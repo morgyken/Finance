@@ -1,0 +1,19 @@
+{
+    "name": "Finance",
+    "alias": "finance",
+    "description": "Finance module for all payments and transactions including insurance bills",
+    "keywords": [],
+    "active": 1,
+    "order": 4,
+    "providers": [
+        "Ignite\\Finance\\Providers\\FinanceServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "core": 0,
+    "version": "v1.0",
+    "author": "Samuel Okoth",
+    "email": "sodhiambo@collabmed.com"
+}
