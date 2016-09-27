@@ -2,7 +2,7 @@
     "name": "collabmed/finance",
     "description": "Finance module for all payments and transactions including insurance bills",
     "license": "proprietary",
-    "type": "dervis-module",
+    "type": "asgard-module",
     "homepage": "http://www.collabmed.com",
     "authors": [
         {
@@ -25,8 +25,5 @@
         "psr-4": {
             "Ignite\\Finance\\": ""
         }
-    },
-    "extra": {
-        "installer-name": "Users"
     }
 }
