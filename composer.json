@@ -1,5 +1,5 @@
 {
-    "name": "collabmed/finance",
+    "name": "collabmed/finance-module",
     "description": "Finance module for all payments and transactions including insurance bills",
     "license": "proprietary",
     "type": "asgard-module",
