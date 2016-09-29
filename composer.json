@@ -24,6 +24,9 @@
         "collabmed/core-module": "1.0.*",
         "inacho/php-credit-card-validator": "1.*"
     },
+    "suggest": {
+        "collabmed/report-module": "Show inventory reports."
+    },
     "autoload": {
         "psr-4": {
             "Ignite\\Finance\\": ""
