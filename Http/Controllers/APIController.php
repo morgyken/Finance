@@ -3,8 +3,8 @@
 namespace Ignite\Finance\Http\Controllers;
 
 use Ignite\Finance\Entities\PettyCash;
-use Ignite\Finance\Entities\Bank;
 use Ignite\Finance\Entities\BankAccount;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
 
