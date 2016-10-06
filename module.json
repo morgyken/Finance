@@ -6,11 +6,12 @@
     "active": 1,
     "order": 4,
     "providers": [
-        "Ignite\\Finance\\Providers\\FinanceServiceProvider"
+        "Ignite\\Finance\\Providers\\FinanceServiceProvider",
+        "Ignite\\Finance\\Providers\\RouteServiceProvider"
     ],
     "aliases": {},
     "files": [
-        "start.php"
+        "helpers.php"
     ],
     "core": 0,
     "version": "v1.0",
