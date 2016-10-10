@@ -19,7 +19,7 @@ class CreatePatientPaymentsTable extends Migration {
             $column->binary('InsuranceAmount')->nullable();
             //cash
             $column->binary('CashAmount')->nullable();
-            ;
+
             //mpesa
             $column->binary('MpesaReference')->nullable();
             $column->binary('MpesaAmount')->nullable();

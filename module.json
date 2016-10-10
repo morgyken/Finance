@@ -3,13 +3,13 @@
     "alias": "finance",
     "description": "Finance module for all payments and transactions including insurance bills",
     "keywords": [],
-    "active": 1,
+    "active": 0,
     "order": 4,
     "providers": [
         "Ignite\\Finance\\Providers\\FinanceServiceProvider",
         "Ignite\\Finance\\Providers\\RouteServiceProvider"
     ],
-    "aliases": {},
+    "aliases": [],
     "files": [
         "helpers.php"
     ],
