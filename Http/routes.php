@@ -3,14 +3,6 @@
 //old web routes
 use Illuminate\Routing\Router;
 
-$router->get('/', ['uses' => 'FinanceController@index', 'as' => 'index']);
-$router->get('patients/accounts', ['uses' => 'FinanceController@patient_accounts', 'as' => 'patient_accounts']);
-$router->get('patients/accounts/individual/{patient}', ['uses' => 'FinanceController@individual_account', 'as' => 'individual_account']);
-$router->match(['get', 'post'], 'patients/payments/receive/{patient?}', ['uses' => 'FinanceController@receive_payments', 'as' => 'receive_payments']);
-$router->get('insurance', ['uses' => 'FinanceController@insurance', 'as' => 'insurance']);
-$router->get('finance/deposits/{patient}', ['uses' => 'FinanceController@deposits', 'as' => 'deposits']);
-$router->get('payment_details/{ref}', ['uses' => 'FinanceController@payment_details', 'as' => 'payment_details']);
-$router->get('workbench/{area?}', ['uses' => 'FinanceController@workbench', 'as' => 'workbench']);
 ///Billing finance.billing.dispatch
 $router->match(['get', 'post'], 'billing', ['uses' => 'FinanceController@billing', 'as' => 'billing']);
 $router->match(['get', 'post'], 'billing/dispatch', ['uses' => 'GlController@dispatchbills', 'as' => 'billing.dispatch']);

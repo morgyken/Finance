@@ -34,8 +34,6 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                 $item->weight(4);
                 $item->icon('fa fa-money');
 
-
-
                 $item->item('Receive Payments', function (Item $item) {
                     $item->icon('fa fa-euro');
                     $item->route('finance.evaluation.pay');
@@ -65,13 +63,6 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->route('inventory.sales.receipts');
                     $item->authorize($this->auth->hasAccess('finance.Payments Overview'));
                 });
-
-                $item->item('Workbench', function (Item $item) {
-                    $item->icon('fa fa-coffee');
-                    $item->route('finance.workbench');
-                    $item->authorize($this->auth->hasAccess('finance.Workbench'));
-                });
-
 
                 $item->item('Billing', function(Item $item) {
                     $item->icon('fa fa-unsorted');

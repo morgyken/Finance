@@ -9,9 +9,9 @@
  *
  * =============================================================================
  */
-
-
-use Dervis\Modules\Finance\Entities\FinanceAccountType;
+use Ignite\Finance\Entities\EvaluationPayments;
+use Ignite\Finance\Entities\FinanceAccountGroup;
+use Ignite\Finance\Entities\FinanceAccountType;
 
 if (!function_exists('get_account_types')) {
 
@@ -32,6 +32,30 @@ if (!function_exists('get_account_groups')) {
      */
     function get_account_groups() {
         return FinanceAccountGroup::all()->pluck('name', 'id');
+    }
+
+}
+if (!function_exists('payment_modes')) {
+
+    /**
+     * @param EvaluationPayments $payment
+     * @return string
+     */
+    function payment_modes(EvaluationPayments $payment) {
+        $modes = [];
+        if (!empty($payment->cash)) {
+            $modes[] = 'Cash';
+        }
+        if (!empty($payment->card)) {
+            $modes[] = 'Credit Card';
+        }
+        if (!empty($payment->mpesa)) {
+            $modes[] = 'Mpesa';
+        }
+        if (!empty($payment->cheque)) {
+            $modes[] = 'Cheque';
+        }
+        return implode(' | ', $modes);
     }
 
 }
