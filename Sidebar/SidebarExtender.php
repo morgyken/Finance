@@ -33,18 +33,39 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
             $group->item('Finance', function (Item $item) {
                 $item->weight(4);
                 $item->icon('fa fa-money');
-                $item->authorize($this->auth->hasAccess('finance.Access Finance Menu'));
+
+
+
+                $item->item('Receive Payments', function (Item $item) {
+                    $item->icon('fa fa-euro');
+                    $item->route('finance.evaluation.pay');
+                });
+
+                $item->item('Patient Accounts', function (Item $item) {
+                    $item->icon('fa fa-list');
+                    $item->route('finance.evaluation.accounts');
+                });
+
+                $item->item('Payment Summary', function (Item $item) {
+                    $item->icon('fa fa-yelp');
+                    $item->route('finance.evaluation.summary');
+                });
+
+                $item->item('Insurance Bills', function (Item $item) {
+                    $item->icon('fa fa-coffee');
+                    $item->route('finance.evaluation.insurance');
+                });
+                $item->item('Cash Bills', function (Item $item) {
+                    $item->icon('fa fa-coffee');
+                    $item->route('finance.evaluation.cash_bills');
+                });
+
                 $item->item('Payments Overview', function (Item $item) {
                     $item->icon('fa fa fa-files-o');
                     $item->route('inventory.sales.receipts');
                     $item->authorize($this->auth->hasAccess('finance.Payments Overview'));
                 });
 
-                $item->item('Receive Payments', function (Item $item) {
-                    $item->icon('fa fa-euro');
-                    $item->route('finance.receive_payments');
-                    $item->authorize($this->auth->hasAccess('finance.Receive Payments'));
-                });
                 $item->item('Workbench', function (Item $item) {
                     $item->icon('fa fa-coffee');
                     $item->route('finance.workbench');

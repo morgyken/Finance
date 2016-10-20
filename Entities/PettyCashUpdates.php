@@ -25,15 +25,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PettyCashUpdates whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class PettyCashUpdates extends Model
-{
+class PettyCashUpdates extends Model {
 
     protected $fillable = [];
     public $table = 'finance_petty_cash_updates';
 
-    public function users()
-    {
-        return $this->belongsTo(User::class, 'user', 'id');
+    public function users() {
+        return $this->belongsTo(User::class, 'user');
     }
 
 }

@@ -11,7 +11,7 @@ class InsuranceInvoicePayments extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('insurance_invoice_payments', function(Blueprint $table) {
+        Schema::create('finance_insurance_invoice_payments', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('insurance_invoice')->unsigned();
             $table->integer('user')->unsigned();
@@ -21,7 +21,7 @@ class InsuranceInvoicePayments extends Migration {
             $table->foreign('user')->references('id')->on('users')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
-            $table->foreign('insurance_invoice')->references('id')->on('insurance_invoices')
+            $table->foreign('insurance_invoice')->references('id')->on('finance_insurance_invoices')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
         });
@@ -33,7 +33,7 @@ class InsuranceInvoicePayments extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('insurance_invoice_payments');
+        Schema::dropIfExists('finance_insurance_invoice_payments');
     }
 
 }

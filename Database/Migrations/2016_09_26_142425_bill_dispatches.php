@@ -20,7 +20,7 @@ class BillDispatches extends Migration {
             $table->foreign('user')->references('id')->on('users')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
-            $table->foreign('insurance_invoice')->references('id')->on('insurance_invoices')
+            $table->foreign('insurance_invoice')->references('id')->on('finance_insurance_invoices')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
         });

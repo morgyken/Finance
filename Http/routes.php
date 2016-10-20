@@ -1,6 +1,8 @@
 <?php
 
 //old web routes
+use Illuminate\Routing\Router;
+
 $router->get('/', ['uses' => 'FinanceController@index', 'as' => 'index']);
 $router->get('patients/accounts', ['uses' => 'FinanceController@patient_accounts', 'as' => 'patient_accounts']);
 $router->get('patients/accounts/individual/{patient}', ['uses' => 'FinanceController@individual_account', 'as' => 'individual_account']);
@@ -17,7 +19,7 @@ $router->get('bill/{id}/payment', ['uses' => 'GlController@payBill', 'as' => 'bi
 $router->post('bill/payment', ['uses' => 'GlController@savePaybill', 'as' => 'bill.pay.save']);
 $router->get('bill/print/{id}', ['uses' => 'GlController@print_bill', 'as' => 'bill.print']);
 // general ledger
-$router->group(['prefix' => 'gl', 'as' => 'gl.'], function(\Illuminate\Routing\Router $router) {
+$router->group(['prefix' => 'gl', 'as' => 'gl.'], function(Router $router) {
     $router->match(['get', 'post'], 'account_groups/{id?}', ['uses' => 'GlController@account_groups', 'as' => 'account_groups']);
     $router->match(['get', 'post'], 'account_types/{id?}', ['uses' => 'GlController@account_types', 'as' => 'account_types']);
     $router->match(['get', 'post'], 'accounts/{id?}', ['uses' => 'GlController@accounts', 'as' => 'accounts']);
@@ -34,4 +36,16 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function(\Illuminate\Routing\R
     $router->match(['get', 'post'], 'payment/save', ['uses' => 'GlController@payment', 'as' => 'save.payment']);
     $router->match(['get', 'post'], 'payments', ['uses' => 'GlController@payments', 'as' => 'inv.payments']);
     $router->match(['get', 'post'], 'payment/{id}', ['uses' => 'GlController@payments', 'as' => 'payment.details']);
+});
+
+//financials
+$router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illuminate\Routing\Router $router) {
+    $router->get('pay/{patient?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
+    $router->get('accounts', ['uses' => 'EvaluationController@accounts', 'as' => 'accounts']);
+    $router->get('accounts/{patient}/show', ['uses' => 'EvaluationController@individual_account', 'as' => 'individual_account']);
+    $router->post('payment', ['as' => 'pay.save', 'uses' => 'EvaluationController@pay_save']);
+    $router->get('payment_details/{id}', ['as' => 'payment_details', 'uses' => 'EvaluationController@payment_details']);
+    $router->get('summary', ['as' => 'summary', 'uses' => 'EvaluationController@summary']);
+    $router->get('insurance', ['as' => 'insurance', 'uses' => 'EvaluationController@insurance']);
+    $router->get('cash_bills', ['as' => 'cash_bills', 'uses' => 'EvaluationController@cash_bills']);
 });

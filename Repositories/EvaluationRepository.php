@@ -13,10 +13,15 @@
 namespace Ignite\Finance\Repositories;
 
 /**
- * Description of EvaluationRepository
+ * Description of FinanceRepository
  *
  * @author samuel
  */
 interface EvaluationRepository {
 
+    /**
+     * Record payment
+     * @return bool
+     */
+    public function record_payment();
 }

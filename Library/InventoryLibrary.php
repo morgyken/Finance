@@ -10,12 +10,15 @@
  * =============================================================================
  */
 
-//namespace Fin
+namespace Ignite\Finance\Library;
+use Ignite\Finance\Repositories\InventoryRepository;
+
 /**
- * Description of EvaluationFunctions
+ * Description of InventoryLibrary
  *
  * @author samuel
  */
-class EvaluationFunctions {
-//put your code here
+class InventoryLibrary implements InventoryRepository
+{
+
 }

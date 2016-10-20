@@ -4,13 +4,13 @@
  * =============================================================================
  *
  * Collabmed Solutions Ltd
- * Project: iClinic
+ * Project: Collabmed Health Platform
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  *
  * =============================================================================
  */
 
-namespace Ignite\Finance\Repositories;
+namespace Ignite\Finance\Library;
 
 use Ignite\Finance\Entities\FinanceAccountGroup;
 use Ignite\Finance\Entities\FinanceAccountType;
@@ -22,6 +22,7 @@ use Ignite\Finance\Entities\BankAccount;
 use Ignite\Finance\Entities\Banking;
 use Ignite\Finance\Entities\BankingCheque;
 use Ignite\Finance\Entities\FinanceInvoicePayment;
+use Ignite\Finance\Repositories\FinanceRepository;
 use Ignite\Inventory\Entities\InventoryBatch;
 use Ignite\Inventory\Entities\InventoryInvoice;
 use Ignite\Finance\Entities\InsuranceInvoice;
@@ -34,7 +35,7 @@ use Illuminate\Support\Facades\DB;
  *
  * @author Samuel Dervis <samueldervis@gmail.com>
  */
-class FinanceFunctions {
+class FinanceLibrary implements FinanceRepository {
 
     /**
      * @param Request $request

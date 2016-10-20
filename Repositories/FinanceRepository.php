@@ -17,6 +17,6 @@ namespace Ignite\Finance\Repositories;
  *
  * @author samuel
  */
-class FinanceRepository {
-//put your code here
+interface FinanceRepository {
+
 }
