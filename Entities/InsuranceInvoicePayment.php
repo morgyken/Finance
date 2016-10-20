@@ -4,7 +4,12 @@ namespace Ignite\Finance\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class insurance_invoice_payment extends Model {
+/**
+ * Ignite\Finance\Entities\InsuranceInvoicePayment
+ *
+ * @mixin \Eloquent
+ */
+class InsuranceInvoicePayment extends Model {
 
     protected $fillable = ['insurance_invoice', 'user', 'amount', 'mode'];
 

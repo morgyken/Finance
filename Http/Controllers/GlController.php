@@ -2,6 +2,7 @@
 
 namespace Ignite\Finance\Http\Controllers;
 
+use Ignite\Core\Http\Controllers\AdminBaseController;
 use Ignite\Finance\Entities\FinanceAccountGroup;
 use Ignite\Finance\Entities\FinanceAccountType;
 use Ignite\Finance\Entities\FinanceGlAccounts;
@@ -10,7 +11,6 @@ use Ignite\Finance\Entities\BankAccount;
 use Ignite\Finance\Entities\Banking;
 use Ignite\Finance\Entities\PettyCash;
 use Ignite\Finance\Entities\PettyCashUpdates;
-use Ignite\Finance\Library\FinanceFunctions;
 use Ignite\Inventory\Entities\InventoryBatchPurchases;
 use Ignite\Inventory\Entities\InventoryBatch;
 use Ignite\Finance\Entities\FinanceInvoicePayment;
@@ -18,25 +18,25 @@ use Illuminate\Http\Request;
 use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Inventory\Entities\InventoryDispensing;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
-use Ignite\Finance\Entities\insurance_invoice_payment;
+use Ignite\Finance\Entities\InsuranceInvoicePayment;
 
-class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
+class GlController extends AdminBaseController
+{
 
-    /**
-     * @var array
-     */
-    protected $data = [];
 
     /**
      * @var Request
      */
     protected $request;
 
-    public function __construct(Request $request) {
+    public function __construct(Request $request)
+    {
+        parent::__construct();
         $this->request = $request;
     }
 
-    public function account_groups($id = null) {
+    public function account_groups($id = null)
+    {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::add_gl_group($this->request, $id)) {
                 return redirect()->route('finance.gl.account_groups')->with('success', 'Account group saved');
@@ -47,7 +47,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::gl.account_groups')->with('data', $this->data);
     }
 
-    public function account_types($id = null) {
+    public function account_types($id = null)
+    {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::add_gl_account_types($this->request, $id)) {
                 return redirect()->route('finance.gl.account_types')->with('success', 'Account type saved');
@@ -58,7 +59,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::gl.account_types')->with('data', $this->data);
     }
 
-    public function accounts($id = null) {
+    public function accounts($id = null)
+    {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::add_gl_accounts($this->request, $id)) {
                 return redirect()->route('finance.gl.accounts')->with('success', 'GL Account saved');
@@ -69,7 +71,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::gl.accounts')->with('data', $this->data);
     }
 
-    public function bank() {
+    public function bank()
+    {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::update_bank($this->request)) {
                 flash('Bank update saved');
@@ -80,7 +83,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::banks')->with('data', $this->data);
     }
 
-    public function bankEdit($id) {
+    public function bankEdit($id)
+    {
         $this->data['bank'] = Bank::find($id);
         $this->data['banks'] = Bank::all();
         $this->data['editMode'] = 1;
@@ -93,7 +97,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::banks')->with('data', $this->data);
     }
 
-    public function bankDelete($id) {
+    public function bankDelete($id)
+    {
         $b = Bank::find($id);
         if ($b->delete()) {
             flash('Bank deleted...');
@@ -102,7 +107,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::banks')->with('data', $this->data);
     }
 
-    public function bankAccount() {
+    public function bankAccount()
+    {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::update_bank_account($this->request)) {
                 flash('Bank account update saved');
@@ -114,7 +120,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::bank_account')->with('data', $this->data);
     }
 
-    public function bankAccountEdit($id) {
+    public function bankAccountEdit($id)
+    {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::edit_baccount($this->request, $id)) {
                 flash('Bank account update saved');
@@ -128,7 +135,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::bank_account')->with('data', $this->data);
     }
 
-    public function bankAccountDelete($id) {
+    public function bankAccountDelete($id)
+    {
         $b = BankAccount::find($id);
         if ($b->delete()) {
             flash('Bank Account deleted...');
@@ -139,7 +147,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::bank_account')->with('data', $this->data);
     }
 
-    public function banking() {
+    public function banking()
+    {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::update_banking($this->request)) {
                 flash('Banking update saved');
@@ -152,7 +161,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::banking')->with('data', $this->data);
     }
 
-    public function banking_trash($id) {
+    public function banking_trash($id)
+    {
         $b = Banking::find($id);
         if ($b->delete()) {
             flash('Banking deleted...');
@@ -163,7 +173,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::banking')->with('data', $this->data);
     }
 
-    public function pettyCash() {
+    public function pettyCash()
+    {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::update_petty_cash($this->request)) {
                 flash('Pettycash update saved');
@@ -175,7 +186,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return view('finance::petty_cash')->with('data', $this->data);
     }
 
-    public function payment() {
+    public function payment()
+    {
         $this->data['accounts'] = BankAccount::all();
         $this->data['pay'] = FinanceInvoicePayment::all();
         $this->data['del'] = InventoryBatch::find($this->request->id);
@@ -190,7 +202,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return \Redirect::back();
     }
 
-    public function payments() {
+    public function payments()
+    {
         if (isset($this->request->id)) {
             $this->data['pay'] = FinanceInvoicePayment::find($this->request->id);
             return view('finance::gl.payment_details')->with('data', $this->data);
@@ -200,7 +213,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         }
     }
 
-    public function dispatchbills() {
+    public function dispatchbills()
+    {
         $this->data['insurance_invoices'] = InsuranceInvoice::all();
         //dd($this->request);
         if ($this->request->isMethod('post')) {
@@ -212,7 +226,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return redirect()->back();
     }
 
-    public function cancelBill() {
+    public function cancelBill()
+    {
         $bill = InsuranceInvoice::find($this->request->id);
         $bill->status = 3; //cancelled
         $bill->save();
@@ -220,7 +235,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return redirect()->back();
     }
 
-    public function payBill() {
+    public function payBill()
+    {
         $this->data['bill'] = InsuranceInvoice::find($this->request->id);
         $batch_sale = InventoryBatchProductSales::where('receipt', '=', $this->data['bill']->invoice_no)->first();
         $batch = $batch_sale->id;
@@ -228,13 +244,14 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         $amnt = 0;
         foreach ($sold as $s) {
             $price = $s->price * $s->quantity;
-            $amnt+=$price;
+            $amnt += $price;
         }
         $this->data['amnt'] = $amnt;
         return view("finance::paybill")->with('data', $this->data);
     }
 
-    public function savePayBill() {
+    public function savePayBill()
+    {
         $bill = InsuranceInvoice::find($this->request->id);
         $bill->status = 2; //cancelled
         $bill->save();
@@ -243,7 +260,7 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         $sale->paid = TRUE;
         $sale->save();
 
-        $payment = new insurance_invoice_payment();
+        $payment = new InsuranceInvoicePayment();
         $payment->insurance_invoice = $this->request->id;
         $payment->user = \Auth::user()->id;
         $payment->amount = $this->request->amount;
@@ -253,7 +270,8 @@ class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
         return redirect()->back();
     }
 
-    public function print_bill(Request $request) {
+    public function print_bill(Request $request)
+    {
         $bill = InsuranceInvoice::findOrFail($request->id);
         $batch_sale = InventoryBatchProductSales::where('receipt', '=', $bill->invoice_no)->first();
         $batch = $batch_sale->id;
