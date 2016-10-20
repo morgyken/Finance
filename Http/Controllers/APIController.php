@@ -1,14 +1,13 @@
 <?php
 
-namespace Dervis\Modules\Finance\Http\Controllers;
+namespace Ignite\Finance\Http\Controllers;
 
-use Dervis\Modules\Finance\Entities\PettyCash;
-use Dervis\Modules\Finance\Entities\BankAccount;
-use Nwidart\Modules\Routing\Controller;
+use Ignite\Finance\Entities\PettyCash;
+use Ignite\Finance\Entities\BankAccount;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
 
-class APIController extends Controller {
+class APIController extends \Illuminate\Routing\Controller {
 
     protected $request;
 
@@ -22,7 +21,7 @@ class APIController extends Controller {
     }
 
     public function cancelBill() {
-        
+
     }
 
     public function checkBogusWidthrawal() {

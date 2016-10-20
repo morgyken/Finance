@@ -1,6 +1,6 @@
 <?php
 
-namespace Dervis\Modules\Finance\Entities;
+namespace Ignite\Finance\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 

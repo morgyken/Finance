@@ -10,22 +10,22 @@
  * =============================================================================
  */
 
-namespace Dervis\Modules\Finance\Library;
+namespace Ignite\Finance\Repositories;
 
-use Dervis\Modules\Finance\Entities\FinanceAccountGroup;
-use Dervis\Modules\Finance\Entities\FinanceAccountType;
-use Dervis\Modules\Finance\Entities\FinanceGlAccounts;
-use Dervis\Modules\Finance\Entities\PettyCash;
-use Dervis\Modules\Finance\Entities\PettyCashUpdates;
-use Dervis\Modules\Finance\Entities\Bank;
-use Dervis\Modules\Finance\Entities\BankAccount;
-use Dervis\Modules\Finance\Entities\Banking;
-use Dervis\Modules\Finance\Entities\BankingCheque;
-use Dervis\Modules\Finance\Entities\FinanceInvoicePayment;
-use Dervis\Modules\Inventory\Entities\InventoryBatch;
-use Dervis\Modules\Inventory\Entities\InventoryInvoice;
-use Dervis\Modules\Finance\Entities\InsuranceInvoice;
-use Dervis\Modules\Finance\Entities\Dispatch;
+use Ignite\Finance\Entities\FinanceAccountGroup;
+use Ignite\Finance\Entities\FinanceAccountType;
+use Ignite\Finance\Entities\FinanceGlAccounts;
+use Ignite\Finance\Entities\PettyCash;
+use Ignite\Finance\Entities\PettyCashUpdates;
+use Ignite\Finance\Entities\Bank;
+use Ignite\Finance\Entities\BankAccount;
+use Ignite\Finance\Entities\Banking;
+use Ignite\Finance\Entities\BankingCheque;
+use Ignite\Finance\Entities\FinanceInvoicePayment;
+use Ignite\Inventory\Entities\InventoryBatch;
+use Ignite\Inventory\Entities\InventoryInvoice;
+use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Finance\Entities\Dispatch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

@@ -1,16 +1,22 @@
-
 <?php
 
 /*
  * =============================================================================
  *
  * Collabmed Solutions Ltd
- * Project: iClinic
+ * Project: Collabmed Health Platform
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  *
  * =============================================================================
  */
 
-$router->get('accounts', ['uses' => 'APIController@bankAccounts', 'as' => 'accounts']);
-$router->get('check/bogus/widthrawal', ['uses' => 'APIController@checkBogusWidthrawal', 'as' => 'widthraw.bogus']);
+namespace Ignite\Finance\Repositories;
 
+/**
+ * Description of FinanceRepository
+ *
+ * @author samuel
+ */
+class FinanceRepository {
+//put your code here
+}

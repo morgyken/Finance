@@ -1,11 +1,11 @@
 <?php
 
-namespace Dervis\Modules\Finance\Entities;
+namespace Ignite\Finance\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Dervis\Modules\Finance\Entities\InsuranceInvoice
+ * Ignite\Finance\Entities\InsuranceInvoice
  *
  * @property integer $id
  * @property string $invoice_no
@@ -15,15 +15,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $status
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Dervis\Modules\Finance\Entities\PatientPayments $payments
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\InsuranceInvoice whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\InsuranceInvoice whereInvoiceNo($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\InsuranceInvoice wherePayment($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\InsuranceInvoice whereInvoiceDate($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\InsuranceInvoice whereDispatch($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\InsuranceInvoice whereStatus($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\InsuranceInvoice whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\InsuranceInvoice whereUpdatedAt($value)
+ * @property-read \Ignite\Finance\Entities\PatientPayments $payments
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereInvoiceNo($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice wherePayment($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereInvoiceDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereDispatch($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereStatus($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class InsuranceInvoice extends Model {
@@ -37,7 +37,7 @@ class InsuranceInvoice extends Model {
     }
 
     public function sales() {
-        return $this->belongsTo(\Dervis\Modules\Inventory\Entities\InventoryBatchProductSales::class, 'receipt', 'id');
+        return $this->belongsTo(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'receipt', 'id');
     }
 
 }

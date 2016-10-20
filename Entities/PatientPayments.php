@@ -1,11 +1,11 @@
 <?php
 
-namespace Dervis\Modules\Finance\Entities;
+namespace Ignite\Finance\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Dervis\Modules\Finance\Entities\PatientPayments
+ * Ignite\Finance\Entities\PatientPayments
  *
  * @property integer $id
  * @property string $receipt
@@ -34,38 +34,38 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $user
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read \Dervis\Modules\Reception\Entities\Patients $patients
- * @property-read \Dervis\Modules\Core\Entities\User $users
- * @property-read \Dervis\Modules\Setup\Entities\Schemes $schemes
+ * @property-read \Ignite\Reception\Entities\Patients $patients
+ * @property-read \Ignite\Core\Entities\User $users
+ * @property-read \Ignite\Setup\Entities\Schemes $schemes
  * @property-read mixed $total
  * @property-read mixed $modes
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereReceipt($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments wherePatient($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereScheme($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereInsuranceAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereCashAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereMpesaReference($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereMpesaAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereMpesaNumber($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments wherePaybil($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereAccount($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereChequeName($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereChequeAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereChequeNumber($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereChequeDate($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereChequeBank($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereChequeBankBranch($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereCardType($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereCardName($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereCardNumber($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereCardExpiry($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereCardSecurity($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereCardAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereUser($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Dervis\Modules\Finance\Entities\PatientPayments whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereReceipt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments wherePatient($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereScheme($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereInsuranceAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereCashAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereMpesaReference($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereMpesaAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereMpesaNumber($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments wherePaybil($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereAccount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereChequeName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereChequeAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereChequeNumber($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereChequeDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereChequeBank($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereChequeBankBranch($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereCardType($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereCardName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereCardNumber($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereCardExpiry($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereCardSecurity($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereCardAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereUser($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PatientPayments whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class PatientPayments extends Model {
@@ -73,15 +73,15 @@ class PatientPayments extends Model {
     //  public $primaryKey = 'patient_payments';
 
     public function patients() {
-        return $this->belongsTo(\Dervis\Modules\Reception\Entities\Patients::class, 'patient', 'patient_id');
+        return $this->belongsTo(\Ignite\Reception\Entities\Patients::class, 'patient', 'patient_id');
     }
 
     public function users() {
-        return $this->belongsTo(\Dervis\Modules\Core\Entities\User::class, 'user', 'user_id');
+        return $this->belongsTo(\Ignite\Core\Entities\User::class, 'user', 'user_id');
     }
 
     public function schemes() {
-        return $this->belongsTo(\Dervis\Modules\Setup\Entities\Schemes::class, 'scheme', 'scheme_id');
+        return $this->belongsTo(\Ignite\Setup\Entities\Schemes::class, 'scheme', 'scheme_id');
     }
 
     public function getTotalAttribute() {

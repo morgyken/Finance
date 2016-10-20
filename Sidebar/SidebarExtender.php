@@ -10,7 +10,7 @@
  * =============================================================================
  */
 
-namespace Dervis\Modules\Finance\Sidebar;
+namespace Ignite\Finance\Sidebar;
 
 use Maatwebsite\Sidebar\Group;
 use Maatwebsite\Sidebar\Item;
@@ -24,7 +24,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
 
     protected $auth;
 
-    public function __construct(\Dervis\Modules\Core\Contracts\Authentication $auth) {
+    public function __construct(\Ignite\Core\Contracts\Authentication $auth) {
         $this->auth = $auth;
     }
 

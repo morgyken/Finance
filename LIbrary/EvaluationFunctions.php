@@ -1,16 +1,21 @@
-
 <?php
 
 /*
  * =============================================================================
  *
  * Collabmed Solutions Ltd
- * Project: iClinic
+ * Project: Collabmed Health Platform
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  *
  * =============================================================================
  */
 
-$router->get('accounts', ['uses' => 'APIController@bankAccounts', 'as' => 'accounts']);
-$router->get('check/bogus/widthrawal', ['uses' => 'APIController@checkBogusWidthrawal', 'as' => 'widthraw.bogus']);
-
+//namespace Fin
+/**
+ * Description of EvaluationFunctions
+ *
+ * @author samuel
+ */
+class EvaluationFunctions {
+//put your code here
+}

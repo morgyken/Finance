@@ -1,6 +1,6 @@
 <?php
 
-namespace Dervis\Modules\Finance\Entities;
+namespace Ignite\Finance\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +10,7 @@ class PettyCashUpdates extends Model {
     public $table = 'finance_petty_cash_updates';
 
     public function users() {
-        return $this->belongsTo(\Dervis\Modules\Core\Entities\User::class, 'user', 'id');
+        return $this->belongsTo(\Ignite\Core\Entities\User::class, 'user', 'id');
     }
 
 }

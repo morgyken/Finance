@@ -4,9 +4,8 @@ namespace Dervis\Modules\Finance\Http\Controllers;
 
 use Dervis\Modules\Finance\Entities\InsuranceInvoice;
 use Illuminate\Http\Request;
-use Nwidart\Modules\Routing\Controller;
 
-class ReportController extends Controller {
+class ReportController extends \Illuminate\Routing\Controller {
 
     public function print_bill(Request $request) {
         $bill = InsuranceInvoice::findOrFail($request->id);

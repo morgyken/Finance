@@ -1,5 +1,7 @@
 <?php
 
+namespace Ignite\Finance\Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class FinancePettyCashTableSeeder extends Seeder {

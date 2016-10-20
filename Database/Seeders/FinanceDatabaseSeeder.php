@@ -1,21 +1,19 @@
 <?php
 
-namespace Dervis\Modules\Finance\Database\Seeders;
+namespace Ignite\Finance\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
-class FinanceDatabaseSeeder extends Seeder
-{
+class FinanceDatabaseSeeder extends Seeder {
+
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run()
-    {
-        Model::unguard();
+    public function run() {
         $this->call(GLTableSeeder::class);
         // $this->call("OthersTableSeeder");
     }
+
 }

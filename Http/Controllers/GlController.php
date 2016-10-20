@@ -1,27 +1,26 @@
 <?php
 
-namespace Dervis\Modules\Finance\Http\Controllers;
+namespace Ignite\Finance\Http\Controllers;
 
-use Dervis\Modules\Finance\Entities\FinanceAccountGroup;
-use Dervis\Modules\Finance\Entities\FinanceAccountType;
-use Dervis\Modules\Finance\Entities\FinanceGlAccounts;
-use Dervis\Modules\Finance\Entities\Bank;
-use Dervis\Modules\Finance\Entities\BankAccount;
-use Dervis\Modules\Finance\Entities\Banking;
-use Dervis\Modules\Finance\Entities\PettyCash;
-use Dervis\Modules\Finance\Entities\PettyCashUpdates;
-use Dervis\Modules\Finance\Library\FinanceFunctions;
-use Nwidart\Modules\Routing\Controller;
-use Dervis\Modules\Inventory\Entities\InventoryBatchPurchases;
-use Dervis\Modules\Inventory\Entities\InventoryBatch;
-use Dervis\Modules\Finance\Entities\FinanceInvoicePayment;
+use Ignite\Finance\Entities\FinanceAccountGroup;
+use Ignite\Finance\Entities\FinanceAccountType;
+use Ignite\Finance\Entities\FinanceGlAccounts;
+use Ignite\Finance\Entities\Bank;
+use Ignite\Finance\Entities\BankAccount;
+use Ignite\Finance\Entities\Banking;
+use Ignite\Finance\Entities\PettyCash;
+use Ignite\Finance\Entities\PettyCashUpdates;
+use Ignite\Finance\Library\FinanceFunctions;
+use Ignite\Inventory\Entities\InventoryBatchPurchases;
+use Ignite\Inventory\Entities\InventoryBatch;
+use Ignite\Finance\Entities\FinanceInvoicePayment;
 use Illuminate\Http\Request;
-use Dervis\Modules\Finance\Entities\InsuranceInvoice;
-use Dervis\Modules\Inventory\Entities\InventoryDispensing;
-use Dervis\Modules\Inventory\Entities\InventoryBatchProductSales;
-use Dervis\Modules\Finance\Entities\insurance_invoice_payment;
+use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Inventory\Entities\InventoryDispensing;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
+use Ignite\Finance\Entities\insurance_invoice_payment;
 
-class GlController extends Controller {
+class GlController extends \Ignite\Core\Http\Controllers\AdminBaseController {
 
     /**
      * @var array
