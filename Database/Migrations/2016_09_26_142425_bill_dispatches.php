@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class FinancePettyCashUpdates extends Migration {
+class BillDispatches extends Migration {
 
     /**
      * Run the migrations.
@@ -11,14 +11,16 @@ class FinancePettyCashUpdates extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('finance_petty_cash_updates', function(Blueprint $table) {
+        Schema::create('finance_bill_dispatches', function(Blueprint $table) {
             $table->increments('id');
+            $table->integer('insurance_invoice')->unsigned();
             $table->integer('user')->unsigned();
-            $table->decimal('amount', 10, 2)->nullable();
-            $table->string('type'); //widthrawal or deposit
-            $table->string('reason')->nullable();
+            $table->decimal('amount', 10, 2);
             $table->timestamps();
             $table->foreign('user')->references('id')->on('users')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
+            $table->foreign('insurance_invoice')->references('id')->on('insurance_invoices')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
         });
@@ -30,7 +32,7 @@ class FinancePettyCashUpdates extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('finance_petty_cash_updates');
+        Schema::dropIfExists('finance_bill_dispatches');
     }
 
 }

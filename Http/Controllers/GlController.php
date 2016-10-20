@@ -1,31 +1,25 @@
 <?php
 
-/*
- * =============================================================================
- *
- * Collabmed Solutions Ltd
- * Project: Collabmed Health Platform
- * Author: Samuel Okoth <sodhiambo@collabmed.com>
- *
- * =============================================================================
- */
+namespace Dervis\Modules\Finance\Http\Controllers;
 
-namespace Ignite\Finance\Http\Controllers;
-
-use Ignite\Finance\Entities\FinanceAccountGroup;
-use Ignite\Finance\Entities\FinanceAccountType;
-use Ignite\Finance\Entities\FinanceGlAccounts;
-use Ignite\Finance\Entities\Bank;
-use Ignite\Finance\Entities\BankAccount;
-use Ignite\Finance\Entities\Banking;
-use Ignite\Finance\Entities\PettyCash;
-use Ignite\Finance\Entities\PettyCashUpdates;
-use Ignite\Finance\Library\FinanceFunctions;
+use Dervis\Modules\Finance\Entities\FinanceAccountGroup;
+use Dervis\Modules\Finance\Entities\FinanceAccountType;
+use Dervis\Modules\Finance\Entities\FinanceGlAccounts;
+use Dervis\Modules\Finance\Entities\Bank;
+use Dervis\Modules\Finance\Entities\BankAccount;
+use Dervis\Modules\Finance\Entities\Banking;
+use Dervis\Modules\Finance\Entities\PettyCash;
+use Dervis\Modules\Finance\Entities\PettyCashUpdates;
+use Dervis\Modules\Finance\Library\FinanceFunctions;
 use Nwidart\Modules\Routing\Controller;
-use Ignite\Inventory\Entities\InventoryBatchPurchases;
-use Ignite\Inventory\Entities\InventoryBatch;
-use Ignite\Finance\Entities\FinanceInvoicePayment;
+use Dervis\Modules\Inventory\Entities\InventoryBatchPurchases;
+use Dervis\Modules\Inventory\Entities\InventoryBatch;
+use Dervis\Modules\Finance\Entities\FinanceInvoicePayment;
 use Illuminate\Http\Request;
+use Dervis\Modules\Finance\Entities\InsuranceInvoice;
+use Dervis\Modules\Inventory\Entities\InventoryDispensing;
+use Dervis\Modules\Inventory\Entities\InventoryBatchProductSales;
+use Dervis\Modules\Finance\Entities\insurance_invoice_payment;
 
 class GlController extends Controller {
 
@@ -205,6 +199,70 @@ class GlController extends Controller {
             $this->data['pay'] = FinanceInvoicePayment::all();
             return view('finance::payments')->with('data', $this->data);
         }
+    }
+
+    public function dispatchbills() {
+        $this->data['insurance_invoices'] = InsuranceInvoice::all();
+        //dd($this->request);
+        if ($this->request->isMethod('post')) {
+            if (FinanceFunctions::dispatchBills($this->request)) {
+                flash('Bills dispatched');
+                return redirect()->route('finance.billing');
+            }
+        }
+        return redirect()->back();
+    }
+
+    public function cancelBill() {
+        $bill = InsuranceInvoice::find($this->request->id);
+        $bill->status = 3; //cancelled
+        $bill->save();
+        flash('Bill cancelled successfully...');
+        return redirect()->back();
+    }
+
+    public function payBill() {
+        $this->data['bill'] = InsuranceInvoice::find($this->request->id);
+        $batch_sale = InventoryBatchProductSales::where('receipt', '=', $this->data['bill']->invoice_no)->first();
+        $batch = $batch_sale->id;
+        $sold = InventoryDispensing::where('batch', '=', $batch)->get();
+        $amnt = 0;
+        foreach ($sold as $s) {
+            $price = $s->price * $s->quantity;
+            $amnt+=$price;
+        }
+        $this->data['amnt'] = $amnt;
+        return view("finance::paybill")->with('data', $this->data);
+    }
+
+    public function savePayBill() {
+        $bill = InsuranceInvoice::find($this->request->id);
+        $bill->status = 2; //cancelled
+        $bill->save();
+
+        $sale = InventoryBatchProductSales::where('receipt', '=', $bill->invoice_no)->first();
+        $sale->paid = TRUE;
+        $sale->save();
+
+        $payment = new insurance_invoice_payment();
+        $payment->insurance_invoice = $this->request->id;
+        $payment->user = \Auth::user()->id;
+        $payment->amount = $this->request->amount;
+        $payment->mode = $this->request->mode;
+        $payment->save();
+        flash('Payment saved successfully...');
+        return redirect()->back();
+    }
+
+    public function print_bill(Request $request) {
+        $bill = InsuranceInvoice::findOrFail($request->id);
+        $batch_sale = InventoryBatchProductSales::where('receipt', '=', $bill->invoice_no)->first();
+        $batch = $batch_sale->id;
+        $sold = InventoryDispensing::where('batch', '=', $batch)->get();
+
+        $pdf = \PDF::loadView('finance::prints.bill', ['bill' => $bill, 'sold' => $sold]);
+        $pdf->setPaper('a4', 'Landscape');
+        return $pdf->stream('Bill' . $request->id . '.pdf');
     }
 
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Ignite\Finance\Http\Controllers;
+namespace Dervis\Modules\Finance\Http\Controllers;
 
-use Ignite\Finance\Entities\PettyCash;
-use Ignite\Finance\Entities\BankAccount;
-use Illuminate\Routing\Controller;
+use Dervis\Modules\Finance\Entities\PettyCash;
+use Dervis\Modules\Finance\Entities\BankAccount;
+use Nwidart\Modules\Routing\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
 
@@ -19,6 +19,10 @@ class APIController extends Controller {
     public function bankAccounts(Request $request) {
         $bank_accounts = BankAccount::where('bank', '=', $request->bank)->pluck('number', 'id');
         return Response::json($bank_accounts);
+    }
+
+    public function cancelBill() {
+        
     }
 
     public function checkBogusWidthrawal() {

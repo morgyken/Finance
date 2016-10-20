@@ -1,29 +1,20 @@
 <?php
 
-/*
- * =============================================================================
- *
- * Collabmed Solutions Ltd
- * Project: Collabmed Health Platform
- * Author: Samuel Okoth <sodhiambo@collabmed.com>
- *
- * =============================================================================
- */
+namespace Dervis\Modules\Finance\Database\Seeders;
 
-namespace Ignite\Finance\Database\Seeders;
-
-use Ignite\Finance\Entities\FinanceAccountGroup;
-use Ignite\Finance\Entities\FinanceAccountType;
+use Dervis\Modules\Finance\Entities\FinanceAccountGroup;
+use Dervis\Modules\Finance\Entities\FinanceAccountType;
 use Illuminate\Database\Seeder;
 
-class GLTableSeeder extends Seeder {
-
+class GLTableSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      *
      * @return void
      */
-    public function run() {
+    public function run()
+    {
         $types = ['Profit & Loss', 'Balance Sheet', 'Expenses'];
         foreach ($types as $type) {
             $in = new FinanceAccountType;
@@ -40,5 +31,4 @@ class GLTableSeeder extends Seeder {
             $in->save();
         }
     }
-
 }

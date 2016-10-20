@@ -24,7 +24,7 @@ class FinanceBanks extends Migration {
      * @return void
      */
     public function down() {
-        Schema::drop('finance_banks');
+        Schema::dropIfExists('finance_banks');
     }
 
 }

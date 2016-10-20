@@ -1,58 +1,46 @@
 <?php
 
-/*
- * =============================================================================
- *
- * Collabmed Solutions Ltd
- * Project: Collabmed Health Platform
- * Author: Samuel Okoth <sodhiambo@collabmed.com>
- *
- * =============================================================================
- */
+namespace Dervis\Modules\Finance\Http\Controllers;
 
-namespace Ignite\Finance\Http\Controllers;
+use Nwidart\Modules\Routing\Controller;
+use Dervis\Modules\Finance\Entities\InsuranceInvoice;
+use Illuminate\Http\Request;
 
-use Ignite\Core\Http\Controllers\AdminBaseController;
-use Ignite\Finance\Entities\PatientPayments;
-use Ignite\Finance\Http\Requests\EvaluationPaymentsRequest;
-use Ignite\Reception\Entities\Patients;
-
-class FinanceController extends AdminBaseController {
+class FinanceController extends Controller {
 
     public function index() {
         return view('finance::index');
     }
 
     public function patient_accounts() {
-        $this->data['patients'] = Patients::all();
+        $this->data['patients'] = \Dervis\Modules\Reception\Entities\Patients::all();
         return view('finance::patient_accounts')->with('data', $this->data);
     }
 
     public function individual_account($patient) {
-        $this->data['patient'] = Patients::find($patient);
-        $this->data['payments'] = PatientPayments::wherePatient($patient)->get();
+        $this->data['patient'] = \Dervis\Modules\Reception\Entities\Patients::find($patient);
+        $this->data['payments'] = \Dervis\Modules\Finance\Entities\PatientPayments::wherePatient($patient)->get();
         return view('finance::individual_account')->with('data', $this->data);
     }
 
     public function payment_details($ref) {
-        $this->data['payment'] = PatientPayments::find($ref);
+        $this->data['payment'] = \Dervis\Modules\Finance\Entities\PatientPayments::find($ref);
         return view('finance::payment_details')->with('data', $this->data);
     }
 
-    public function save_payment(EvaluationPaymentsRequest $request) {
-        if ($ref = \Dervis\Helpers\FinancialFunctions::receive_payments($request, $patient)) {
-            \Dervis\Helpers\FinancialFunctions::updateInvoice();
-            return redirect()->route('finance::payment_details', $ref);
+    public function receive_payments(Request $request, $patient = null) {
+        if ($request->isMethod('post')) {
+            if ($ref = \Dervis\Helpers\FinancialFunctions::receive_payments($request, $patient)) {
+                \Dervis\Helpers\FinancialFunctions::updateInvoice();
+                return redirect()->route('finance::payment_details', $ref);
+            }
         }
-    }
-
-    public function receive_payments($patient = null) {
         if (!empty($patient)) {
-            $this->data['patient'] = Patients::find($patient);
+            $this->data['patient'] = \Dervis\Modules\Reception\Entities\Patients::find($patient);
             return view('finance::receive_payments')->with('data', $this->data);
         }
-        $this->data['patients'] = Patients::whereHas('visits', function ($query) {
-                    $query->whereHas('treatments', function ($q2) {
+        $this->data['patients'] = \Dervis\Modules\Reception\Entities\Patients::whereHas('visits', function ($query) {
+                    $query->whereHas('treatments', function($q2) {
                         $q2->whereIsPaid(false);
                     });
                 })->get();
@@ -64,10 +52,10 @@ class FinanceController extends AdminBaseController {
         if (!empty($view)) {
             switch ($view) {
                 case 'insurance':
-                    $this->data['insurance'] = \Ignite\Finance\Entities\InsuranceInvoice::all();
+                    $this->data['insurance'] = \Dervis\Modules\Finance\Entities\InsuranceInvoice::all();
                     break;
                 case 'cash':
-                    $this->data['cash'] = PatientPayments::all();
+                    $this->data['cash'] = \Dervis\Modules\Finance\Entities\PatientPayments::all();
                     break;
             }
         }
@@ -76,8 +64,13 @@ class FinanceController extends AdminBaseController {
 
     public function insurance() {
         \Dervis\Helpers\FinancialFunctions::updateInvoice();
-        $this->data['invoice'] = \Ignite\Finance\Entities\InsuranceInvoice::all();
+        $this->data['invoice'] = \Dervis\Modules\Finance\Entities\InsuranceInvoice::all();
         return view('finance::insurance')->with('data', $this->data);
+    }
+
+    public function billing() {
+        $this->data['insurance_invoices'] = InsuranceInvoice::all();
+        return view('finance::billing')->with('data', $this->data);
     }
 
 }

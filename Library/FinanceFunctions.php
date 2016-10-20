@@ -10,21 +10,24 @@
  * =============================================================================
  */
 
-namespace Ignite\Finance\Library;
+namespace Dervis\Modules\Finance\Library;
 
-use Ignite\Finance\Entities\FinanceAccountGroup;
-use Ignite\Finance\Entities\FinanceAccountType;
-use Ignite\Finance\Entities\FinanceGlAccounts;
-use Ignite\Finance\Entities\PettyCash;
-use Ignite\Finance\Entities\PettyCashUpdates;
-use Ignite\Finance\Entities\Bank;
-use Ignite\Finance\Entities\BankAccount;
-use Ignite\Finance\Entities\Banking;
-use Ignite\Finance\Entities\BankingCheque;
-use Ignite\Finance\Entities\FinanceInvoicePayment;
-use Ignite\Inventory\Entities\InventoryBatch;
-use Ignite\Inventory\Entities\InventoryInvoice;
+use Dervis\Modules\Finance\Entities\FinanceAccountGroup;
+use Dervis\Modules\Finance\Entities\FinanceAccountType;
+use Dervis\Modules\Finance\Entities\FinanceGlAccounts;
+use Dervis\Modules\Finance\Entities\PettyCash;
+use Dervis\Modules\Finance\Entities\PettyCashUpdates;
+use Dervis\Modules\Finance\Entities\Bank;
+use Dervis\Modules\Finance\Entities\BankAccount;
+use Dervis\Modules\Finance\Entities\Banking;
+use Dervis\Modules\Finance\Entities\BankingCheque;
+use Dervis\Modules\Finance\Entities\FinanceInvoicePayment;
+use Dervis\Modules\Inventory\Entities\InventoryBatch;
+use Dervis\Modules\Inventory\Entities\InventoryInvoice;
+use Dervis\Modules\Finance\Entities\InsuranceInvoice;
+use Dervis\Modules\Finance\Entities\Dispatch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Description of FinanceFunctions
@@ -190,8 +193,9 @@ class FinanceFunctions {
             self::update_grn_payment_status($pay->grn);
         } elseif (isset($request->invoice_id)) {
             $pay->invoice = $request->invoice_id;
+            $pay->grn = $request->inv_grn;
             $pay->save();
-            self::update_invoice_payment_status($pay->invoice);
+            self::update_invoice_payment_status($request);
         }
 
         if ($request->payment_mode == 'account') {
@@ -209,10 +213,46 @@ class FinanceFunctions {
         return $delivery->update();
     }
 
-    public static function update_invoice_payment_status($inv) {
-        $invoice = InventoryInvoice::find($inv);
-        $invoice->status = 'paid';
+    public static function update_invoice_payment_status($request) {
+        //update grn payment status
+        $delivery = InventoryBatch::find($request->inv_grn);
+        $paid = $request->paid_amount + $request->amount;
+        if (ceil($request->grn_amount) <= $paid) {
+            $delivery->payment_status = 1; //fully paid
+        } elseif ($request->grn_amount > $paid) {
+            $delivery->payment_status = 2; //partially paid
+        }
+        $delivery->update();
+        //update invoice payment status
+        $invoice = InventoryInvoice::find($request->invoice_id);
+        if ($request->inv_amount <= $paid) {
+            $invoice->status = 'paid';
+        } elseif ($request->inv_amount >= $paid) {
+            $invoice->status = 'partially paid';
+        }
         return $invoice->update();
+    }
+
+    public static function dispatchBills(Request $request) {
+        DB::beginTransaction();
+        try {
+            foreach ($request->bill as $index => $invoice) {
+                $inv = InsuranceInvoice::find($invoice);
+                $inv->status = 1;
+                $inv->save();
+
+                $dispatch = new Dispatch();
+                $dispatch->insurance_invoice = $invoice;
+                $dispatch->user = \Auth::user()->id;
+                $dispatch->amount = $request->amount[$index];
+                $dispatch->save();
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            flash()->warning("Select at least one bill to proceed... thank you");
+        }//Catch
     }
 
 }

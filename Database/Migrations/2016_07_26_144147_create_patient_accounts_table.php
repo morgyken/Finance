@@ -34,7 +34,7 @@ class CreatePatientAccountsTable extends Migration {
      * @return void
      */
     public function down() {
-        Schema::drop('finance_patient_accounts');
+        Schema::dropIfExists('finance_patient_accounts');
     }
 
 }

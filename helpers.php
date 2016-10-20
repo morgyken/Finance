@@ -10,8 +10,8 @@
  * =============================================================================
  */
 
-use Ignite\Finance\Entities\FinanceAccountGroup;
-use Ignite\Finance\Entities\FinanceAccountType;
+use Dervis\Modules\Finance\Entities\FinanceAccountGroup;
+use Dervis\Modules\Finance\Entities\FinanceAccountType;
 
 if (!function_exists('get_account_types')) {
 
