@@ -68,13 +68,13 @@ class EvaluationController extends AdminBaseController {
       break;
       }
       }
-      return view('finance::workbench')->with('data', $this->data);
+      return view('finance::workbench',['data'=>$this->data]);
       }
 
       public function insurance() {
       \Dervis\Helpers\FinancialFunctions::updateInvoice();
       $this->data['invoice'] = \Dervis\Modules\Finance\Entities\InsuranceInvoice::all();
-      return view('finance::insurance')->with('data', $this->data);
+      return view('finance::insurance',['data'=>$this->data]);
       }
      */
 
