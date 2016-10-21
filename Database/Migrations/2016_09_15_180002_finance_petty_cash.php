@@ -24,7 +24,7 @@ class FinancePettyCash extends Migration {
      * @return void
      */
     public function down() {
-        Schema::drop('finance_petty_cash');
+        Schema::dropIfExists('finance_petty_cash');
     }
 
 }

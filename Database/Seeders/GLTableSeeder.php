@@ -1,15 +1,5 @@
 <?php
 
-/*
- * =============================================================================
- *
- * Collabmed Solutions Ltd
- * Project: Collabmed Health Platform
- * Author: Samuel Okoth <sodhiambo@collabmed.com>
- *
- * =============================================================================
- */
-
 namespace Ignite\Finance\Database\Seeders;
 
 use Ignite\Finance\Entities\FinanceAccountGroup;

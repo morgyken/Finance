@@ -19,7 +19,6 @@
         <h3 class="box-title"></h3>
     </div>
     <div class="box-body">
-
         <div class="row">
             <div class="col-md-8">
                 <center>

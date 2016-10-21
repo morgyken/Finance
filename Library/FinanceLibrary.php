@@ -4,7 +4,7 @@
  * =============================================================================
  *
  * Collabmed Solutions Ltd
- * Project: iClinic
+ * Project: Collabmed Health Platform
  * Author: Samuel Okoth <sodhiambo@collabmed.com>
  *
  * =============================================================================
@@ -22,16 +22,20 @@ use Ignite\Finance\Entities\BankAccount;
 use Ignite\Finance\Entities\Banking;
 use Ignite\Finance\Entities\BankingCheque;
 use Ignite\Finance\Entities\FinanceInvoicePayment;
+use Ignite\Finance\Repositories\FinanceRepository;
 use Ignite\Inventory\Entities\InventoryBatch;
 use Ignite\Inventory\Entities\InventoryInvoice;
+use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Finance\Entities\Dispatch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Description of FinanceFunctions
  *
  * @author Samuel Dervis <samueldervis@gmail.com>
  */
-class FinanceFunctions {
+class FinanceLibrary implements FinanceRepository {
 
     /**
      * @param Request $request
@@ -190,8 +194,9 @@ class FinanceFunctions {
             self::update_grn_payment_status($pay->grn);
         } elseif (isset($request->invoice_id)) {
             $pay->invoice = $request->invoice_id;
+            $pay->grn = $request->inv_grn;
             $pay->save();
-            self::update_invoice_payment_status($pay->invoice);
+            self::update_invoice_payment_status($request);
         }
 
         if ($request->payment_mode == 'account') {
@@ -209,10 +214,46 @@ class FinanceFunctions {
         return $delivery->update();
     }
 
-    public static function update_invoice_payment_status($inv) {
-        $invoice = InventoryInvoice::find($inv);
-        $invoice->status = 'paid';
+    public static function update_invoice_payment_status($request) {
+        //update grn payment status
+        $delivery = InventoryBatch::find($request->inv_grn);
+        $paid = $request->paid_amount + $request->amount;
+        if (ceil($request->grn_amount) <= $paid) {
+            $delivery->payment_status = 1; //fully paid
+        } elseif ($request->grn_amount > $paid) {
+            $delivery->payment_status = 2; //partially paid
+        }
+        $delivery->update();
+        //update invoice payment status
+        $invoice = InventoryInvoice::find($request->invoice_id);
+        if ($request->inv_amount <= $paid) {
+            $invoice->status = 'paid';
+        } elseif ($request->inv_amount >= $paid) {
+            $invoice->status = 'partially paid';
+        }
         return $invoice->update();
+    }
+
+    public static function dispatchBills(Request $request) {
+        DB::beginTransaction();
+        try {
+            foreach ($request->bill as $index => $invoice) {
+                $inv = InsuranceInvoice::find($invoice);
+                $inv->status = 1;
+                $inv->save();
+
+                $dispatch = new Dispatch();
+                $dispatch->insurance_invoice = $invoice;
+                $dispatch->user = \Auth::user()->id;
+                $dispatch->amount = $request->amount[$index];
+                $dispatch->save();
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            flash()->warning("Select at least one bill to proceed... thank you");
+        }//Catch
     }
 
 }

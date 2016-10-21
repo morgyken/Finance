@@ -1,17 +1,8 @@
 <?php
 
-/*
- * =============================================================================
- *
- * Collabmed Solutions Ltd
- * Project: Collabmed Health Platform
- * Author: Samuel Okoth <sodhiambo@collabmed.com>
- *
- * =============================================================================
- */
-
 namespace Ignite\Finance\Http\Controllers;
 
+use Ignite\Core\Http\Controllers\AdminBaseController;
 use Ignite\Finance\Entities\FinanceAccountGroup;
 use Ignite\Finance\Entities\FinanceAccountType;
 use Ignite\Finance\Entities\FinanceGlAccounts;
@@ -20,19 +11,16 @@ use Ignite\Finance\Entities\BankAccount;
 use Ignite\Finance\Entities\Banking;
 use Ignite\Finance\Entities\PettyCash;
 use Ignite\Finance\Entities\PettyCashUpdates;
-use Ignite\Finance\Library\FinanceFunctions;
-use Nwidart\Modules\Routing\Controller;
 use Ignite\Inventory\Entities\InventoryBatchPurchases;
 use Ignite\Inventory\Entities\InventoryBatch;
 use Ignite\Finance\Entities\FinanceInvoicePayment;
 use Illuminate\Http\Request;
+use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Inventory\Entities\InventoryDispensing;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
+use Ignite\Finance\Entities\InsuranceInvoicePayment;
 
-class GlController extends Controller {
-
-    /**
-     * @var array
-     */
-    protected $data = [];
+class GlController extends AdminBaseController {
 
     /**
      * @var Request
@@ -40,6 +28,7 @@ class GlController extends Controller {
     protected $request;
 
     public function __construct(Request $request) {
+        parent::__construct();
         $this->request = $request;
     }
 
@@ -51,7 +40,7 @@ class GlController extends Controller {
         }
         $this->data['groups'] = FinanceAccountGroup::all();
         $this->data['group'] = FinanceAccountGroup::findOrNew($id);
-        return view('finance::gl.account_groups')->with('data', $this->data);
+        return view('finance::gl.account_groups', ['data' => $this->data]);
     }
 
     public function account_types($id = null) {
@@ -62,7 +51,7 @@ class GlController extends Controller {
         }
         $this->data['groups'] = FinanceAccountType::all();
         $this->data['group'] = FinanceAccountType::findOrNew($id);
-        return view('finance::gl.account_types')->with('data', $this->data);
+        return view('finance::gl.account_types', ['data' => $this->data]);
     }
 
     public function accounts($id = null) {
@@ -73,7 +62,7 @@ class GlController extends Controller {
         }
         $this->data['groups'] = FinanceGlAccounts::all();
         $this->data['group'] = FinanceGlAccounts::findOrNew($id);
-        return view('finance::gl.accounts')->with('data', $this->data);
+        return view('finance::gl.accounts', ['data' => $this->data]);
     }
 
     public function bank() {
@@ -84,7 +73,7 @@ class GlController extends Controller {
             }
         }
         $this->data['banks'] = Bank::all();
-        return view('finance::banks')->with('data', $this->data);
+        return view('finance::banks', ['data' => $this->data]);
     }
 
     public function bankEdit($id) {
@@ -94,10 +83,10 @@ class GlController extends Controller {
         if ($this->request->isMethod('post')) {
             if (FinanceFunctions::update_bank($this->request)) {
                 flash('Bank update saved');
-                return view('finance::banks')->with('data', $this->data);
+                return view('finance::banks', ['data' => $this->data]);
             }
         }
-        return view('finance::banks')->with('data', $this->data);
+        return view('finance::banks', ['data' => $this->data]);
     }
 
     public function bankDelete($id) {
@@ -106,7 +95,7 @@ class GlController extends Controller {
             flash('Bank deleted...');
         }
         $this->data['banks'] = Bank::all();
-        return view('finance::banks')->with('data', $this->data);
+        return view('finance::banks', ['data' => $this->data]);
     }
 
     public function bankAccount() {
@@ -118,7 +107,7 @@ class GlController extends Controller {
         }
         $this->data['accounts'] = BankAccount::all();
         $this->data['banks'] = Bank::all();
-        return view('finance::bank_account')->with('data', $this->data);
+        return view('finance::bank_account', ['data' => $this->data]);
     }
 
     public function bankAccountEdit($id) {
@@ -132,7 +121,7 @@ class GlController extends Controller {
         $this->data['account'] = BankAccount::find($id);
         $this->data['accounts'] = BankAccount::all();
         $this->data['banks'] = Bank::all();
-        return view('finance::bank_account')->with('data', $this->data);
+        return view('finance::bank_account', ['data' => $this->data]);
     }
 
     public function bankAccountDelete($id) {
@@ -143,7 +132,7 @@ class GlController extends Controller {
         $this->data['account'] = BankAccount::find($id);
         $this->data['accounts'] = BankAccount::all();
         $this->data['banks'] = Bank::all();
-        return view('finance::bank_account')->with('data', $this->data);
+        return view('finance::bank_account', ['data' => $this->data]);
     }
 
     public function banking() {
@@ -156,7 +145,7 @@ class GlController extends Controller {
         $this->data['bankings'] = Banking::all();
         $this->data['banks'] = Bank::all();
         $this->data['accounts'] = BankAccount::all();
-        return view('finance::banking')->with('data', $this->data);
+        return view('finance::banking', ['data' => $this->data]);
     }
 
     public function banking_trash($id) {
@@ -167,7 +156,7 @@ class GlController extends Controller {
         $this->data['bankings'] = Banking::all();
         $this->data['banks'] = Bank::all();
         $this->data['accounts'] = BankAccount::all();
-        return view('finance::banking')->with('data', $this->data);
+        return view('finance::banking', ['data' => $this->data]);
     }
 
     public function pettyCash() {
@@ -179,7 +168,7 @@ class GlController extends Controller {
         }
         $this->data['petty'] = PettyCash::first();
         $this->data['petty_updates'] = PettyCashUpdates::all();
-        return view('finance::petty_cash')->with('data', $this->data);
+        return view('finance::petty_cash', ['data' => $this->data]);
     }
 
     public function payment() {
@@ -200,11 +189,75 @@ class GlController extends Controller {
     public function payments() {
         if (isset($this->request->id)) {
             $this->data['pay'] = FinanceInvoicePayment::find($this->request->id);
-            return view('finance::gl.payment_details')->with('data', $this->data);
+            return view('finance::gl.payment_details', ['data' => $this->data]);
         } else {
             $this->data['pay'] = FinanceInvoicePayment::all();
-            return view('finance::payments')->with('data', $this->data);
+            return view('finance::payments', ['data' => $this->data]);
         }
+    }
+
+    public function dispatchbills() {
+        $this->data['insurance_invoices'] = InsuranceInvoice::all();
+        //dd($this->request);
+        if ($this->request->isMethod('post')) {
+            if (FinanceFunctions::dispatchBills($this->request)) {
+                flash('Bills dispatched');
+                return redirect()->route('finance.billing');
+            }
+        }
+        return redirect()->back();
+    }
+
+    public function cancelBill() {
+        $bill = InsuranceInvoice::find($this->request->id);
+        $bill->status = 3; //cancelled
+        $bill->save();
+        flash('Bill cancelled successfully...');
+        return redirect()->back();
+    }
+
+    public function payBill() {
+        $this->data['bill'] = InsuranceInvoice::find($this->request->id);
+        $batch_sale = InventoryBatchProductSales::where('receipt', '=', $this->data['bill']->invoice_no)->first();
+        $batch = $batch_sale->id;
+        $sold = InventoryDispensing::where('batch', '=', $batch)->get();
+        $amnt = 0;
+        foreach ($sold as $s) {
+            $price = $s->price * $s->quantity;
+            $amnt += $price;
+        }
+        $this->data['amnt'] = $amnt;
+        return view("finance::paybill", ['data' => $this->data]);
+    }
+
+    public function savePayBill() {
+        $bill = InsuranceInvoice::find($this->request->id);
+        $bill->status = 2; //cancelled
+        $bill->save();
+
+        $sale = InventoryBatchProductSales::where('receipt', '=', $bill->invoice_no)->first();
+        $sale->paid = TRUE;
+        $sale->save();
+
+        $payment = new InsuranceInvoicePayment();
+        $payment->insurance_invoice = $this->request->id;
+        $payment->user = \Auth::user()->id;
+        $payment->amount = $this->request->amount;
+        $payment->mode = $this->request->mode;
+        $payment->save();
+        flash('Payment saved successfully...');
+        return redirect()->back();
+    }
+
+    public function print_bill(Request $request) {
+        $bill = InsuranceInvoice::findOrFail($request->id);
+        $batch_sale = InventoryBatchProductSales::where('receipt', '=', $bill->invoice_no)->first();
+        $batch = $batch_sale->id;
+        $sold = InventoryDispensing::where('batch', '=', $batch)->get();
+
+        $pdf = \PDF::loadView('finance::prints.bill', ['bill' => $bill, 'sold' => $sold]);
+        $pdf->setPaper('a4', 'Landscape');
+        return $pdf->stream('Bill' . $request->id . '.pdf');
     }
 
 }

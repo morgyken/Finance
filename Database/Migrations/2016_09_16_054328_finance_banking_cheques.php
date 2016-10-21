@@ -32,7 +32,7 @@ class FinanceBankingCheques extends Migration {
      * @return void
      */
     public function down() {
-        Schema::drop('finance_banking_cheques');
+        Schema::dropIfExists('finance_banking_cheques');
     }
 
 }

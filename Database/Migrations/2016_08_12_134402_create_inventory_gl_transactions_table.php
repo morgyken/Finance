@@ -29,7 +29,7 @@ class CreateInventoryGlTransactionsTable extends Migration {
      * @return void
      */
     public function down() {
-        Schema::drop('finance_gl_transactions');
+        Schema::dropIfExists('finance_gl_transactions');
     }
 
 }

@@ -25,7 +25,7 @@ class CreateInventoryAccountTypesTable extends Migration {
      * @return void
      */
     public function down() {
-        Schema::drop('finance_gl_account_types');
+        Schema::dropIfExists('finance_gl_account_types');
     }
 
 }

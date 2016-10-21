@@ -29,7 +29,7 @@ class CreateInventoryAccountGroupsTable extends Migration {
      * @return void
      */
     public function down() {
-        Schema::drop('finance_gl_account_groups');
+        Schema::dropIfExists('finance_gl_account_groups');
     }
 
 }

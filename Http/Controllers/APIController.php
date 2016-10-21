@@ -4,11 +4,10 @@ namespace Ignite\Finance\Http\Controllers;
 
 use Ignite\Finance\Entities\PettyCash;
 use Ignite\Finance\Entities\BankAccount;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
 
-class APIController extends Controller {
+class APIController extends \Illuminate\Routing\Controller {
 
     protected $request;
 
@@ -19,6 +18,10 @@ class APIController extends Controller {
     public function bankAccounts(Request $request) {
         $bank_accounts = BankAccount::where('bank', '=', $request->bank)->pluck('number', 'id');
         return Response::json($bank_accounts);
+    }
+
+    public function cancelBill() {
+
     }
 
     public function checkBogusWidthrawal() {
