@@ -55,31 +55,8 @@ class EvaluationController extends AdminBaseController {
         return view('finance::evaluation.account', ['data' => $this->data]);
     }
 
-    /*
-      public function workbench($view = null) {
-      $this->data['insurance'] = $this->data['cash'] = collect();
-      if (!empty($view)) {
-      switch ($view) {
-      case 'insurance':
-      $this->data['insurance'] = \Dervis\Modules\Finance\Entities\InsuranceInvoice::all();
-      break;
-      case 'cash':
-      $this->data['cash'] = \Dervis\Modules\Finance\Entities\PatientPayments::all();
-      break;
-      }
-      }
-      return view('finance::workbench',['data'=>$this->data]);
-      }
-
-      public function insurance() {
-      \Dervis\Helpers\FinancialFunctions::updateInvoice();
-      $this->data['invoice'] = \Dervis\Modules\Finance\Entities\InsuranceInvoice::all();
-      return view('finance::insurance',['data'=>$this->data]);
-      }
-     */
-
     public function insurance() {
-        $this->data['all'] = Visit::wherePaymentMode('insurance');
+        $this->data['all'] = Visit::wherePaymentMode('insurance')->get();
         return view('finance::evaluation.workbench', ['data' => $this->data]);
     }
 
