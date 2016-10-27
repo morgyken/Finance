@@ -19,6 +19,7 @@ use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Inventory\Entities\InventoryDispensing;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Finance\Entities\InsuranceInvoicePayment;
+use Ignite\Finance\Repositories\FinanceRepository;
 
 class GlController extends AdminBaseController {
 
@@ -27,14 +28,20 @@ class GlController extends AdminBaseController {
      */
     protected $request;
 
-    public function __construct(Request $request) {
+    /**
+     * @var financeRepository
+     */
+    protected $financeRepository;
+
+    public function __construct(Request $request, FinanceRepository $financeRepository) {
         parent::__construct();
         $this->request = $request;
+        $this->financeRepository = $financeRepository;
     }
 
     public function account_groups($id = null) {
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::add_gl_group($this->request, $id)) {
+            if ($this->financeRepository->add_gl_group($this->request, $id)) {
                 return redirect()->route('finance.gl.account_groups')->with('success', 'Account group saved');
             }
         }
@@ -45,7 +52,7 @@ class GlController extends AdminBaseController {
 
     public function account_types($id = null) {
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::add_gl_account_types($this->request, $id)) {
+            if ($this->financeRepository->add_gl_account_types($this->request, $id)) {
                 return redirect()->route('finance.gl.account_types')->with('success', 'Account type saved');
             }
         }
@@ -56,7 +63,7 @@ class GlController extends AdminBaseController {
 
     public function accounts($id = null) {
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::add_gl_accounts($this->request, $id)) {
+            if ($this->financeRepository->add_gl_accounts($this->request, $id)) {
                 return redirect()->route('finance.gl.accounts')->with('success', 'GL Account saved');
             }
         }
@@ -67,7 +74,7 @@ class GlController extends AdminBaseController {
 
     public function bank() {
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::update_bank($this->request)) {
+            if ($this->financeRepository->update_bank($this->request)) {
                 flash('Bank update saved');
                 return redirect()->route('finance.gl.banks');
             }
@@ -81,7 +88,7 @@ class GlController extends AdminBaseController {
         $this->data['banks'] = Bank::all();
         $this->data['editMode'] = 1;
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::update_bank($this->request)) {
+            if ($this->financeRepository->update_bank($this->request)) {
                 flash('Bank update saved');
                 return view('finance::banks', ['data' => $this->data]);
             }
@@ -100,7 +107,7 @@ class GlController extends AdminBaseController {
 
     public function bankAccount() {
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::update_bank_account($this->request)) {
+            if ($this->financeRepository->update_bank_account($this->request)) {
                 flash('Bank account update saved');
                 return redirect()->route('finance.gl.bank.accounts');
             }
@@ -112,7 +119,7 @@ class GlController extends AdminBaseController {
 
     public function bankAccountEdit($id) {
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::edit_baccount($this->request, $id)) {
+            if ($this->financeRepository->edit_baccount($this->request, $id)) {
                 flash('Bank account update saved');
                 return redirect()->route('finance.gl.bank.accounts');
             }
@@ -137,7 +144,7 @@ class GlController extends AdminBaseController {
 
     public function banking() {
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::update_banking($this->request)) {
+            if ($this->financeRepository->update_banking($this->request)) {
                 flash('Banking update saved');
                 return redirect()->route('finance.gl.banking');
             }
@@ -161,7 +168,7 @@ class GlController extends AdminBaseController {
 
     public function pettyCash() {
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::update_petty_cash($this->request)) {
+            if ($this->financeRepository->update_petty_cash($this->request)) {
                 flash('Pettycash update saved');
                 return redirect()->route('finance.gl.pettycash');
             }
@@ -178,7 +185,7 @@ class GlController extends AdminBaseController {
         $purchases = InventoryBatchPurchases::query();
         $this->data['items'] = $purchases->where('batch', '=', $this->request->id)->get();
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::save_payment($this->request)) {
+            if ($this->financeRepository->save_payment($this->request)) {
                 flash('Payment saved');
                 return \Redirect::back();
             }
@@ -200,7 +207,7 @@ class GlController extends AdminBaseController {
         $this->data['insurance_invoices'] = InsuranceInvoice::all();
         //dd($this->request);
         if ($this->request->isMethod('post')) {
-            if (FinanceFunctions::dispatchBills($this->request)) {
+            if ($this->financeRepository->dispatchBills($this->request)) {
                 flash('Bills dispatched');
                 return redirect()->route('finance.billing');
             }

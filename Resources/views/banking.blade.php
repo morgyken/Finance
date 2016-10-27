@@ -177,7 +177,7 @@
                 //check bogus widthraw
                 $.ajax({
                     type: 'get',
-                    url: "{{route('finance.ajax.widthraw.bogus')}}",
+                    url: "{{route('api.finance.widthraw.bogus')}}",
                     data: {amount: amount, type: type, account_type: account_type, account_id: account_id},
                     success: function (response) {
                         $('#response').html(response);
@@ -192,7 +192,7 @@
             var options = "";
 
             $.ajax({
-                url: "{{route('finance.ajax.accounts')}}",
+                url: "{{route('api.finance.accounts')}}",
                 data: {'bank': that},
                 success: function (data) {
                     $.each(data, function (key, value) {

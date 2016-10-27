@@ -31,15 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InsuranceInvoice extends Model {
 
-    public $fillable = ['payment'];
-    public $incrementing = false;
+    protected $fillable = [];
     public $table = 'finance_insurance_invoices';
-
-    /*
-      public function payments() {
-      return $this->hasOne(PatientPayments::class, 'payment_id', 'payment');
-      }
-     */
 
     public function sales() {
         return $this->belongsTo(InventoryBatchProductSales::class, 'receipt', 'id');
