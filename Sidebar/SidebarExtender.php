@@ -74,37 +74,6 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     });
                 });
 
-                /*
-                 * @todo  Add support for insurance
-                 */
-                /* $item->item('Insurance', function (Item $item) {
-                  $item->icon('fa fa-institution');
-                  $item->route('finance.insurance');
-                  });
-                  $item->item('Deposits', function (Item $item) {
-                  $item->icon('fa fa-gbp');
-                  $item->route('finance.deposits');
-                  }); */
-            });
-            $group->item('General Ledger', function (Item $item) {
-                $item->weight(5);
-                $item->icon('fa fa-credit-card-alt');
-                $item->authorize($this->auth->hasAccess('finance.General Ledger.Access GL Menu'));
-                $item->item('Account Types', function(Item $item) {
-                    $item->icon('fa fa-industry');
-                    $item->route('finance.gl.account_types');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Account Types'));
-                });
-                $item->item('Account Groups', function(Item $item) {
-                    $item->icon('fa fa-toggle-up');
-                    $item->route('finance.gl.account_groups');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Account Groups'));
-                });
-                $item->item('Accounts', function(Item $item) {
-                    $item->icon('fa fa-spoon');
-                    $item->route('finance.gl.accounts');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage GL Accounts'));
-                });
 
 
                 $item->item('Banking', function(Item $item) {
@@ -136,6 +105,38 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->icon('fa fa-money');
                     $item->route('finance.gl.inv.payments');
                     $item->authorize($this->auth->hasAccess('finance.General Ledger.View Invoice Payments'));
+                });
+
+                /*
+                 * @todo  Add support for insurance
+                 */
+                /* $item->item('Insurance', function (Item $item) {
+                  $item->icon('fa fa-institution');
+                  $item->route('finance.insurance');
+                  });
+                  $item->item('Deposits', function (Item $item) {
+                  $item->icon('fa fa-gbp');
+                  $item->route('finance.deposits');
+                  }); */
+            });
+            $group->item('General Ledger', function (Item $item) {
+                $item->weight(5);
+                $item->icon('fa fa-credit-card-alt');
+                $item->authorize($this->auth->hasAccess('finance.General Ledger.Access GL Menu'));
+                $item->item('Account Types', function(Item $item) {
+                    $item->icon('fa fa-industry');
+                    $item->route('finance.gl.account_types');
+                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Account Types'));
+                });
+                $item->item('Account Groups', function(Item $item) {
+                    $item->icon('fa fa-toggle-up');
+                    $item->route('finance.gl.account_groups');
+                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Account Groups'));
+                });
+                $item->item('Accounts', function(Item $item) {
+                    $item->icon('fa fa-spoon');
+                    $item->route('finance.gl.accounts');
+                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage GL Accounts'));
                 });
             });
         });
