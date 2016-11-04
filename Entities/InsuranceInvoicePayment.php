@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Ignite\Finance\Entities\InsuranceInvoicePayment
  *
+ * @property integer $id
+ * @property integer $insurance_invoice
+ * @property integer $user
+ * @property float $amount
+ * @property string $mode
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereInsuranceInvoice($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereUser($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereMode($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class InsuranceInvoicePayment extends Model {
