@@ -30,12 +30,18 @@ $count = 0;
                         <?php $t = $n = 0; ?>
                         @foreach($data['insurance_invoices'] as $bill)
                         <?php $amount = 0; ?>
-                        @foreach($bill->sales->goodies as $sale)
-                        <?php
-                        $amount+=($sale->price * $sale->quantity);
+                        <?php if (isset($bill->sales->goodies)) { ?>
+                            @foreach($bill->sales->goodies as $sale)
+                            <?php
+                            $amount+=($sale->price * $sale->quantity);
+                            ?>
+                            @endforeach
+                            <?php
+                            $t +=$amount;
+                        } else {
+                            $amount += $bill->payment;
+                        }
                         ?>
-                        @endforeach
-                        <?php $t +=$amount; ?>
                         <tr>
                             <td>{{$n+=1}}</td>
                             <td>
@@ -43,8 +49,8 @@ $count = 0;
                             </td>
                             <td>{{$bill->invoice_no}}</td>
                             <td>
-                                {{$bill->sales->insuranceses->clients->first_name}}
-                                {{$bill->sales->insuranceses->clients->last_name}}
+                                {{@$bill->sales->insuranceses->clients->first_name}}
+                                {{@$bill->sales->insuranceses->clients->last_name}}
                             </td>
                             <td>{{$bill->invoice_date}}</td>
                             <td>
@@ -65,8 +71,8 @@ $count = 0;
                                 @endif
                             </td>
                             <td>
-                                {{$bill->sales->insuranceses->companies->name}}:
-                                {{$bill->sales->insuranceses->schemes->name}}
+                                {{@$bill->sales->insuranceses->companies->name}}:
+                                {{@$bill->sales->insuranceses->schemes->name}}
                             </td>
                             <td>
                                 <a target="blank" href="{{route('finance.bill.print', $bill->id)}}"> <i class="fa fa-print"></i></a>
