@@ -40,4 +40,9 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('summary', ['as' => 'summary', 'uses' => 'EvaluationController@summary']);
     $router->get('insurance', ['as' => 'insurance', 'uses' => 'EvaluationController@insurance']);
     $router->get('cash_bills', ['as' => 'cash_bills', 'uses' => 'EvaluationController@cash_bills']);
+
+    $router->get('bill/{id}', ['as' => 'bill', 'uses' => 'EvaluationController@bill']);
+    $router->get('cancel/{id}', ['as' => 'cancel', 'uses' => 'EvaluationController@cancelBill']);
+    $router->post('dispatch', ['as' => 'dispatch', 'uses' => 'EvaluationController@dispatchBill']);
+    $router->post('payment', ['as' => 'dispatch', 'uses' => 'EvaluationController@dispatchBill']);
 });

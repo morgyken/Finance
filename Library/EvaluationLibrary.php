@@ -23,6 +23,8 @@ use Ignite\Finance\Repositories\EvaluationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Ignite\Evaluation\Entities\Visit;
+use Ignite\Finance\Entities\Dispatch;
 
 /**
  * Description of EvaluationFinanceFunctions
@@ -153,6 +155,42 @@ class EvaluationLibrary implements EvaluationRepository {
             }
         }
         return $stack;
+    }
+
+    public function bill_visit(Request $request) {
+        return $this->updateVisitStatus($request->id, 'billed');
+    }
+
+    public function cancel_visit_bill(Request $request) {
+        return $this->updateVisitStatus($request->id, 'canceled');
+    }
+
+    public static function dispatchBills(Request $request) {
+        DB::beginTransaction();
+        try {
+            foreach ($request->visit as $index => $visit) {
+                $v = Visit::find($visit);
+                $v->status = 'dispatched';
+                $v->save();
+
+                $dispatch = new Dispatch();
+                $dispatch->visit = $visit;
+                $dispatch->user = \Auth::user()->id;
+                $dispatch->amount = $request->amount[$index];
+                $dispatch->save();
+            }
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollback();
+            flash()->warning("Select at least one bill to proceed... thank you");
+        }//Catch
+    }
+
+    public function updateVisitStatus($visit_id, $new_status) {
+        $visit = Visit::find($visit_id);
+        $visit->status = $new_status;
+        return $visit->save();
     }
 
 }
