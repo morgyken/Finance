@@ -13,13 +13,20 @@ class BillDispatches extends Migration {
     public function up() {
         Schema::create('finance_bill_dispatches', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('insurance_invoice')->unsigned();
+            $table->integer('insurance_invoice')->nullable()->unsigned();
+            $table->integer('visit')->nullable()->unsigned();
             $table->integer('user')->unsigned();
             $table->decimal('amount', 10, 2);
             $table->timestamps();
+
             $table->foreign('user')->references('id')->on('users')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
+
+            $table->foreign('visit')->references('id')->on('evaluation_visits')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
+
             $table->foreign('insurance_invoice')->references('id')->on('finance_insurance_invoices')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
