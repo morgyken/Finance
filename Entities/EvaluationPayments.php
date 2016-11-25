@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $receipt
  * @property integer $patient
  * @property integer $user
+ * @property float $amount
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read mixed $total
@@ -28,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereReceipt($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments wherePatient($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereUser($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereAmount($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereUpdatedAt($value)
  * @mixin \Eloquent
