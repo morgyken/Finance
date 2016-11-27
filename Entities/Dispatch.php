@@ -25,4 +25,8 @@ class Dispatch extends Model {
 
     protected $table = 'finance_bill_dispatches';
 
+    public function invoice() {
+        return $this->belongsTo(InsuranceInvoice::class, 'insurance_invoice', 'id');
+    }
+
 }

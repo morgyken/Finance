@@ -8,6 +8,8 @@ use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Reception\Entities\Patients;
+use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Finance\Entities\Dispatch;
 use Illuminate\Http\Request;
 
 class EvaluationController extends AdminBaseController {
@@ -57,32 +59,59 @@ class EvaluationController extends AdminBaseController {
     }
 
     public function insurance() {
-        $this->data['all'] = Visit::wherePaymentMode('insurance')->get();
+        $this->data['bill_mode'] = 1;
+        $this->data['billed'] = InsuranceInvoice::where('visit', '>', 0)
+                ->get();
+        return view('finance::evaluation.partials.billed', ['data' => $this->data]);
+    }
 
+    public function pendingBills() {
+        $this->data['pending_mode'] = 1;
         $this->data['pending'] = Visit::wherePaymentMode('insurance')
                 ->whereNull('status')
                 ->get();
+        return view('finance::evaluation.partials.pending', ['data' => $this->data]);
+    }
 
-        $this->data['billed'] = Visit::wherePaymentMode('insurance')
-                ->whereStatus('billed')
+    public function billedBills() {
+        $this->data['bill_mode'] = 1;
+        $this->data['billed'] = InsuranceInvoice::where('visit', '>', 0)
                 ->get();
+        return view('finance::evaluation.partials.billed', ['data' => $this->data]);
+    }
 
+    public function dispatchedInvoices() {
+        $this->data['dispatch_mode'] = 1;
+        $this->data['dispatched'] = Dispatch::all();
+        return view('finance::evaluation.partials.dispatched', ['data' => $this->data]);
+    }
+
+    public function cancelledBills() {
+        $this->data['cancel_mode'] = 1;
         $this->data['canceled'] = Visit::wherePaymentMode('insurance')
                         ->whereStatus('canceled')->get();
+        return view('finance::evaluation.partials.cancelled', ['data' => $this->data]);
+    }
 
-        $this->data['dispatched'] = Visit::wherePaymentMode('insurance')
-                ->whereStatus('dispatched')
+    public function companyInvoicePayment() {
+        $this->data['payment_mode'] = 1;
+        $this->data['billed'] = InsuranceInvoice::where('visit', '>', 0)
                 ->get();
+        return view('finance::evaluation.partials.payment', ['data' => $this->data]);
+    }
 
-        $this->data['unpaid'] = Visit::wherePaymentMode('insurance')
-                ->where('status', '==', 'dispatched')
+    public function paidInvoices() {
+        $this->data['paid_mode'] = 1;
+        $this->data['partpaid'] = InsuranceInvoice::where('visit', '>', 0)
+                ->whereStatus(2)
                 ->get();
-
-        $this->data['paid'] = Visit::wherePaymentMode('insurance')
-                ->whereStatus('paid')
+        $this->data['paid'] = InsuranceInvoice::where('visit', '>', 0)
+                ->whereStatus(3)
                 ->get();
-
-        return view('finance::evaluation.workbench', ['data' => $this->data]);
+        $this->data['overpaid'] = InsuranceInvoice::where('visit', '>', 0)
+                ->whereStatus(4)
+                ->get();
+        return view('finance::evaluation.partials.paid', ['data' => $this->data]);
     }
 
     public function bill(Request $request) {
@@ -91,6 +120,16 @@ class EvaluationController extends AdminBaseController {
             return back();
         } else {
             flash('Bill could not be placed, thank you');
+            return back();
+        }
+    }
+
+    public function billMany(Request $request) {
+        if ($this->evaluationRepository->bill_visit_many($request)) {
+            flash('Bills placed, thank you');
+            return back();
+        } else {
+            flash('Bills could not be placed, please try again');
             return back();
         }
     }
@@ -118,6 +157,28 @@ class EvaluationController extends AdminBaseController {
     public function summary() {
         $this->data['all'] = EvaluationPayments::all();
         return view('finance::evaluation.summary', ['data' => $this->data]);
+    }
+
+    public function payInsBill(Request $request) {
+        $this->data['visit'] = Visit::find($request->visit);
+        return view('finance::evaluation.pay_ins_bill', ['data' => $this->data]);
+    }
+
+    public function saveInsuranceInvoicePayments(Request $request) {
+        if (isset($request->company)) {
+            $this->evaluationRepository->record_insurance_payment();
+            return back();
+        } else {
+            flash()->error('Select an insurance company to continue');
+            return back();
+        }
+    }
+
+    public function insurancePayment(Request $request) {
+        $this->data['invoices'] = InsuranceInvoice::where('visit', '>', 0)
+                ->whereStatus(1)
+                ->get();
+        return view('finance::evaluation.insurance_payment', ['data' => $this->data]);
     }
 
     public function cash_bills() {

@@ -249,7 +249,7 @@ class FinanceLibrary implements FinanceRepository {
                 $dispatch->save();
             }
             DB::commit();
-            return true;
+            //return true;
         } catch (\Exception $e) {
             DB::rollback();
             flash()->warning("Select at least one bill to proceed... thank you");

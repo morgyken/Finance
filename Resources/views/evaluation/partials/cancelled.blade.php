@@ -1,6 +1,8 @@
-
+@extends('finance::evaluation.workbench')
+@section('tab')
+<?php extract($data); ?>
 @if(!$canceled->isEmpty())
-<table class="table table-stripped">
+<table class="table table-stripped cancel_table">
     <thead>
         <tr>
             <th>#</th>
@@ -12,7 +14,7 @@
             <th>Action</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="response">
         @foreach($canceled as $visit)
         <tr>
             <td>{{$visit->id}}</td>
@@ -30,3 +32,4 @@
 <br>
 <p>No canceled insurance bills</p>
 @endif
+@endsection

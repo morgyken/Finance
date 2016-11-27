@@ -17,7 +17,11 @@
     </ul>
 </div>
 @endif
+@if(isset($patient))
 {!! Form::hidden('patient',$patient->id) !!}
+@else
+{!! Form::hidden('patient',$visit->patients->id) !!}
+@endif
 <div class="accordion form-horizontal" id="someForm">
     <h4>Cash</h4>
     <div>
