@@ -124,11 +124,11 @@ class EvaluationLibrary implements EvaluationRepository {
         $bill = $inv->payment;
         if ($settled < $bill) {//partially paid (2)
             $inv->status = 2;
-        } elseif ($settled == $bill) {//fully (3)
+        } elseif ($settled > $bill) {//fully (3)
             $inv->status = 3;
-        } elseif ($settled > $bill) {// overpaid (4)
-            $inv->status = 4;
-        }
+        }/* elseif ($settled > $bill) {// overpaid (4)
+          $inv->status = 4;
+          } */
         $inv->save();
     }
 
@@ -290,7 +290,15 @@ class EvaluationLibrary implements EvaluationRepository {
     }
 
     public function cancel_visit_bill(Request $request) {
-        return $this->updateVisitStatus($request->id, 'canceled');
+        $inv = InsuranceInvoice::find($request->id);
+        $inv->status = 5;
+        return $inv->update();
+    }
+
+    public function undoBillCancel(Request $request) {
+        $inv = InsuranceInvoice::find($request->id);
+        $inv->status = 0;
+        return $inv->update();
     }
 
     public static function dispatchBills(Request $request) {

@@ -27,6 +27,7 @@ use Ignite\Inventory\Entities\InventoryBatch;
 use Ignite\Inventory\Entities\InventoryInvoice;
 use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Finance\Entities\Dispatch;
+use Ignite\Finance\Entities\DispatchDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -236,24 +237,29 @@ class FinanceLibrary implements FinanceRepository {
 
     public static function dispatchBills(Request $request) {
         DB::beginTransaction();
-        try {
-            foreach ($request->bill as $index => $invoice) {
-                $inv = InsuranceInvoice::find($invoice);
-                $inv->status = 1;
-                $inv->save();
+        // try {
+        $dispatch = new Dispatch();
+        $dispatch->firm = $request->company;
+        $dispatch->user = \Auth::user()->id;
+        $dispatch->save();
 
-                $dispatch = new Dispatch();
-                $dispatch->insurance_invoice = $invoice;
-                $dispatch->user = \Auth::user()->id;
-                $dispatch->amount = $request->amount[$index];
-                $dispatch->save();
-            }
-            DB::commit();
-            //return true;
-        } catch (\Exception $e) {
-            DB::rollback();
-            flash()->warning("Select at least one bill to proceed... thank you");
-        }//Catch
+        foreach ($request->bill as $index => $invoice) {
+            $inv = InsuranceInvoice::find($invoice);
+            $inv->status = 1;
+            $inv->save();
+
+            $dispatch_info = new DispatchDetails();
+            $dispatch_info->insurance_invoice = $inv->id;
+            $dispatch_info->dispatch = $dispatch->id;
+            $dispatch_info->amount = $request->amount[$index];
+            $dispatch_info->save();
+        }
+        DB::commit();
+        //return true;
+        //  } catch (\Exception $e) {
+        DB::rollback();
+        // flash()->warning("Select at least one bill to proceed... thank you");
+        //}//Catch
     }
 
 }

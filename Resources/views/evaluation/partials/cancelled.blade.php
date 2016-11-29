@@ -15,21 +15,21 @@
         </tr>
     </thead>
     <tbody class="response">
-        @foreach($canceled as $visit)
+        @foreach($canceled as $item)
         <tr>
-            <td>{{$visit->id}}</td>
-            <td>{{$visit->patients->full_name}}</td>
-            <td>{{(new Date($visit->created_at))->format('dS M y g:i a')}} - Clinic {{$visit->clinics->name}}</td>
-            <td>{{$visit->patient_scheme->schemes->companies->name}}</td>
-            <td>{{$visit->patient_scheme->schemes->name}}</td>
-            <td>{{$visit->unpaid_amount}}</td>
-            <td><a href="" class="btn btn-xs btn-primary"><i class="fa fa-undo"></i>Undo</a></td>
+            <td>{{$item->id}}</td>
+            <td>{{$item->visits->patients->full_name}}</td>
+            <td>{{(new Date($item->visits->created_at))->format('dS M y g:i a')}} - Clinic {{$item->visits->clinics->name}}</td>
+            <td>{{$item->visits->patient_scheme->schemes->companies->name}}</td>
+            <td>{{$item->visits->patient_scheme->schemes->name}}</td>
+            <td>{{$item->visits->unpaid_amount}}</td>
+            <td><a href="{{route('finance.evaluation.undo.cancel', $item->id)}}" class="btn btn-xs btn-primary"><i class="fa fa-undo"></i>Undo</a></td>
         </tr>
         @endforeach
     </tbody>
 </table>
 @else
 <br>
-<p>No canceled insurance bills</p>
+<p>No cancelled insurance bills</p>
 @endif
 @endsection

@@ -24,7 +24,7 @@
                 {{$item->invoice->visits->patient_scheme->schemes->companies->name}}::
                 {{$item->invoice->visits->patient_scheme->schemes->name}}
             </td>
-            <td>{{$item->invoice->payment}}</td>
+            <td>{{$item->amount}}</td>
             <td>
                 <a href="{{route('finance.evaluation.payment')}}" class="btn btn-xs btn-primary">
                     <i class="fa fa-money"></i> Receive Payment</a>

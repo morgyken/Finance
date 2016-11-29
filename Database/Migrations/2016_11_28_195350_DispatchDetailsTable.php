@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class InsuranceInvoicePayments extends Migration {
+class DispatchDetailsTable extends Migration {
 
     /**
      * Run the migrations.
@@ -11,21 +12,16 @@ class InsuranceInvoicePayments extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('finance_insurance_invoice_payments', function(Blueprint $table) {
+        Schema::create('finance_bill_dispatch_details', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('insurance_invoice')->unsigned();
-            $table->integer('user')->unsigned();
+            $table->integer('dispatch')->unsigned();
             $table->decimal('amount', 10, 2);
-            $table->integer('batch')->unsigned()->nullable();
-            $table->string('mode')->nullable();
             $table->timestamps();
-            $table->foreign('user')->references('id')->on('users')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
             $table->foreign('insurance_invoice')->references('id')->on('finance_insurance_invoices')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
-            $table->foreign('batch')->references('id')->on('finance_evaluation_insurance_payments')
+            $table->foreign('dispatch')->references('id')->on('finance_bill_dispatches')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
         });
@@ -37,7 +33,7 @@ class InsuranceInvoicePayments extends Migration {
      * @return void
      */
     public function down() {
-        Schema::dropIfExists('finance_insurance_invoice_payments');
+        Schema::dropIfExists('finance_bill_dispatch_details');
     }
 
 }

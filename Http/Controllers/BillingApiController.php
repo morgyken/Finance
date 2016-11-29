@@ -3,9 +3,10 @@
 namespace Ignite\Finance\Http\Controllers;
 
 use Ignite\Finance\Entities\InsuranceInvoice;
-use Ignite\Finance\Entities\Dispatch;
+use Ignite\Finance\Entities\DispatchDetails;
 use Illuminate\Http\Request;
 use Ignite\Evaluation\Entities\Visit;
+use Ignite\Finance\Entities\InsuranceInvoicePayment;
 
 class BillingApiController extends \Illuminate\Routing\Controller {
 
@@ -60,6 +61,9 @@ class BillingApiController extends \Illuminate\Routing\Controller {
             }
             //Billing
         } elseif ($mode == 'billing') {
+            ?>
+            <input type="hidden" name="company" value="<?php echo $this->request->firm ?>" >
+            <?php
             foreach ($billed as $item) {
                 ?>
                 <tr>
@@ -166,7 +170,7 @@ class BillingApiController extends \Illuminate\Routing\Controller {
             }
             //Disptched
         } elseif ($mode == 'dispatched') {
-            $dispatched = Dispatch::whereHas('invoice', function($query) {
+            $dispatched = DispatchDetails::whereHas('invoice', function($query) {
                         $query->whereHas('visits', function($query) {
                             $query->whereHas('patient_scheme', function($query) {
                                 $query->whereHas('schemes', function ($query) {
@@ -186,7 +190,7 @@ class BillingApiController extends \Illuminate\Routing\Controller {
                         <?php echo $item->invoice->visits->patient_scheme->schemes->companies->name ?>::
                         <?php echo $item->invoice->visits->patient_scheme->schemes->name ?>
                     </td>
-                    <td><?php echo $item->invoice->payment ?></td>
+                    <td><?php echo $item->amount ?></td>
                     <td>
                         <a href="<?php echo route('finance.evaluation.insurance.payment.specific', $item->id) ?>" class="btn btn-xs btn-primary">
                             <i class="fa fa-money"></i> Receive Payment</a>
@@ -246,7 +250,7 @@ class BillingApiController extends \Illuminate\Routing\Controller {
                 <tr>
                     <td><?php echo $item->visits->id ?></td>
                     <td><?php echo $item->visits->patients->full_name ?></td>
-                    <td><?php echo (new Date($item->created_at))->format('dS M y g:i a') ?></td>
+                    <td><?php echo (new \Date($item->created_at))->format('dS M y g:i a') ?></td>
                     <td><?php echo $item->visits->patient_scheme->schemes->companies->name ?></td>
                     <td><?php echo $item->visits->patient_scheme->schemes->name ?></td>
                     <td><?php echo $item->visits->unpaid_amount ?></td>
@@ -254,6 +258,74 @@ class BillingApiController extends \Illuminate\Routing\Controller {
                 </tr>
                 <?php
             }
+        } elseif ($mode == 'stmt_mode') {
+
+            $thirty = \Carbon\Carbon::now()->subWeeks(4);
+            $sixty = \Carbon\Carbon::now()->subWeeks(8);
+            $ninety = \Carbon\Carbon::now()->subWeeks(12);
+
+            $scurrent = 0;
+            $sthirty1_to_60 = 0;
+            $ssix1_to_90 = 0;
+            $sninety_plus = 0;
+            $sAMOUNT = 0;
+
+            $payment = InsuranceInvoicePayment::whereHas('invoice', function($query) {
+                        $query->whereHas('visits', function($query) {
+                            $query->whereHas('patient_scheme', function($query) {
+                                $query->whereHas('schemes', function ($query) {
+                                    $query->whereCompany($this->request->firm);
+                                });
+                            });
+                        });
+                    })->get();
+
+            foreach ($payment as $item) {
+                $sAMOUNT+=$item->amount;
+                if ($item->created_at >= $thirty) {
+                    $scurrent+=$item->amount;
+                } elseif ($item->created_at < $thirty && $item->created_at >= $sixty) {
+                    $sthirty1_to_60+=$item->amount;
+                } elseif ($item->created_at < $sixty && $item->created_at >= $ninety) {
+                    $ssix1_to_90 += $item->amount;
+                } else {
+                    $sninety_plus += $item->amount;
+                }
+                ?>
+                <tr>
+                    <td><?php echo $n+=1 ?></td>
+                    <td><?php echo $item->created_at ?></td>
+                    <td><?php echo $item->invoice->invoice_no ?></td>
+                    <td><?php echo $item->invoice->visits->patient_scheme->schemes->companies->name ?></td>
+                    <td><?php echo $item->invoice->visits->patient_scheme->schemes->name ?></td>
+                    <td><?php echo $item->invoice->visits->patients->full_name ?></td>
+                    <td style="text-align: center"><?php echo $item->amount ?>
+                        <i class="fa fa-sort-asc" style="color: green" aria-hidden="true"></i>
+                    </td>
+                </tr>
+                <?php
+            }
+            ?>
+            <tr>
+                <td colspan="7"><h3>Summary:</h3></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><strong>90+ Days Old</strong></td>
+                <td><strong>61-90 Days Old</strong></td>
+                <td><strong>31-60 Days Old</strong></td>
+                <td><strong>Current</strong></td>
+                <td><strong>Total</strong></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><?php echo$sninety_plus ?></td>
+                <td><?php echo$ssix1_to_90 ?></td>
+                <td><?php echo$sthirty1_to_60 ?></td>
+                <td><?php echo$scurrent ?></td>
+                <td colspan="2"><?php echo$sAMOUNT ?></td>
+            </tr>
+            <?php
         }//endif
     }
 

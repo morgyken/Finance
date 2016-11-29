@@ -30,7 +30,12 @@
                             <td>{{$item->visits->patient_scheme->schemes->companies->name}}</td>
                             <td>{{$item->visits->patient_scheme->schemes->name}}</td>
                             <td>{{$item->visits->unpaid_amount}}</td>
-                            <td></td>
+                            <td>
+                                <small>
+                                    <a href="{{route('finance.evaluation.ins.rcpt.print', $item->id)}}" class="btn btn-xs btn-primary">
+                                        <i class="fa fa-print"></i> Print Receipt</a>
+                                </small>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

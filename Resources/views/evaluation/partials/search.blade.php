@@ -15,20 +15,34 @@
                         </label>
                         <div class="col-md-5">
                             {!! Form::select('company',get_insurance_companies(), null, ['class' => 'form-control company', 'placeholder' => 'Choose...']) !!}
-                            <span class="help-block">Select an insurance company to dispatch or receive payment for invoices.</span>
+                            <span class="help-block">Select an insurance company for action.</span>
                         </div>
                     </div>
+                    @if($mode !=='stmt_mode')
                     <div class="form-group">
                         <label class="col-md-2 control-label">
-                            Period
+                            Patient
+                        </label>
+                        <div class="col-md-10">
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <input type='text' id="patient" class="form-control" placeholder="Patient Name" name='patient'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            Time Period
                         </label>
                         <div class="col-md-10">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <input type='text' placeholder="FROM (Date)" name='from'>
+                                    <input type='text' id="date1" placeholder="Date 1" name='date1'>
                                 </div>
                                 <div class="col-xs-4 col-md-3">
-                                    <input type='text' style="float: right" placeholder="TO (Date)" name='cheque_amount' id='cheque_amount'>
+                                    <input type='text' id="date2" style="float: right" placeholder="Date 2" name='date2' id='cheque_amount'>
                                 </div>
                             </div>
                         </div>

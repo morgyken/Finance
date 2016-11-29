@@ -56,6 +56,12 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('billed/invoices', ['as' => 'billed', 'uses' => 'EvaluationController@billedBills']);
     $router->get('dispatched/invoices', ['as' => 'dispatched', 'uses' => 'EvaluationController@dispatchedInvoices']);
     $router->get('cancelled', ['as' => 'cancelled', 'uses' => 'EvaluationController@cancelledBills']);
+    $router->get('cancell/undo/{id}', ['as' => 'undo.cancel', 'uses' => 'EvaluationController@undoBillCancel']);
     $router->get('payment', ['as' => 'payment', 'uses' => 'EvaluationController@companyInvoicePayment']);
-    $router->get('paid', ['as' => 'paid', 'uses' => 'EvaluationController@paidInvoices']);
+    $router->get('paid/ins/invoices', ['as' => 'paid', 'uses' => 'EvaluationController@paidInvoices']);
+
+    $router->get('print/insurance/invoice/{id}', ['as' => 'ins.inv.print', 'uses' => 'EvaluationController@printInvoice']);
+    $router->get('print/insurance/receipt/{id}', ['as' => 'ins.rcpt.print', 'uses' => 'EvaluationController@printReceipt']);
+
+    $router->get('company/statements', ['as' => 'company.stmt', 'uses' => 'EvaluationController@companyStatements']);
 });

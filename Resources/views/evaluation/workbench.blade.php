@@ -27,23 +27,33 @@ $mode = '';
                     <li <?php
                     if (isset($bill_mode)) {
                         $mode = 'billing'
-                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.billed')}}">Billed</a></li>
+                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.billed')}}">Billed</a>
+                    </li>
                     <li <?php
                     if (isset($cancel_mode)) {
                         $mode = 'cancelled'
-                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.cancelled')}}">Canceled</a></li>
+                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.cancelled')}}">Cancelled</a>
+                    </li>
                     <li <?php
                     if (isset($dispatch_mode)) {
                         $mode = 'dispatched'
-                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.dispatched')}}">Dispatched</a></li>
+                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.dispatched')}}">Dispatched</a>
+                    </li>
                     <li <?php
                     if (isset($payment_mode)) {
                         $mode = 'payment'
-                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.payment')}}">Payment</a></li>
+                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.payment')}}">Payment</a>
+                    </li>
                     <li <?php
                     if (isset($paid_mode)) {
                         $mode = 'paid'
-                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.paid')}}">Paid</a></li>
+                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.paid')}}">Paid</a>
+                    </li>
+                    <li <?php
+                    if (isset($stmt_mode)) {
+                        $mode = 'stmt_mode'
+                        ?>class="active"<?php } ?>><a href="{{route('finance.evaluation.company.stmt')}}">Company Statements</a>
+                    </li>
                 </ul>
                 <input type="hidden" id="mode" value="{{$mode}}">
                 @if($mode=='payment')
@@ -67,6 +77,9 @@ $mode = '';
         function get_invoices(firm) {
             //initialize
             var mode = $('#mode').val();
+            var patient = $('#patient').val();
+            var date1 = $('#date1').val();
+            var date2 = $('#date2').val();
             $.ajax({
                 type: 'get',
                 url: "{{route('api.finance.evaluation.firm.invoices')}}",

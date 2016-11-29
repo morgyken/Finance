@@ -40,8 +40,6 @@
                 <input type="hidden" name="amount[]" value="{{$item->payment}}">
             </td>
             <td>
-
-
                 @if($item->status ==0)
                 <!--billed-->
                 <span  class="btn-default btn-xs">
@@ -90,13 +88,15 @@
             </td>
             <td>
                 <small>
-                    <a href="{{route('finance.evaluation.cancel', $item->id)}}" class="btn btn-xs btn-primary">
+                    <a href="{{route('finance.evaluation.ins.inv.print', $item->id)}}" class="btn btn-xs btn-primary">
                         <i class="fa fa-print"></i> Print</a>
                 </small>
+                @if($item->status <2)
                 <small>
                     <a href="{{route('finance.evaluation.cancel', $item->id)}}" class="btn btn-xs btn-danger">
                         <i class="fa fa-times"></i> Cancel</a>
                 </small>
+                @endif
             </td>
         </tr>
         @endforeach

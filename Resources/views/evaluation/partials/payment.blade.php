@@ -28,7 +28,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Amount:</label>
                             <div class="col-md-8">
-                                {!! Form::text('ChequeAmount',old('ChequeAmount'),['class'=>'form-control','placeholder'=>'Amount']) !!}
+                                {!! Form::text('ChequeAmount',old('ChequeAmount'),['class'=>'form-control','placeholder'=>'Amount','required'=>'required']) !!}
                             </div>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Cheque Number:</label>
                             <div class="col-md-8">
-                                {!! Form::text('ChequeNumber',old('ChequeNumber'),['class'=>'form-control','placeholder'=>'Cheque Number']) !!}
+                                {!! Form::text('ChequeNumber',old('ChequeNumber'),['class'=>'form-control','placeholder'=>'Cheque Number','required'=>'required']) !!}
                             </div>
                         </div>
                     </div>
