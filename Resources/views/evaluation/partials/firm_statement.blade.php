@@ -77,7 +77,7 @@ $AMOUNT = 0
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <i class="icon-calendar"></i>
-                <h3 class="panel-title">Aging Analysis</h3>
+                <h3 class="panel-title">Aging Analysis (General)</h3>
             </div>
             <div class="panel-body">
                 <table class="table table-stripped">

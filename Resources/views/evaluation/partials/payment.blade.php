@@ -28,7 +28,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Amount:</label>
                             <div class="col-md-8">
-                                {!! Form::text('ChequeAmount',old('ChequeAmount'),['class'=>'form-control','placeholder'=>'Amount','required'=>'required']) !!}
+                                {!! Form::text('ChequeAmount',old('ChequeAmount'),['class'=>'form-control cheque_amount','placeholder'=>'Amount','required'=>'required']) !!}
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,6 @@
                     </div>
                 </div>
 
-
             </div>
         </div>
     </div>
@@ -75,7 +74,7 @@
             <th>Pay</th>
         </tr>
     </thead>
-    <tbody class="response">
+    <tbody class="response" id="rows">
         <?php $t = $n = 0; ?>
         @foreach($billed as $inv)
         <?php

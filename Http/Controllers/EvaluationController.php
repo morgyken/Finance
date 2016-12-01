@@ -233,4 +233,12 @@ class EvaluationController extends AdminBaseController {
         return $pdf->stream('Bill' . $request->id . '.pdf');
     }
 
+    public function billToCash(Request $request) {
+        $visit = Visit::find($request->visit);
+        $visit->payment_mode = 'cash';
+        $visit->save();
+        flash("Bill changed to cash successfully");
+        return back();
+    }
+
 }

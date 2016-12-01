@@ -101,9 +101,8 @@ $mode = '';
             }
         });
 
-        $("#cheque_amount").keyup(function () {
+        $(".cheque_amount").keyup(function () {
             $('#pay_balance').val(this.value);
-            $('#paycheque_amnt').val(this.value);
         });
 
         $("#cheque_no").keyup(function () {
@@ -111,25 +110,21 @@ $mode = '';
         });
 
         $("#payment_table").mouseover(function () {
-            $('#paycheck_no').val($("#cheque_no").val());
-            $('#paycheque_amnt').val($("#cheque_amount").val());
+            //$('#pay_balance').val($(".cheque_amount").val());
         });
-
-
 
         $('.table').dataTable();
     });
     function updateAmount(amount, i) {
         $amount = $('#pay_dis_tot');
         $sum = $('#pay_sum');
-        $balance = $('#pay_balance').val();
-        //var bal = 0;
+        $balance = $('#pay_balance');
         if ($('#pay_check' + i).is(':checked')) {
             $amount.val(parseInt($amount.val(), 10) + amount);
-            //$balance -= amount;
-            //alert($balance);
+            $balance.val(parseInt($balance.val(), 10) - amount);
         } else {
             $amount.val(parseInt($amount.val(), 10) - amount);
+            $balance.val(parseInt($balance.val(), 10) + amount);
         }
     }
 </script>

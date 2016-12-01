@@ -57,6 +57,7 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('dispatched/invoices', ['as' => 'dispatched', 'uses' => 'EvaluationController@dispatchedInvoices']);
     $router->get('cancelled', ['as' => 'cancelled', 'uses' => 'EvaluationController@cancelledBills']);
     $router->get('cancell/undo/{id}', ['as' => 'undo.cancel', 'uses' => 'EvaluationController@undoBillCancel']);
+    $router->get('tocash/{visit}', ['as' => 'tocash', 'uses' => 'EvaluationController@billToCash']);
     $router->get('payment', ['as' => 'payment', 'uses' => 'EvaluationController@companyInvoicePayment']);
     $router->get('paid/ins/invoices', ['as' => 'paid', 'uses' => 'EvaluationController@paidInvoices']);
 

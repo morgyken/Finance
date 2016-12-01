@@ -37,6 +37,8 @@
                 <td>
                     <a href="{{route('finance.evaluation.bill', $visit->id)}}" class="btn btn-xs btn-primary">
                         <i class="fa fa-usd"></i> Bill</a>
+                    <a href="{{route('finance.evaluation.tocash', $visit->id)}}" class="btn btn-xs btn-info">
+                        <i class="fa fa-money"></i>Change to Cash</a>
                     <a href="{{route('finance.evaluation.cancel', $visit->id)}}" class="btn btn-xs btn-danger">
                         <i class="fa fa-times"></i> Cancel</a>
                 </td>
