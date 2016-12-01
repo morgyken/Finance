@@ -88,4 +88,8 @@ class EvaluationPayments extends Model {
         return $this->belongsTo(User::class, 'user');
     }
 
+    public function visits() {
+        return $this->belongsTo(\Ignite\Evaluation\Entities\Visit::class, 'visit');
+    }
+
 }

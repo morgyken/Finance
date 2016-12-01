@@ -27,4 +27,8 @@ class Dispatch extends Model {
 
     protected $table = 'finance_bill_dispatches';
 
+    public function details() {
+        return $this->hasMany(DispatchDetails::class, 'dispatch');
+    }
+
 }

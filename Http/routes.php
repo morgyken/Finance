@@ -42,7 +42,27 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('cash_bills', ['as' => 'cash_bills', 'uses' => 'EvaluationController@cash_bills']);
 
     $router->get('bill/{id}', ['as' => 'bill', 'uses' => 'EvaluationController@bill']);
+    $router->post('bill/insurances', ['as' => 'bill.many', 'uses' => 'EvaluationController@billMany']);
+
+    $router->get('insurance/payment', ['as' => 'insurance.payment', 'uses' => 'EvaluationController@insurancePayment']);
+    $router->get('insurance/payment/specific/{id}', ['as' => 'insurance.payment.specific', 'uses' => 'EvaluationController@insurancePayment']);
+
     $router->get('cancel/{id}', ['as' => 'cancel', 'uses' => 'EvaluationController@cancelBill']);
     $router->post('dispatch', ['as' => 'dispatch', 'uses' => 'EvaluationController@dispatchBill']);
-    $router->post('payment', ['as' => 'dispatch', 'uses' => 'EvaluationController@dispatchBill']);
+    $router->get('ins/payment/{visit}', ['as' => 'ins.pay', 'uses' => 'EvaluationController@payInsBill']);
+    $router->post('ins/payment', ['as' => 'ins.save.pay', 'uses' => 'EvaluationController@saveInsuranceInvoicePayments']);
+
+    $router->get('pending/bills', ['as' => 'pending', 'uses' => 'EvaluationController@pendingBills']);
+    $router->get('billed/invoices', ['as' => 'billed', 'uses' => 'EvaluationController@billedBills']);
+    $router->get('dispatched/invoices', ['as' => 'dispatched', 'uses' => 'EvaluationController@dispatchedInvoices']);
+    $router->get('cancelled', ['as' => 'cancelled', 'uses' => 'EvaluationController@cancelledBills']);
+    $router->get('cancell/undo/{id}', ['as' => 'undo.cancel', 'uses' => 'EvaluationController@undoBillCancel']);
+    $router->get('tocash/{visit}', ['as' => 'tocash', 'uses' => 'EvaluationController@billToCash']);
+    $router->get('payment', ['as' => 'payment', 'uses' => 'EvaluationController@companyInvoicePayment']);
+    $router->get('paid/ins/invoices', ['as' => 'paid', 'uses' => 'EvaluationController@paidInvoices']);
+
+    $router->get('print/insurance/invoice/{id}', ['as' => 'ins.inv.print', 'uses' => 'EvaluationController@printInvoice']);
+    $router->get('print/insurance/receipt/{id}', ['as' => 'ins.rcpt.print', 'uses' => 'EvaluationController@printReceipt']);
+
+    $router->get('company/statements', ['as' => 'company.stmt', 'uses' => 'EvaluationController@companyStatements']);
 });

@@ -14,12 +14,17 @@ class CreateInsuranceInvoicesTable extends Migration {
         Schema::create('finance_insurance_invoices', function(Blueprint $table) {
             $table->increments('id');
             $table->string('invoice_no')->unique();
+            $table->integer('visit')->unsigned()->nullable();
             $table->integer('receipt')->unsigned()->nullable();
             $table->integer('payment')->unsigned()->nullable();
             $table->date('invoice_date')->nullable();
             $table->string('dispatch')->nullable();
-            $table->integer('status')->default(1);
+            $table->integer('status')->default(0);
             $table->timestamps();
+
+            $table->foreign('visit')->references('id')->on('evaluation_visits')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
         });
     }
 

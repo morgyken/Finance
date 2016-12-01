@@ -67,7 +67,7 @@ $count = 0;
                                     <small><i style="color:green" class="fa fa-check"></i>paid</small>
                                 </span>
                                 @elseif($bill->status ==3)
-                                <span  class="btn-default btn-xs"><small><i style="color:red" class="fa fa-trash"></i>cancelled</small></span>
+                                <span  class="btn-default btn-xs"><small><i style="color:red" class="fa fa-trash"></i>canceled</small></span>
                                 @endif
                             </td>
                             <td>
@@ -75,12 +75,16 @@ $count = 0;
                                 {{@$bill->sales->insuranceses->schemes->name}}
                             </td>
                             <td>
-                                <a target="blank" href="{{route('finance.bill.print', $bill->id)}}"> <i class="fa fa-print"></i></a>
+                                <small>
+                                    <a target="blank" href="{{route('finance.bill.print', $bill->id)}}"> <i class="fa fa-print"></i></a>
+                                </small>
                                 @if($bill->status ==3)
                                 @else
-                                <a href="{{route('finance.bill.cancel', $bill->id)}}">
-                                    <i id="cancel" style="color:red" class="fa fa-times"></i>
-                                </a>
+                                <small>
+                                    <a href="{{route('finance.bill.cancel', $bill->id)}}">
+                                        <i id="cancel" style="color:red" class="fa fa-times"></i>
+                                    </a>
+                                </small>
                                 @endif
 
                                 @if($bill->status ==1)

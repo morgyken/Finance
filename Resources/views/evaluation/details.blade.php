@@ -36,7 +36,7 @@ extract($data);
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Procedure</th>
+                        <th>Procedures/Drug</th>
                         <th>Cost (Ksh.)</th>
                     </tr>
                 </thead>
@@ -49,12 +49,27 @@ extract($data);
                         <td>{{$pay->price}}</td>
                     </tr>
                     @endforeach
+                    <!--Drugs Dispensed -->
+                    <?php $disp_amount = 0 ?>
+                    @foreach($payment->visits->dispensing as $item)
+                    <?php $disp_amount+=$item->amount ?>
+                    @foreach($item->details as $item)
+                    <tr>
+                        <td>{{$loop->iteration}}</td>
+                        <td>{{$item->drugs->name}} <i
+                                class="small">(x{{$item->quantity}})</i></td>
+                        <td>{{$item->price}}</td>
+                    </tr>
+                    @endforeach
+                    @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th>Total Bill</th>
                         <th></th>
-                        <th>Total</th>
-                        <th>{{$payment->details->sum('price')}}</th>
+                        <th>
+                            {{$payment->details->sum('price')+$disp_amount}}
+                        </th>
                     </tr>
                 </tfoot>
             </table>
@@ -62,7 +77,7 @@ extract($data);
         <div class="col-md-6">
             @if(!empty($payment->cash))
             <h4>Cash Payment</h4>
-            Amount: Ksh {{$payment->cash->amount}}
+            Amount Paid: Ksh {{$payment->cash->amount}}
             <hr/>
             @endif
 

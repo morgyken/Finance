@@ -13,7 +13,8 @@ class CreateEvaluationPaymentsChequeTable extends Migration {
     public function up() {
         Schema::create('finance_payments_cheque', function (Blueprint $column) {
             $column->increments('id');
-            $column->integer('payment')->unsigned();
+            $column->integer('payment')->unsigned()->nullable();
+            $column->integer('insurance_payment')->unsigned()->nullable();
             $column->string('name')->nullable();
             $column->string('number')->nullable();
             $column->date('date')->nullable();
@@ -23,6 +24,10 @@ class CreateEvaluationPaymentsChequeTable extends Migration {
             $column->timestamps();
 
             $column->foreign('payment')->references('id')->on('finance_evaluation_payments')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
+
+            $column->foreign('insurance_payment')->references('id')->on('finance_evaluation_insurance_payments')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
         });

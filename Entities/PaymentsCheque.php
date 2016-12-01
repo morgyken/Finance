@@ -34,4 +34,8 @@ class PaymentsCheque extends Model {
     protected $guarded = [];
     public $table = 'finance_payments_cheque';
 
+    public function insurance_payment() {
+        return $this->belongsTo(FinanceEvaluationInsurancePayments::class, 'insurance_payment', 'id');
+    }
+
 }

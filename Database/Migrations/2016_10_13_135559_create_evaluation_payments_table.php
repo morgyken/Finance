@@ -16,6 +16,7 @@ class CreateEvaluationPaymentsTable extends Migration {
             $column->string('receipt')->unique();
             $column->integer('patient')->unsigned();
             $column->integer('user')->unsigned();
+            $column->integer('visit')->unsigned();
             $column->timestamps();
 
             $column->foreign('patient')
@@ -23,7 +24,14 @@ class CreateEvaluationPaymentsTable extends Migration {
                     ->on('reception_patients')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
-            $column->foreign('user')->references('id')->on('users')
+            $column->foreign('user')
+                    ->references('id')
+                    ->on('users')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+            $column->foreign('visit')
+                    ->references('id')
+                    ->on('evaluation_visits')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });

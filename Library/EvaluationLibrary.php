@@ -24,7 +24,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Ignite\Evaluation\Entities\Visit;
-use Ignite\Finance\Entities\Dispatch;
+use Ignite\Finance\Library\FinanceLibrary;
+use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Finance\Entities\InsuranceInvoicePayment;
+use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 
 /**
  * Description of EvaluationFinanceFunctions
@@ -70,13 +73,76 @@ class EvaluationLibrary implements EvaluationRepository {
             $payment = new EvaluationPayments;
             $payment->patient = $this->request->patient;
             $payment->receipt = generate_receipt_no();
+            if (isset($this->request->visit)) {
+                $payment->visit = $this->request->visit;
+            }
             $payment->user = $this->user;
             $payment->save();
-            $this->payment_methods($payment);
+            $payment->amount = $this->payment_methods($payment);
+            $payment->save();
             $this->payment_details($payment);
             $this->pay_id = $payment->id;
         });
         return $this->pay_id;
+    }
+
+    /**
+     * Record Insurance Payment
+     * return bool
+     */
+    public function record_insurance_payment() {
+        $batch = new FinanceEvaluationInsurancePayments;
+        $batch->company = $this->request->company;
+        $batch->user = \Auth::user()->id;
+        $batch->amount = $this->request->ChequeAmount;
+        $batch->save();
+
+        $this->saveCheque($batch);
+
+        foreach ($this->request->invoice as $key => $invoice) {
+            $amount = 'amount' . $invoice;
+            $payment = new InsuranceInvoicePayment;
+            $payment->amount = $this->request->$amount;
+            $payment->insurance_invoice = $invoice;
+            $payment->user = $this->user;
+            $payment->batch = $batch->id;
+            $payment->save();
+            $this->updateInvoiceStatus($invoice, $this->request->$amount);
+        }
+        return true;
+    }
+
+    /**
+     * Update Insurance Invoice Status
+     * @param type invoice_id, amount
+     * @return bool
+     */
+    public function updateInvoiceStatus($invoice, $amount) {
+        $paid = $this->getPriorInvoicePaidAmount($invoice);
+        $settled = $amount + $paid;
+        $inv = InsuranceInvoice::find($invoice);
+        $bill = $inv->payment;
+        if ($settled < $bill) {//partially paid (2)
+            $inv->status = 2;
+        } elseif ($settled > $bill) {//fully (3)
+            $inv->status = 3;
+        }/* elseif ($settled > $bill) {// overpaid (4)
+          $inv->status = 4;
+          } */
+        $inv->save();
+    }
+
+    public function getPriorInvoicePaidAmount($invoice) {
+        $payment = InsuranceInvoicePayment::where('insurance_invoice', '=', $invoice)->get(); //find(['insurance_invoice' => $invoice]);
+        if (!$payment->isEmpty()) {
+            $paid = 0;
+            foreach ($payment as $p) {
+                $paid+=$p->amount;
+            }
+            return $paid;
+        } else {
+            return 0;
+        }
     }
 
     private function payment_details(EvaluationPayments $payment) {
@@ -93,13 +159,16 @@ class EvaluationLibrary implements EvaluationRepository {
     }
 
     private function payment_methods(EvaluationPayments $payment) {
+        $paid_amount = 0;
         if ($this->request->has('CashAmount')) {
+            $paid_amount+=$this->input['CashAmount'];
             PaymentsCash::create([
                 'amount' => $this->input['CashAmount'],
                 'payment' => $payment->id
             ]);
         }
         if ($this->request->has('MpesaAmount')) {
+            $paid_amount+=$this->input['MpesaAmount'];
             PaymentsMpesa::create([
                 'amount' => $this->input['MpesaAmount'],
                 'reference' => strtoupper($this->input['MpesaCode']),
@@ -107,6 +176,7 @@ class EvaluationLibrary implements EvaluationRepository {
             ]);
         }
         if ($this->request->has('CardAmount')) {
+            $paid_amount+=$this->input['CardAmount'];
             PaymentsCard::create([
                 'type' => $this->input['CardType'],
                 'name' => strtoupper($this->input['CardNames']),
@@ -118,6 +188,7 @@ class EvaluationLibrary implements EvaluationRepository {
             ]);
         }
         if ($this->request->has('ChequeAmount')) {
+            $paid_amount+=$this->input['ChequeAmount'];
             PaymentsCheque::create([
                 'name' => strtoupper($this->input['ChequeName']),
                 'date' => new \Date($this->input['ChequeDate']),
@@ -128,6 +199,51 @@ class EvaluationLibrary implements EvaluationRepository {
                 'payment' => $payment->id
             ]);
         }
+
+        if ($this->request->has('visit')) {
+            $this->update_visit_payment_status($this->input['visit'], $paid_amount);
+        }
+
+        return $paid_amount;
+    }
+
+    /*
+     * Save Payment Cheque
+     * @return
+     * @param payment
+     *
+     */
+
+    public function saveCheque($payment) {
+        $cheque = new PaymentsCheque;
+        $cheque->name = strtoupper($this->input['ChequeName']);
+        $cheque->date = new \Date($this->input['ChequeDate']);
+        $cheque->amount = $this->input['ChequeAmount'];
+        $cheque->bank = $this->input['ChequeBank'];
+        $cheque->bank_branch = $this->input['ChequeBankBranch'];
+        $cheque->number = $this->input['ChequeNumber'];
+        $cheque->insurance_payment = $payment->id;
+        $cheque->save();
+    }
+
+    public static function update_visit_payment_status($id, $amount) {
+        $visit = Visit::find($id);
+
+        $bill = $visit->unpaid_amount;
+
+        $payment = EvaluationPayments::where('visit', '=', $id)->get();
+        $pre_paid = 0;
+
+        foreach ($payment as $item) {
+            $pre_paid+=$item->amount;
+        }
+        $total_paid = $pre_paid + $amount;
+        if ($bill <= $total_paid) {
+            $visit->status = 'paid';
+        } elseif ($bill >= $total_paid) {
+            $visit->status = 'partially paid';
+        }
+        return $visit->update();
     }
 
     private function prepareInput(&$input) {
@@ -158,39 +274,50 @@ class EvaluationLibrary implements EvaluationRepository {
     }
 
     public function bill_visit(Request $request) {
-        return $this->updateVisitStatus($request->id, 'billed');
+        $this->updateVisitStatus($request->id, 'billed');
+        $visit = Visit::find($request->id);
+        $this->createInsuranceInvoice($visit->id, $visit->unpaid_amount);
+        return 'billed';
+    }
+
+    public function bill_visit_many(Request $request) {
+        foreach ($request->visit as $i => $visit) {
+            $this->updateVisitStatus($request->visit[$i], 'billed');
+            $visit = Visit::find($request->visit[$i]);
+            $this->createInsuranceInvoice($request->visit[$i], $visit->unpaid_amount);
+        }
+        return TRUE;
     }
 
     public function cancel_visit_bill(Request $request) {
-        return $this->updateVisitStatus($request->id, 'canceled');
+        $inv = InsuranceInvoice::find($request->id);
+        $inv->status = 5;
+        return $inv->update();
+    }
+
+    public function undoBillCancel(Request $request) {
+        $inv = InsuranceInvoice::find($request->id);
+        $inv->status = 0;
+        return $inv->update();
     }
 
     public static function dispatchBills(Request $request) {
-        DB::beginTransaction();
-        try {
-            foreach ($request->visit as $index => $visit) {
-                $v = Visit::find($visit);
-                $v->status = 'dispatched';
-                $v->save();
-
-                $dispatch = new Dispatch();
-                $dispatch->visit = $visit;
-                $dispatch->user = \Auth::user()->id;
-                $dispatch->amount = $request->amount[$index];
-                $dispatch->save();
-            }
-            DB::commit();
-            return true;
-        } catch (\Exception $e) {
-            DB::rollback();
-            flash()->warning("Select at least one bill to proceed... thank you");
-        }//Catch
+        FinanceLibrary::dispatchBills($request);
+        return TRUE;
     }
 
     public function updateVisitStatus($visit_id, $new_status) {
         $visit = Visit::find($visit_id);
         $visit->status = $new_status;
         return $visit->save();
+    }
+
+    public function createInsuranceInvoice($visit, $amount) {
+        $inv = new InsuranceInvoice;
+        $inv->invoice_no = 'INV-' . $visit . '-' . date('dmyHis');
+        $inv->visit = $visit;
+        $inv->payment = $amount;
+        $inv->save();
     }
 
 }
