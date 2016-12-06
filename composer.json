@@ -25,7 +25,7 @@
         "inacho/php-credit-card-validator": "1.*"
     },
     "suggest": {
-        "collabmed/report-module": "Show inventory reports."
+        "collabmed/analytics-module": "he Business Intelligence and Analytics module."
     },
     "autoload": {
         "psr-4": {
