@@ -18,6 +18,10 @@ class BillingApiController extends \Illuminate\Routing\Controller {
 
     public function fetchInvoices() {
         $mode = $this->request->mode;
+        $patient = $this->request->patient ? $this->request->patient : NULL;
+        $date1 = $this->request->date1 ? $this->request->date1 : NULL;
+        $date2 = $this->request->date2 ? $this->request->date2 : NULL;
+
         $n = 0;
         $billed = InsuranceInvoice::where('visit', '>', 0)->whereHas('visits', function($query) {
                     $query->whereHas('patient_scheme', function($query) {
