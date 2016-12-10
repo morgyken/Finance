@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property integer $id
  * @property integer $payment
+ * @property integer $insurance_payment
  * @property string $name
  * @property string $number
  * @property string $date
@@ -17,8 +18,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $amount
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
+ * @property-read \Ignite\Finance\Entities\FinanceEvaluationInsurancePayments $insurance_payments
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque wherePayment($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereInsurancePayment($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereNumber($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereDate($value)
@@ -34,7 +37,7 @@ class PaymentsCheque extends Model {
     protected $guarded = [];
     public $table = 'finance_payments_cheque';
 
-    public function insurance_payment() {
+    public function insurance_payments() {
         return $this->belongsTo(FinanceEvaluationInsurancePayments::class, 'insurance_payment', 'id');
     }
 

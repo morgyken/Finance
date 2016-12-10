@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $patient
  * @property integer $user
  * @property float $amount
+ * @property integer $visit
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read mixed $total
@@ -25,11 +26,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Ignite\Reception\Entities\Patients $patients
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\EvaluationPaymentsDetails[] $details
  * @property-read \Ignite\Users\Entities\User $users
+ * @property-read \Ignite\Evaluation\Entities\Visit $visits
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereReceipt($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments wherePatient($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereUser($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereVisit($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPayments whereUpdatedAt($value)
  * @mixin \Eloquent

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property integer $id
  * @property string $invoice_no
+ * @property integer $visit
  * @property integer $receipt
  * @property integer $payment
  * @property string $invoice_date
@@ -19,8 +20,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Ignite\Inventory\Entities\InventoryBatchProductSales $sales
+ * @property-read \Ignite\Evaluation\Entities\Visit $visits
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\InsuranceInvoicePayment[] $payments
+ * @property-read mixed $paid
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereInvoiceNo($value)
+ * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereVisit($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereReceipt($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice wherePayment($value)
  * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereInvoiceDate($value)
