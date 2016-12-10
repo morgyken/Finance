@@ -8,8 +8,8 @@ extract($data);
 $mode = '';
 ?>
 @extends('layouts.app')
-@section('content_title','Insurance Billing Workbench')
-@section('content_description','Manage insurance bills')
+@section('content_title','Insurance and Credit Clients Workbench')
+@section('content_description','')
 @section('content')
 <div class="box box-info">
     <div class="box-header with-border">
@@ -83,7 +83,7 @@ $mode = '';
             $.ajax({
                 type: 'get',
                 url: "{{route('api.finance.evaluation.firm.invoices')}}",
-                data: {firm: firm, mode: mode},
+                data: {firm: firm, mode: mode, date1: date1, date2: date2, patient: patient},
                 success: function (response) {
                     $('.response').html(response);
                 }
@@ -109,11 +109,20 @@ $mode = '';
             $('#paycheck_no').val(this.value);
         });
 
+
+
         $("#payment_table").mouseover(function () {
             //$('#pay_balance').val($(".cheque_amount").val());
         });
 
-        $('.table').dataTable();
+        $("#date1").datepicker({
+            dateFormat: 'yy-mm-dd', onSelect: function (date) {
+                $("#date2").datepicker('option', 'minDate', date);
+            }});
+        $("#date2").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+
     });
     function updateAmount(amount, i) {
         $amount = $('#pay_dis_tot');

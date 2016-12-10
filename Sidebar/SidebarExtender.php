@@ -49,7 +49,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->route('finance.evaluation.summary');
                 });
 
-                $item->item('Insurance Bills', function (Item $item) {
+                $item->item('Insurance Workbench', function (Item $item) {
                     $item->icon('fa fa-coffee');
                     $item->route('finance.evaluation.insurance');
                 });
