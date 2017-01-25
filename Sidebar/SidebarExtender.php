@@ -33,7 +33,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
             $group->item('Finance', function (Item $item) {
                 $item->weight(4);
                 $item->icon('fa fa-money');
-
+                $item->authorize($this->auth->hasAccess('finance.*'));
                 $item->item('Receive Payments', function (Item $item) {
                     $item->icon('fa fa-euro');
                     $item->route('finance.evaluation.pay');
@@ -70,7 +70,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->item('Billing Workbench', function(Item $item) {
                         $item->icon('fa fa-yelp');
                         $item->route('finance.billing');
-                        $item->authorize($this->auth->hasAccess('finance.Billing'));
+                        $item->authorize($this->auth->hasAccess('finance.billing'));
                     });
                 });
 

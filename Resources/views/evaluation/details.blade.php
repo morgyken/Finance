@@ -50,18 +50,26 @@ extract($data);
                     </tr>
                     @endforeach
                     <!--Drugs Dispensed -->
-                    <?php $disp_amount = 0 ?>
-                    @foreach($payment->visits->dispensing as $item)
-                    <?php $disp_amount+=$item->amount ?>
-                    @foreach($item->details as $item)
-                    <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td>{{$item->drugs->name}} <i
-                                class="small">(x{{$item->quantity}})</i></td>
-                        <td>{{$item->price}}</td>
-                    </tr>
-                    @endforeach
-                    @endforeach
+                    <?php
+                    $disp_amount = 0;
+                    if (isset($payment->visits->dispensing)) {
+                        ?>
+                        @foreach($payment->visits->dispensing as $item)
+                        <?php $disp_amount+=$item->amount ?>
+                        @foreach($item->details as $item)
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$item->drugs->name}} <i
+                                    class="small">(x{{$item->quantity}})</i></td>
+                            <td>{{$item->price}}</td>
+                        </tr>
+                        @endforeach
+                        @endforeach
+
+                        <?php
+                    }
+                    ?>
+
                 </tbody>
                 <tfoot>
                     <tr>

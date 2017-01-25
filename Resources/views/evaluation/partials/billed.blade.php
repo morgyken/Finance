@@ -46,7 +46,8 @@
                     <small>
                         <i class="fa fa-hourglass-start" aria-hidden="true"></i>
                         billed
-                    </small></span>
+                    </small>
+                </span>
                 @elseif($item->status ==1)
                 <!--dispatched -->
                 <span  class="btn-info btn-xs">

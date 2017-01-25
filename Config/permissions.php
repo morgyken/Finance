@@ -12,11 +12,11 @@
 
 return [
     'finance' => [
-        'Access Finance Menu',
-        'Payments Overview',
-        'Receive Payments',
-        'Workbench',
-        'Billing'
+        'menu' => 'Access Finance Menu',
+        'overview' => 'Payments Overview',
+        'receive_payments' => 'Receive Payments',
+        'workbench' => 'Workbench',
+        'billing' => 'Billing'
     ],
     'finance.General Ledger' => [
         'Access GL Menu',
