@@ -112,9 +112,10 @@ extract($data);
         </div>
     </div>
     <div class="box-footer">
-        {!! Form::open(['route'=>'evaluation.report.pay_receipt','target'=>'_blank'])!!}
+        {!! Form::open(['route'=>'finance.evaluation.normal.rcpt.print','target'=>'_blank'])!!}
         {!! Form::hidden('payment',$payment->id) !!}
-        <button class="btn btn-primary" type="submit"><i class="fa fa-file-pdf-o"></i> Print Receipt</button>
+        <button class="btn btn-primary" type="submit">
+            <i class="fa fa-file-pdf-o"></i> Print Receipt</button>
         {{Form::close()}}
     </div>
 </div>

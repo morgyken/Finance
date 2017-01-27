@@ -37,6 +37,13 @@ class EvaluationController extends AdminBaseController {
         return view('finance::evaluation.details', ['data' => $this->data]);
     }
 
+    public function printNormalReceipt(Request $request) {
+        $this->data['payment'] = EvaluationPayments::find($request->payment);
+        $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
+        $pdf->setPaper('a4', 'Landscape');
+        return $pdf->stream('Bill' . $request->id . '.pdf');
+    }
+
     public function pay_save(PaymentsRequest $request) {
         $id = $this->evaluationRepository->record_payment();
         return redirect()->route('finance.evaluation.payment_details', $id);
