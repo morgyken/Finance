@@ -64,50 +64,50 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->authorize($this->auth->hasAccess('finance.Payments Overview'));
                 });
 
-                $item->item('Billing', function(Item $item) {
-                    $item->icon('fa fa-unsorted');
+                /*
+                  $item->item('Billing', function(Item $item) {
+                  $item->icon('fa fa-unsorted');
 
-                    $item->item('Billing Workbench', function(Item $item) {
-                        $item->icon('fa fa-yelp');
-                        $item->route('finance.billing');
-                        $item->authorize($this->auth->hasAccess('finance.billing'));
-                    });
-                });
+                  $item->item('Billing Workbench', function(Item $item) {
+                  $item->icon('fa fa-yelp');
+                  $item->route('finance.billing');
+                  $item->authorize($this->auth->hasAccess('finance.billing'));
+                  });
+                  }); */
 
-
-
-                $item->item('Banking', function(Item $item) {
-                    $item->icon('fa fa-university');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Bankings'));
-                    $item->item('Banking', function(Item $item) {
-                        $item->icon('fa fa-money');
-                        $item->route('finance.gl.banking');
-                    });
-
-                    $item->item('Bank Accounts', function(Item $item) {
-                        $item->icon('fa fa-credit-card');
-                        $item->route('finance.gl.bank.accounts');
-                    });
-
-                    $item->item('Banks', function(Item $item) {
-                        $item->icon('fa fa-bitcoin');
-                        $item->route('finance.gl.banks');
-                    });
-                });
-
-                $item->item('Petty Cash', function(Item $item) {
-                    $item->icon('fa fa-paypal');
-                    $item->route('finance.gl.pettycash');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Petty Cash'));
-                });
-
-                $item->item('Payments(Invoice)', function(Item $item) {
-                    $item->icon('fa fa-money');
-                    $item->route('finance.gl.inv.payments');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.View Invoice Payments'));
-                });
 
                 /*
+                  $item->item('Banking', function(Item $item) {
+                  $item->icon('fa fa-university');
+                  $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Bankings'));
+                  $item->item('Banking', function(Item $item) {
+                  $item->icon('fa fa-money');
+                  $item->route('finance.gl.banking');
+                  });
+
+                  $item->item('Bank Accounts', function(Item $item) {
+                  $item->icon('fa fa-credit-card');
+                  $item->route('finance.gl.bank.accounts');
+                  });
+
+                  $item->item('Banks', function(Item $item) {
+                  $item->icon('fa fa-bitcoin');
+                  $item->route('finance.gl.banks');
+                  });
+                  });
+
+                  $item->item('Petty Cash', function(Item $item) {
+                  $item->icon('fa fa-paypal');
+                  $item->route('finance.gl.pettycash');
+                  $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Petty Cash'));
+                  });
+
+                  $item->item('Payments(Invoice)', function(Item $item) {
+                  $item->icon('fa fa-money');
+                  $item->route('finance.gl.inv.payments');
+                  $item->authorize($this->auth->hasAccess('finance.General Ledger.View Invoice Payments'));
+                  });
+                  /*
                  * @todo  Add support for insurance
                  */
                 /* $item->item('Insurance', function (Item $item) {
@@ -119,26 +119,29 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                   $item->route('finance.deposits');
                   }); */
             });
-            $group->item('General Ledger', function (Item $item) {
-                $item->weight(5);
-                $item->icon('fa fa-credit-card-alt');
-                $item->authorize($this->auth->hasAccess('finance.General Ledger.Access GL Menu'));
-                $item->item('Account Types', function(Item $item) {
-                    $item->icon('fa fa-industry');
-                    $item->route('finance.gl.account_types');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Account Types'));
-                });
-                $item->item('Account Groups', function(Item $item) {
-                    $item->icon('fa fa-toggle-up');
-                    $item->route('finance.gl.account_groups');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Account Groups'));
-                });
-                $item->item('Accounts', function(Item $item) {
-                    $item->icon('fa fa-spoon');
-                    $item->route('finance.gl.accounts');
-                    $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage GL Accounts'));
-                });
-            });
+
+            /*
+              $group->item('General Ledger', function (Item $item) {
+              $item->weight(5);
+              $item->icon('fa fa-credit-card-alt');
+              $item->authorize($this->auth->hasAccess('finance.General Ledger.Access GL Menu'));
+              $item->item('Account Types', function(Item $item) {
+              $item->icon('fa fa-industry');
+              $item->route('finance.gl.account_types');
+              $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Account Types'));
+              });
+              $item->item('Account Groups', function(Item $item) {
+              $item->icon('fa fa-toggle-up');
+              $item->route('finance.gl.account_groups');
+              $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage Account Groups'));
+              });
+              $item->item('Accounts', function(Item $item) {
+              $item->icon('fa fa-spoon');
+              $item->route('finance.gl.accounts');
+              $item->authorize($this->auth->hasAccess('finance.General Ledger.Manage GL Accounts'));
+              });
+              });
+             */
         });
         return $menu;
     }
