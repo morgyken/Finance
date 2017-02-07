@@ -55,8 +55,15 @@ class EvaluationController extends AdminBaseController {
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
         $this->data['patients'] = get_patients_with_bills();
-        $this->data['with_pharm'] = get_patients_with_pharm();
-        $this->data['from_pos'] = get_patients_from_pos();
+        $this->data['with_pharm'] = Patients::whereHas('visits', function ($query) {
+                    $query->wherePaymentMode('cash');
+                    $query->whereHas('dispensing', function ($q) {
+                        $q->wherePayment_status(0);
+                    });
+                })->get();
+        $this->data['from_pos'] = Patients::whereHas('drug_purchases', function ($query) {
+                    $query->wherePaid(0);
+                })->get();
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 
