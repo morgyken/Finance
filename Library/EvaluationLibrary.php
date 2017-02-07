@@ -28,6 +28,8 @@ use Ignite\Finance\Library\FinanceLibrary;
 use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Finance\Entities\InsuranceInvoicePayment;
 use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
+use Ignite\Evaluation\Entities\Dispensing;
+use Ignite\Evaluation\Entities\DispensingDetails;
 
 /**
  * Description of EvaluationFinanceFunctions
@@ -70,6 +72,11 @@ class EvaluationLibrary implements EvaluationRepository {
      */
     public function record_payment() {
         DB::transaction(function () {
+            foreach ($this->request->dispensing as $d) {
+                $disp = Dispensing::find($d);
+                $disp->payment_status = 1;
+                $disp->save();
+            }
             $payment = new EvaluationPayments;
             $payment->patient = $this->request->patient;
             $payment->receipt = generate_receipt_no();

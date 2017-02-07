@@ -5,6 +5,8 @@
  *  Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
 $patient = $data['patient'];
+$p2 = $data['with_pharm'];
+
 $__visits = $patient->visits; //->where('payment_status', 'pending');
 ?>
 @extends('layouts.app')
@@ -56,7 +58,6 @@ $__visits = $patient->visits; //->where('payment_status', 'pending');
                                 <td>{{$item->procedures->name}} <i class="small">({{$item->type}})</i> - Ksh <span class="topay">{{$item->price}}</span></td>
                                 @endif
                             </tr>
-
                             @endforeach
                         </tbody>
 

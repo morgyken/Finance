@@ -16,6 +16,7 @@
     <tbody class="response">
         <?php $n = 0; ?>
         @foreach($dispatched as $item)
+        <?php //dd($item); ?>
         <tr>
             <td>{{$n+=1}}</td>
             <td>{{(new Date($item->created_at))->format('dS M y g:i a')}}</td>
