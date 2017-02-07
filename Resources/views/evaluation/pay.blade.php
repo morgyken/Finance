@@ -67,6 +67,37 @@ $__visits = $patient->visits;
                         </tr>
                         @endforeach
                         @endforeach
+                        <?php
+                        $n = 0;
+                        ?>
+                        @foreach($visit->drug_purchases as $item)
+                        <tr>
+                            @if($item->paid===1)
+                        <input type="hidden" name="batch[]" value="{{$item->id}}">
+                        <td><input type="checkbox" disabled=""/>
+                        <td>Drugs <i class="small">(point of sale)</i>
+                            <div class="label label-success">Paid</div>
+                            Ksh <span class="topay">{{$item->amount}}.00/=</span></td>
+                        <ul>
+                            @foreach($item->goodies as $g)
+                            <li>{{$g->products->name}} x {{$g->quantity}} -- {{$g->quantity*$g->price}}.00/=</li>
+                            @endforeach
+                        </ul>
+                        @else
+                        <input type="hidden" name="batch[]" value="{{$item->id}}">
+                        <td><input type="checkbox" value="{{$item->id}}"
+                                   name="item{{$item->id}}" />
+                        <td>Drugs <i class="small">(point of sale)</i>
+                            Ksh <span class="topay">{{$item->amount}}.00/=</span></td>
+                        <ul>
+                            @foreach($item->goodies as $g)
+                            <li>{{$g->products->name}} x {{$g->quantity}} -- {{$g->quantity*$g->price}}.00/=</li>
+                            @endforeach
+                        </ul>
+                        @endif
+                        </tr>
+                        @endforeach
+
                         </tbody>
 
                     </table>

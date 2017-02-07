@@ -56,6 +56,7 @@ class EvaluationController extends AdminBaseController {
         }
         $this->data['patients'] = get_patients_with_bills();
         $this->data['with_pharm'] = get_patients_with_pharm();
+        $this->data['from_pos'] = get_patients_from_pos();
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 

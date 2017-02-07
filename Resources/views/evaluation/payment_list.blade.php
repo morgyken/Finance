@@ -45,6 +45,19 @@ extract($data);
                     </td>
                 </tr>
                 @endforeach
+                @foreach($from_pos as $patient)
+                <tr id="patient{{$patient->patient_id}}">
+                    <td>{{$patient->full_name}}</td>
+                    <td>{{$patient->id_no}}</td>
+                    <td>{{$patient->mobile}}</td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" href="{{route('finance.evaluation.pay',$patient->id)}}">
+                            <i class="fa fa-hand-lizard-o"></i> Receive Payments</a>
+                        <a class="btn btn-success btn-xs" href="{{route('finance.evaluation.individual_account',$patient->id)}}">
+                            <i class="fa fa-eye-slash"></i> View Account</a>
+                    </td>
+                </tr>
+                @endforeach
             </tbody>
             <thead>
                 <tr>
