@@ -19,7 +19,6 @@ $count = 0;
     <div class="box-header with-border">
         <h3 class="box-title">Bills</h3>
     </div>
-
     <div class="box-body">
         <div class="row">
             <div class="col-md-12">

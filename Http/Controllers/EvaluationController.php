@@ -55,6 +55,7 @@ class EvaluationController extends AdminBaseController {
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
         $this->data['patients'] = get_patients_with_bills();
+        $this->data['with_pharm'] = get_patients_with_pharm();
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 
@@ -79,7 +80,7 @@ class EvaluationController extends AdminBaseController {
     public function pendingBills() {
         $this->data['pending_mode'] = 1;
         $this->data['pending'] = Visit::wherePaymentMode('insurance')
-                ->whereNull('status')
+                //->whereNull('status')
                 ->orderBy('created_at', 'DESC')
                 ->get();
         return view('finance::evaluation.partials.pending', ['data' => $this->data]);

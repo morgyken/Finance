@@ -43,8 +43,30 @@ $__visits = $patient->visits;
                                     Ksh <span class="topay">{{$item->price}}</span></td>
                                 @endif
                             </tr>
-
                             @endforeach
+                            @foreach($visit->dispensing as $disp)
+                        <input type="hidden" name="disp[]" value="1">
+                        <input type="hidden" name="dispensing{{$disp->id}}" value="{{$disp->id}}">
+                        @foreach($disp->details as $item)
+                        <tr>
+                            @if($item->paid===1)
+                            <td><input type="checkbox" disabled/></td>
+                            <td>
+                                <div class="label label-success">Paid</div>
+                                {{$item->drug->name}} <i class="small">(dispensed drug)</i>
+                                Ksh {{$item->price*$item->quantity}}
+                            </td>
+                            @else
+                        <input type="hidden" name="disp[]" value="1">
+                        <input type="hidden" name="dispensing[]" value="{{$disp->id}}">
+                        <td><input type="checkbox" value="{{$item->id}}"
+                                   name="item{{$item->id}}" />
+                        <td>{{$item->drug->name}} <i class="small">(dispensed drug)</i>
+                            Ksh <span class="topay">{{$item->price*$item->quantity}}</span></td>
+                        @endif
+                        </tr>
+                        @endforeach
+                        @endforeach
                         </tbody>
 
                     </table>
