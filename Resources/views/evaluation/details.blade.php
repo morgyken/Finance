@@ -65,11 +65,28 @@ extract($data);
                         </tr>
                         @endforeach
                         @endforeach
-
                         <?php
                     }
                     ?>
-
+                    <!--POS -->
+                    <?php
+                    $pos_amount = 0;
+                    if (isset($payment->visits->drug_purchases)) {
+                        ?>
+                        @foreach($payment->visits->drug_purchases as $item)
+                        <?php $pos_amount+=$item->amount ?>
+                        @foreach($item->details as $item)
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$item->drugs->name}} <i
+                                    class="small">(x{{$item->quantity}})</i></td>
+                            <td>{{$item->price}}</td>
+                        </tr>
+                        @endforeach
+                        @endforeach
+                        <?php
+                    }
+                    ?>
                 </tbody>
                 <tfoot>
                     <tr>

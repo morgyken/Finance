@@ -30,6 +30,7 @@ use Ignite\Finance\Entities\InsuranceInvoicePayment;
 use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Evaluation\Entities\Dispensing;
 use Ignite\Evaluation\Entities\DispensingDetails;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
 
 /**
  * Description of EvaluationFinanceFunctions
@@ -72,10 +73,20 @@ class EvaluationLibrary implements EvaluationRepository {
      */
     public function record_payment() {
         DB::transaction(function () {
-            foreach ($this->request->dispensing as $d) {
-                $disp = Dispensing::find($d);
-                $disp->payment_status = 1;
-                $disp->save();
+            if (isset($this->request->dispensing)) {
+                foreach ($this->request->dispensing as $d) {
+                    $disp = Dispensing::find($d);
+                    $disp->payment_status = 1;
+                    $disp->save();
+                }
+            }
+            //dd($this->request);
+            if (isset($this->request->batch)) {
+                foreach ($this->request->batch as $bitch) {
+                    $sale = InventoryBatchProductSales::find($bitch);
+                    $sale->paid = 1;
+                    $sale->save();
+                }
             }
             $payment = new EvaluationPayments;
             $payment->patient = $this->request->patient;
@@ -155,13 +166,15 @@ class EvaluationLibrary implements EvaluationRepository {
     private function payment_details(EvaluationPayments $payment) {
         $__investigations = $this->__get_selected_stack();
         foreach ($__investigations as $item) {
-            $investigation = Investigations::findOrFail($item);
-            $detail = new EvaluationPaymentsDetails;
-            $detail->price = $investigation->price;
-            $detail->investigation = $item;
-            $detail->payment = $payment->id;
-            $detail->cost = $investigation->procedures->price;
-            $detail->save();
+            $investigation = Investigations::find($item);
+            if (isset($investigation)) {
+                $detail = new EvaluationPaymentsDetails;
+                $detail->price = $investigation->price;
+                $detail->investigation = $item;
+                $detail->payment = $payment->id;
+                $detail->cost = $investigation->procedures->price;
+                $detail->save();
+            }
         }
     }
 
