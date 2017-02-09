@@ -84,7 +84,7 @@ class EvaluationPayments extends Model {
     }
 
     public function details() {
-        return $this->hasMany(EvaluationPaymentsDetails::class, 'payment');
+        return $this->hasMany(EvaluationPaymentsDetails::class, 'payment', 'id');
     }
 
     public function users() {
