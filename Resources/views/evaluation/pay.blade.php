@@ -44,6 +44,8 @@ $__visits = $patient->visits;
                                 @endif
                             </tr>
                             @endforeach
+
+                            <!-- pharmacy queue -->
                             @foreach($visit->dispensing as $disp)
                         <input type="hidden" name="disp[]" value="1">
                         <input type="hidden" name="dispensing{{$disp->id}}" value="{{$disp->id}}">
@@ -67,13 +69,16 @@ $__visits = $patient->visits;
                         </tr>
                         @endforeach
                         @endforeach
+
+                        <!-- From pos -->
                         <?php
                         $n = 0;
                         ?>
                         @foreach($visit->drug_purchases as $item)
+                        <?php dd($item) ?>
                         <tr>
-                            @if($item->paid===1)
                         <input type="hidden" name="batch[]" value="{{$item->id}}">
+                        @if($item->paid===1)
                         <td><input type="checkbox" disabled=""/>
                         <td>Drugs <i class="small">(point of sale)</i>
                             <div class="label label-success">Paid</div>

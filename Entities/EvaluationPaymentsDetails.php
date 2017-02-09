@@ -33,7 +33,7 @@ class EvaluationPaymentsDetails extends Model {
     public $table = 'finance_evaluation_payment_details';
 
     public function investigations() {
-        return $this->belongsTo(Investigations::class, 'investigation');
+        return $this->belongsTo(Investigations::class, 'investigation', 'id');
     }
 
 }

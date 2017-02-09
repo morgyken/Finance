@@ -41,14 +41,18 @@ extract($data);
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($payment->details as $pay)
+                    <?php $inv_amount = 0; ?>
+                    @if(isset($payment->visits->investigations))
+                    @foreach($payment->visits->investigations as $i)
+                    <?php $inv_amount+=$i->price ?>
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td>{{$pay->investigations->procedures->name}} <i
-                                class="small">({{$pay->investigations->type}})</i></td>
-                        <td>{{$pay->price}}</td>
+                        <td>{{$i->procedures->name}} <i
+                                class="small">({{$i->type}})</i></td>
+                        <td>{{$i->price}}</td>
                     </tr>
                     @endforeach
+                    @endif
                     <!--Drugs Dispensed -->
                     <?php
                     $disp_amount = 0;
@@ -59,7 +63,7 @@ extract($data);
                         @foreach($item->details as $item)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$item->drugs->name}} <i
+                            <td>{{$item->drug->name}} <i
                                     class="small">(x{{$item->quantity}})</i></td>
                             <td>{{$item->price}}</td>
                         </tr>
@@ -74,7 +78,9 @@ extract($data);
                     if (isset($payment->visits->drug_purchases)) {
                         ?>
                         @foreach($payment->visits->drug_purchases as $item)
-                        <?php $pos_amount+=$item->amount ?>
+                        <?php
+                        $pos_amount+=$item->amount;
+                        ?>
                         @foreach($item->details as $item)
                         <tr>
                             <td>{{$loop->iteration}}</td>
@@ -93,7 +99,7 @@ extract($data);
                         <th>Total Bill</th>
                         <th></th>
                         <th>
-                            {{$payment->details->sum('price')+$disp_amount}}
+                            {{$inv_amount+$disp_amount+$pos_amount}}
                         </th>
                     </tr>
                 </tfoot>
