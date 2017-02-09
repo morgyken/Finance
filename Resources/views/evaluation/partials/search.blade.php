@@ -42,7 +42,7 @@
                                     <input type='text' id="date1" placeholder="Date 1" name='date1'>
                                 </div>
                                 <div class="col-xs-4 col-md-3">
-                                    <input type='text' id="date2" style="float: right" placeholder="Date 2" name='date2' id='cheque_amount'>
+                                    <input type='text' id="date2" style="float: right" placeholder="Date 2" name='date2'>
                                 </div>
                             </div>
                         </div>

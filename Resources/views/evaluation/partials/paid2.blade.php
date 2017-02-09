@@ -32,7 +32,7 @@
                             <td>{{$item->amount}}</td>
                             <td>
                                 <small>
-                                    <a href="{{route('finance.evaluation.ins.rcpt.print', $item->id)}}" class="btn btn-xs btn-primary">
+                                    <a target="blank" href="{{route('finance.evaluation.ins.rcpt.print', $item->id)}}" class="btn btn-xs btn-primary">
                                         <i class="fa fa-print"></i> Print Receipt</a>
                                 </small>
                             </td>

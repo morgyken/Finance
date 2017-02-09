@@ -22,7 +22,7 @@
                         <div class="form-group">
                             <label class="col-md-4 control-label">Date:</label>
                             <div class="col-md-8">
-                                {!! Form::text('ChequeDate',old('ChequeDate'),['class'=>'form-control datepicker','placeholder'=>'Date on Cheque']) !!}
+                                <input type='text' id="date1" placeholder="Date on Cheque" name='ChequeDate'>
                             </div>
                         </div>
                         <div class="form-group">
@@ -94,7 +94,7 @@
             <td>{{$inv->payment}}</td>
             <td>{{$inv->paid}}</td>
             <td>
-                <input type="text" size="5" name="amount{{$inv->id}}" id="pay_amount{{$inv->id}}" value="{{$bal}}">
+                <input readonly="" type="text" size="5" name="amount{{$inv->id}}" id="pay_amount{{$inv->id}}" value="{{$bal}}">
                 {!! Form::hidden('patient',$inv->visits->patients->id) !!}
             </td>
         </tr>

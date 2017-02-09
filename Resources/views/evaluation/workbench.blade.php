@@ -92,14 +92,23 @@ $mode = '';
 
         $("#action-btn").hide();
         $("#action-scene").html('<span class="label label-danger">Select an Insurance Firm for action</span>');
+
         $(".company").change(function () {
-            get_invoices(this.value);
+            getInvs(this.value);
+        });
+
+        $(".company").click(function () {
+            getInvs(this.value);
+        });
+
+        function getInvs(id) {
+            get_invoices(id);
             if (mode === 'payment') {
                 $("#action-scene").html('<input type="submit" class="btn-primary" id="action-btn" value="Receive Payment">');
             } else {
                 $("#action-scene").html('<input type="submit" class="btn-primary" value="Dispatch Selected Invoices" >');
             }
-        });
+        }
 
         $(".cheque_amount").keyup(function () {
             $('#pay_balance').val(this.value);
@@ -124,6 +133,8 @@ $mode = '';
         });
 
     });
+
+
     function updateAmount(amount, i) {
         $amount = $('#pay_dis_tot');
         $sum = $('#pay_sum');
@@ -136,5 +147,14 @@ $mode = '';
             $balance.val(parseInt($balance.val(), 10) + amount);
         }
     }
+    $("#date1").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#date_cheque").datepicker({dateFormat: 'yy-mm-dd'});
+
 </script>
+<style>
+    .disabled {
+        pointer-events: none;
+        cursor: default;
+    }
+</style>
 @endsection

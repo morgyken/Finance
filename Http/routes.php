@@ -65,5 +65,8 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('print/insurance/receipt/{id}', ['as' => 'ins.rcpt.print', 'uses' => 'EvaluationController@printReceipt']);
     $router->post('print/receipt/', ['as' => 'normal.rcpt.print', 'uses' => 'EvaluationController@printNormalReceipt']);
 
+    $router->get('print/dispatch/{id}', ['as' => 'print_dispatch', 'uses' => 'EvaluationController@printDispatch']);
+    $router->get('purge/dispatch/{id}', ['as' => 'purge_dispatch', 'uses' => 'EvaluationController@purgeDispatch']);
+
     $router->get('company/statements', ['as' => 'company.stmt', 'uses' => 'EvaluationController@companyStatements']);
 });

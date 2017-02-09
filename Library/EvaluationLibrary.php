@@ -296,6 +296,8 @@ class EvaluationLibrary implements EvaluationRepository {
     public function bill_visit(Request $request) {
         $this->updateVisitStatus($request->id, 'billed');
         $visit = Visit::find($request->id);
+        $visit->status = 'billed';
+        $visit->save();
         $this->createInsuranceInvoice($visit->id, $visit->unpaid_amount);
         return 'billed';
     }
