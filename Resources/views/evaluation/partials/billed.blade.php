@@ -89,7 +89,7 @@
             </td>
             <td>
                 <small>
-                    <a href="{{route('finance.evaluation.ins.inv.print', $item->id)}}" class="btn btn-xs btn-primary">
+                    <a target="blank" href="{{route('finance.evaluation.ins.inv.print', $item->id)}}" class="btn btn-xs btn-primary">
                         <i class="fa fa-print"></i> Print</a>
                 </small>
                 @if($item->status <2)

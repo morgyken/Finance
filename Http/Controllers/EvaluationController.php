@@ -13,6 +13,7 @@ use Ignite\Finance\Entities\InsuranceInvoicePayment;
 use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\DispatchDetails;
+use Ignite\Finance\Entities\Dispatch;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -88,7 +89,7 @@ class EvaluationController extends AdminBaseController {
     public function pendingBills() {
         $this->data['pending_mode'] = 1;
         $this->data['pending'] = Visit::wherePaymentMode('insurance')
-                //->whereNull('status')
+                ->whereNull('status')
                 ->orderBy('created_at', 'DESC')
                 ->get();
         return view('finance::evaluation.partials.pending', ['data' => $this->data]);
@@ -255,6 +256,28 @@ class EvaluationController extends AdminBaseController {
         $visit->save();
         flash("Bill changed to cash successfully");
         return back();
+    }
+
+    public function printDispatch(Request $request) {
+        $dispatch = Dispatch::find($request->id);
+        $pdf = \PDF::loadView('finance::evaluation.print.dispatch', ['dispatch' => $dispatch]);
+        $pdf->setPaper('a4', 'Landscape');
+        return $pdf->stream('dispatch_' . $request->id . '.pdf');
+    }
+
+    public function purgeDispatch(Request $request) {
+        $dispatch = DispatchDetails::whereDispatch($request->id)->get();
+        $item;
+        foreach ($dispatch as $dis) {
+            $inv = InsuranceInvoice::find($dis->insurance_invoice);
+            $inv->status = 0;
+            $inv->update();
+            $item = $dis->dispatch;
+        }
+        $batch = Dispatch::find($item);
+        $batch->delete();
+        flash("Dispatch Cancelled");
+        return redirect()->route('finance.evaluation.dispatched');
     }
 
 }

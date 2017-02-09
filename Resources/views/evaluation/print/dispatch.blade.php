@@ -145,7 +145,7 @@
         <header class="clearfix">
             <div id="logo">
             </div>
-            <h1>Invoice::{{ $bill->id }}</h1><br>
+            <h1>Dispatch#{{ $dispatch->id }}</h1><br>
             <div id="company" class="clearfix">
                 <div>{{config('practice.name')}}</div>
                 <div>{{config('practice.building')}},<br /> {{config('practice.street')}}, {{config('practice.town')}}</div>
@@ -153,8 +153,8 @@
                 <div>Email:<a href="mailto:{{config('practice.email')}}">{{config('practice.email')}}</a></div>
             </div>
             <div id="project">
-                <div><span>DATE:</span> {{smart_date($bill->created_at)}}</div>
-                <div><span>Patient:</span> {{$bill->visits->patients->full_name}}</div>
+                <div><span>DATE:</span> {{smart_date($dispatch->created_at)}}</div>
+                <div><span>Company:</span> {{$dispatch->company->name}}</div>
             </div>
         </header>
         <main>
@@ -163,32 +163,23 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Procedures/Drug</th>
-                        <th>Cost (Ksh.)</th>
+                        <th style="text-align: left;">Invoice</th>
+                        <th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($bill->visits->investigations as $item)
+                    <?php $amount = 0; ?>
+                    @foreach($dispatch->details as $item)
+                    <?php $amount +=$item->amount ?>
                     <tr class="products">
                         <td>{{$loop->iteration}}</td>
-                        <td style="text-align: left;">{{$item->procedures->name}}</td>
-                        <td>{{$item->price}}</td>
+                        <td style="text-align: left;">{{$item->invoice->invoice_no}}</td>
+                        <td>{{$item->amount}}</td>
                     </tr>
                     @endforeach
-                    @foreach($bill->visits->dispensing as $item)
-
-                    @foreach($item->details as $item)
                     <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td>{{$item->drug->name}} <i
-                                class="small">(x{{$item->quantity}})</i></td>
-                        <td>{{$item->price}}</td>
-                    </tr>
-                    @endforeach
-                    @endforeach
-                    <tr>
-                        <td style="text-align: right;" colspan="2" class="grand total">TOTAL Amount</td>
-                        <td class="grand total">{{ number_format($bill->payment,2) }}</td>
+                        <td style="text-align: right;" colspan="2" class="grand total">Total Amount</td>
+                        <td class="grand total"><u>{{ number_format($amount,2) }}</u></td>
                     </tr>
                 </tbody>
             </table>

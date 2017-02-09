@@ -28,4 +28,8 @@ class Dispatch extends Model {
         return $this->hasMany(DispatchDetails::class, 'dispatch');
     }
 
+    public function company() {
+        return $this->belongsTo(\Ignite\Settings\Entities\Insurance::class, 'firm', 'id');
+    }
+
 }

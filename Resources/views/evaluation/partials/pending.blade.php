@@ -25,7 +25,9 @@
             <tr>
                 <td>{{$n+=1}}</td>
                 <td>
+                    @if($visit->status ==null)
                     <input type="checkbox" name="visit[]" value="{{$visit->id}}">
+                    @endif
                     <input type="hidden" name="amount[]" value="{{$visit->unpaid_amount}}"
                 </td>
                 <td>{{$visit->id}}</td>
@@ -35,12 +37,12 @@
                 <td>{{$visit->patient_scheme->schemes->name}}</td>
                 <td>{{$visit->unpaid_amount}}</td>
                 <td>
+                    @if($visit->unpaid_amount>0)
                     <a href="{{route('finance.evaluation.bill', $visit->id)}}" class="btn btn-xs btn-primary">
                         <i class="fa fa-usd"></i> Bill</a>
+                    @endif
                     <a href="{{route('finance.evaluation.tocash', $visit->id)}}" class="btn btn-xs btn-info">
                         <i class="fa fa-money"></i>Change to Cash</a>
-                    <a href="{{route('finance.evaluation.cancel', $visit->id)}}" class="btn btn-xs btn-danger">
-                        <i class="fa fa-times"></i> Cancel</a>
                 </td>
             </tr>
             @endif

@@ -27,13 +27,13 @@
             </td>
             <td>{{number_format($item->invoice->payment, 2)}}</td>
             <td>
-                <a href="{{route('finance.evaluation.payment')}}" class="btn btn-xs btn-primary">
+                <a target="blank" href="{{route('finance.evaluation.payment')}}" class="btn btn-xs btn-primary">
                     <i class="fa fa-money"></i> Receive Payment</a>
 
-                <a href="" class="btn btn-xs btn-warning">
+                <a target="blank" href="{{route('finance.evaluation.print_dispatch', $item->id)}}" class="btn btn-xs btn-warning">
                     <i class="fa fa-print"></i>Print</a>
 
-                <a href="" class="btn btn-xs btn-danger">
+                <a href="{{route('finance.evaluation.purge_dispatch', $item->id)}}" class="btn btn-xs btn-danger">
                     <i class="fa fa-trash"></i> Cancel Dispatch</a>
             </td>
         </tr>

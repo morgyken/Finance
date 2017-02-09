@@ -35,7 +35,7 @@ class BillingApiController extends \Illuminate\Routing\Controller {
         if ($mode == 'pending') {
             $pending = Visit::wherePaymentMode('insurance')->whereHas('patient_scheme', function($query) {
                         $query->whereHas('schemes', function ($query) {
-                            $query->whereCompany($this->request->firm);
+                            //$query->whereCompany($this->request->firm);
                         });
                     })
                     ->whereNull('status')
@@ -55,10 +55,13 @@ class BillingApiController extends \Illuminate\Routing\Controller {
                     <td><?php echo$visit->patient_scheme->schemes->name ?></td>
                     <td><?php echo$visit->unpaid_amount ?></td>
                     <td>
-                        <a href="<?php echo route('finance.evaluation.bill', $visit->id) ?>" class="btn btn-xs btn-primary">
-                            <i class="fa fa-usd"></i> Bill</a>
-                        <a href="<?php echo route('finance.evaluation.cancel', $visit->id) ?>" class="btn btn-xs btn-danger">
-                            <i class="fa fa-times"></i> Cancel</a>
+                        <?php if ($visit->unpaid_amount > 0) { ?>
+                            <a href="<?php echo route('finance.evaluation.bill', $visit->id) ?>" class="btn btn-xs btn-primary disabled">
+                                <i class="fa fa-usd"></i> Bill</a>
+                        <?php } else { ?>
+                            <a href="<?php echo route('finance.evaluation.bill', $visit->id) ?>" class="btn btn-xs btn-primary disabled">
+                                <i class="fa fa-usd"></i> Bill</a>
+                        <?php } ?>
                     </td>
                 </tr>
                 <?php
