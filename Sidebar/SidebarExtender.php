@@ -58,12 +58,14 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->route('finance.evaluation.cash_bills');
                 });
 
-                $item->item('Payments Overview', function (Item $item) {
-                    $item->icon('fa fa fa-files-o');
-                    $item->route('inventory.sales.receipts');
-                    $item->authorize($this->auth->hasAccess('finance.Payments Overview'));
-                });
+                /*
 
+                  $item->item('Payments Overview', function (Item $item) {
+                  $item->icon('fa fa fa-files-o');
+                  $item->route('inventory.sales.receipts');
+                  $item->authorize($this->auth->hasAccess('finance.Payments Overview'));
+                  });
+                 */
                 /*
                   $item->item('Billing', function(Item $item) {
                   $item->icon('fa fa-unsorted');

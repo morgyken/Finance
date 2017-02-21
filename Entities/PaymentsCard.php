@@ -34,4 +34,8 @@ class PaymentsCard extends Model {
     protected $guarded = [];
     public $table = 'finance_payments_card';
 
+    public function payments() {
+        return $this->belongsTo(EvaluationPayments::class, 'payment');
+    }
+
 }

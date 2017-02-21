@@ -41,4 +41,8 @@ class PaymentsCheque extends Model {
         return $this->belongsTo(FinanceEvaluationInsurancePayments::class, 'insurance_payment', 'id');
     }
 
+    public function payments() {
+        return $this->belongsTo(EvaluationPayments::class, 'payment');
+    }
+
 }

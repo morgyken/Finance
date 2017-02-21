@@ -24,4 +24,8 @@ class PaymentsCash extends Model {
     protected $guarded = [];
     public $table = 'finance_payments_cash';
 
+    public function payments() {
+        return $this->belongsTo(EvaluationPayments::class, 'payment');
+    }
+
 }
