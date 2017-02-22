@@ -22,5 +22,4 @@ class PettyCash extends Model {
     protected $fillable = ['amount'];
     public $table = 'finance_petty_cash';
 
-    //
 }

@@ -32,4 +32,8 @@ class PaymentsMpesa extends Model {
     protected $guarded = [];
     public $table = 'finance_payments_mpesa';
 
+    public function payments() {
+        return $this->belongsTo(EvaluationPayments::class, 'payment');
+    }
+
 }
