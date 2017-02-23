@@ -94,6 +94,9 @@ class EvaluationLibrary implements EvaluationRepository {
             if (isset($this->request->visit)) {
                 $payment->visit = $this->request->visit;
             }
+            if (isset($this->request->sale)) {
+                $payment->sale = $this->request->sale;
+            }
             $payment->user = $this->user;
             $payment->save();
             $payment->amount = $this->payment_methods($payment);

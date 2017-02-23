@@ -34,6 +34,10 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function(Router $router) {
 $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illuminate\Routing\Router $router) {
     $router->get('pay/{patient?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
     $router->get('accounts', ['uses' => 'EvaluationController@accounts', 'as' => 'accounts']);
+
+    $router->get('sale/pay/{sale?}', ['as' => 'sale.pay', 'uses' => 'EvaluationController@sale_pay']);
+    $router->get('sale/details/{sale}', ['uses' => 'EvaluationController@sale_details', 'as' => 'sale']);
+
     $router->get('accounts/{patient}/show', ['uses' => 'EvaluationController@individual_account', 'as' => 'individual_account']);
     $router->post('payment', ['as' => 'pay.save', 'uses' => 'EvaluationController@pay_save']);
     $router->get('payment_details/{id}', ['as' => 'payment_details', 'uses' => 'EvaluationController@payment_details']);

@@ -15,6 +15,7 @@ use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\DispatchDetails;
 use Ignite\Finance\Entities\Dispatch;
 use Illuminate\Http\Request;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Carbon\Carbon;
 
 class EvaluationController extends AdminBaseController {
@@ -38,6 +39,11 @@ class EvaluationController extends AdminBaseController {
         return view('finance::evaluation.details', ['data' => $this->data]);
     }
 
+    public function sale_details(Request $request) {
+        $this->data['sales'] = InventoryBatchProductSales::find($request->sale);
+        return view('finance::evaluation.sale_preview', ['data' => $this->data]);
+    }
+
     public function printNormalReceipt(Request $request) {
         $this->data['payment'] = EvaluationPayments::find($request->payment);
         $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
@@ -51,20 +57,37 @@ class EvaluationController extends AdminBaseController {
     }
 
     public function pay($patient = null) {
+
         if (!empty($patient)) {
             $this->data['patient'] = Patients::find($patient);
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
         $this->data['patients'] = get_patients_with_bills();
-        $this->data['with_pharm'] = Patients::whereHas('visits', function ($query) {
-                    $query->wherePaymentMode('cash');
-                    $query->whereHas('dispensing', function ($q) {
-                        $q->wherePayment_status(0);
-                    });
-                })->get();
+
+        $this->data['with_drugs'] = get_patients_with_drugs();
+
         $this->data['from_pos'] = Patients::whereHas('drug_purchases', function ($query) {
                     $query->wherePaid(0);
                 })->get();
+
+        $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
+                ->get();
+
+        //dd($this->data['sales']);
+
+        return view('finance::evaluation.payment_list', ['data' => $this->data]);
+    }
+
+    public function sale_pay($sale = null) {
+
+        if (!empty($sale)) {
+            $this->data['sales'] = InventoryBatchProductSales::find($sale);
+            return view('finance::evaluation.sale_pay', ['data' => $this->data]);
+        }
+
+        $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
+                ->get();
+
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 

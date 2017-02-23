@@ -51,74 +51,116 @@ extract($data);
         </div>
         <div class="col-md-6">
             @if(isset($payment))
-            <table class="table table-striped" id="items">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Procedures/Drug</th>
-                        <th>Cost (Ksh.)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $inv_amount = 0; ?>
-                    @if(isset($payment->visits->investigations))
-                    @foreach($payment->visits->investigations as $i)
-                    <?php $inv_amount+=$i->price ?>
-                    <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td>{{$i->procedures->name}} <i
-                                class="small">({{$i->type}})</i></td>
-                        <td>{{$i->price}}</td>
-                    </tr>
-                    @endforeach
-                    @endif
-                    <!--Drugs Dispensed -->
-                    <?php
-                    $disp_amount = 0;
-                    if (isset($payment->visits->dispensing)) {
-                        ?>
-                        @foreach($payment->visits->dispensing as $item)
-                        <?php $disp_amount+=$item->amount ?>
-                        @foreach($item->details as $item)
+            <?php if (!$payment->sale > 0) { ?>
+                <table class="table table-striped" id="items">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Procedures/Drug</th>
+                            <th>Cost (Ksh.)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $inv_amount = 0; ?>
+                        @if(isset($payment->visits->investigations))
+                        @foreach($payment->visits->investigations as $i)
+                        <?php $inv_amount+=$i->price ?>
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$item->drug->name}} <i
-                                    class="small">(x{{$item->quantity}})</i></td>
-                            <td>{{$item->price}}</td>
+                            <td>{{$i->procedures->name}} <i
+                                    class="small">({{$i->type}})</i></td>
+                            <td>{{$i->price}}</td>
                         </tr>
                         @endforeach
-                        @endforeach
+                        @endif
+                        <!--Drugs Dispensed -->
                         <?php
-                    }
-                    ?>
-                    <!--POS -->
-                    <?php
-                    $pos_amount = 0;
-                    if (isset($payment->visits->drug_purchases)) {
+                        $disp_amount = 0;
+                        if (isset($payment->visits->dispensing)) {
+                            ?>
+                            @foreach($payment->visits->dispensing as $item)
+                            <?php $disp_amount+=$item->amount ?>
+                            @foreach($item->details as $item)
+                            <tr>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{$item->drug->name}} <i
+                                        class="small">(x{{$item->quantity}})</i></td>
+                                <td>{{$item->price}}</td>
+                            </tr>
+                            @endforeach
+                            @endforeach
+                            <?php
+                        }
                         ?>
-                        @foreach($payment->visits->drug_purchases as $item)
-                        <?php $pos_amount+=$item->amount ?>
-                        @foreach($item->details as $item)
+                        <!--POS -->
+                        <?php
+                        $pos_amount = 0;
+                        if (isset($payment->visits->drug_purchases)) {
+                            ?>
+                            @foreach($payment->visits->drug_purchases as $item)
+                            <?php $pos_amount+=$item->amount ?>
+                            @foreach($item->details as $item)
+                            <tr>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{$item->drugs->name}} <i
+                                        class="small">(x{{$item->quantity}})</i></td>
+                                <td>{{$item->price}}</td>
+                            </tr>
+                            @endforeach
+                            @endforeach
+                            <?php
+                        }
+                        ?>
+                    </tbody>
+                    <tfoot>
                         <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$item->drugs->name}} <i
-                                    class="small">(x{{$item->quantity}})</i></td>
+                            <th>Total Bill</th>
+                            <th></th>
+                            <th>{{$inv_amount+$disp_amount+$pos_amount}}</th>
+                        </tr>
+                        <tr>
+                            <th>Amount Paid</th>
+                            <th></th>
+                            <th>{{$payment->total}}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            <?php } else { ?>
+
+
+                <table class="table table-striped" id="items">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($payment->sales->goodies as $item)
+                        <tr>
+                            <td>{{$item->products->name}}</td>
+                            <td>{{$item->quantity}}</td>
                             <td>{{$item->price}}</td>
+                            <td>{{$item->price*$item->quantity}}</td>
                         </tr>
                         @endforeach
-                        @endforeach
-                        <?php
-                    }
-                    ?>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Total</th>
-                        <th></th>
-                        <th>{{$inv_amount+$disp_amount+$pos_amount}}</th>
-                    </tr>
-                </tfoot>
-            </table>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total Amount</th>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                {{$payment->sales->amount}}
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+
+            <?php } ?>
             @endif
         </div>
         <div class="col-md-6">
@@ -142,7 +184,6 @@ extract($data);
             Amount: Ksh {{$payment->card->amount}}
             <br/>
             @endif
-            <strong>Total Paid: {{$payment->total}}</strong>
         </div>
     </div>
     <hr/>

@@ -14,9 +14,10 @@ class CreateEvaluationPaymentsTable extends Migration {
         Schema::create('finance_evaluation_payments', function (Blueprint $column) {
             $column->increments('id');
             $column->string('receipt')->unique();
-            $column->integer('patient')->unsigned();
+            $column->integer('patient')->unsigned()->nullable();
             $column->integer('user')->unsigned();
-            $column->integer('visit')->unsigned();
+            $column->integer('visit')->unsigned()->nullable();
+            $column->integer('sale')->unsigned()->nullable();
             $column->timestamps();
 
             $column->foreign('patient')
@@ -24,14 +25,22 @@ class CreateEvaluationPaymentsTable extends Migration {
                     ->on('reception_patients')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
+
             $column->foreign('user')
                     ->references('id')
                     ->on('users')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
+
             $column->foreign('visit')
                     ->references('id')
                     ->on('evaluation_visits')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');
+
+            $column->foreign('sales')
+                    ->references('id')
+                    ->on('inventory_batch_sales')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
         });
