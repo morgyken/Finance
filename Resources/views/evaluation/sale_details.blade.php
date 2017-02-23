@@ -32,7 +32,6 @@ extract($data);
             </div>
         </div>
         <div class="col-md-6">
-            @if(!$payment->sale >0)
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -105,39 +104,6 @@ extract($data);
                     </tr>
                 </tfoot>
             </table>
-            @else
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Quantity</th>
-                        <th>Unit Price</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($payment->sales->goodies as $item)
-                    <tr>
-                        <td>{{$item->products->name}}</td>
-                        <td>{{$item->quantity}}</td>
-                        <td>{{$item->price}}</td>
-                        <td>{{$item->price*$item->quantity}}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Total Amount</th>
-                        <th></th>
-                        <th></th>
-                        <th>
-                            {{$payment->sales->amount}}
-                        </th>
-                    </tr>
-                </tfoot>
-            </table>
-
-            @endif
         </div>
         <div class="col-md-6">
             @if(!empty($payment->cash))

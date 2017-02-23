@@ -95,4 +95,8 @@ class EvaluationPayments extends Model {
         return $this->belongsTo(\Ignite\Evaluation\Entities\Visit::class, 'visit');
     }
 
+    public function sales() {
+        return $this->belongsTo(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'sale');
+    }
+
 }

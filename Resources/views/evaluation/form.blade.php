@@ -19,8 +19,10 @@
 @endif
 @if(isset($patient))
 {!! Form::hidden('patient',$patient->id) !!}
-@else
+@elseif(isset($visit))
 {!! Form::hidden('patient',$visit->patients->id) !!}
+@elseif(isset($sales))
+<input type="hidden" name="patient" value="{{$sales->patient}}">
 @endif
 <div class="accordion form-horizontal" id="someForm">
     <h4>Cash</h4>
@@ -28,7 +30,9 @@
         <div class="form-group">
             <label class="col-md-4 control-label">Cash Amount</label>
             <div class="col-md-8">
+                @if(isset($visit))
                 <input type="hidden" name="visit" value="{{$visit->id}}">
+                @endif
                 {!! Form::text('CashAmount',old('CashAmount'),['class'=>'form-control','placeholder'=>'Cash Amount']) !!}
             </div>
         </div>

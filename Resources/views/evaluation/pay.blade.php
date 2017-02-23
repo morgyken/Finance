@@ -18,7 +18,7 @@ $__visits = $patient->visits;
         <div class="col-md-6">
             Patient Name: <strong>{{$patient->full_name}}</strong>
             <hr/>
-            <h4>Select procedures for payment<span class="pull-right" id="total"></span></h4>
+            <h4>Select items for payment<span class="pull-right" id="total"></span></h4>
             @if(!empty($__visits))
             <div class="accordion">
                 @foreach($__visits as $visit)
@@ -69,45 +69,11 @@ $__visits = $patient->visits;
                         </tr>
                         @endforeach
                         @endforeach
-
-                        <!-- From pos -->
-                        <?php
-                        $n = 0;
-                        ?>
-                        @foreach($visit->drug_purchases as $item)
-                        <?php dd($item) ?>
-                        <tr>
-                        <input type="hidden" name="batch[]" value="{{$item->id}}">
-                        @if($item->paid===1)
-                        <td><input type="checkbox" disabled=""/>
-                        <td>Drugs <i class="small">(point of sale)</i>
-                            <div class="label label-success">Paid</div>
-                            Ksh <span class="topay">{{$item->amount}}.00/=</span></td>
-                        <ul>
-                            @foreach($item->goodies as $g)
-                            <li>{{$g->products->name}} x {{$g->quantity}} -- {{$g->quantity*$g->price}}.00/=</li>
-                            @endforeach
-                        </ul>
-                        @else
-                        <input type="hidden" name="batch[]" value="{{$item->id}}">
-                        <td><input type="checkbox" value="{{$item->id}}"
-                                   name="item{{$item->id}}" />
-                        <td>Drugs <i class="small">(point of sale)</i>
-                            Ksh <span class="topay">{{$item->amount}}.00/=</span></td>
-                        <ul>
-                            @foreach($item->goodies as $g)
-                            <li>{{$g->products->name}} x {{$g->quantity}} -- {{$g->quantity*$g->price}}.00/=</li>
-                            @endforeach
-                        </ul>
-                        @endif
-                        </tr>
-                        @endforeach
-
                         </tbody>
-
                     </table>
                 </div>
                 @endforeach
+
             </div>
             @else
             <div class="alert alert-info">
