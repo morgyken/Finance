@@ -33,7 +33,8 @@ class BillingApiController extends \Illuminate\Routing\Controller {
                 ->get();
 
         if ($mode == 'pending') {
-            $pending = Visit::wherePaymentMode('insurance')->whereHas('patient_scheme', function($query) {
+            $pending = Visit::wherePaymentMode('insurance')
+                    ->whereHas('patient_scheme', function($query) {
                         $query->whereHas('schemes', function ($query) {
                             //$query->whereCompany($this->request->firm);
                         });
