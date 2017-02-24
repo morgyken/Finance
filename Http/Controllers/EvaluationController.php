@@ -71,6 +71,7 @@ class EvaluationController extends AdminBaseController {
                 })->get();
 
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
+                ->whereNull('insurance')
                 ->get();
 
         //dd($this->data['sales']);

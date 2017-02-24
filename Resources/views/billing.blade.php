@@ -25,6 +25,17 @@ $count = 0;
             <div class="col-md-12">
                 @if(!$data['insurance_invoices']->isEmpty())
                 {!! Form::open(['class'=>'form-horizontal', 'route'=>'finance.billing.dispatch']) !!}
+                <!--
+                <div class="form-group">
+                    <label class="col-md-2 control-label">
+                        Insurance Company
+                    </label>
+                    <div class="col-md-5">
+                        {!! Form::select('company',get_insurance_companies(), null, ['class' => 'form-control company', 'placeholder' => 'Choose...']) !!}
+                        <span class="help-block">Select an insurance company for action.</span>
+                    </div>
+                </div>
+                -->
                 <table class="table table-responsive table-striped" id="bills">
                     <tbody>
                         <?php $t = $n = 0; ?>
@@ -49,8 +60,7 @@ $count = 0;
                             </td>
                             <td>{{$bill->invoice_no}}</td>
                             <td>
-                                {{@$bill->sales->insuranceses->clients->first_name}}
-                                {{@$bill->sales->insuranceses->clients->last_name}}
+                                {{@$bill->sales->patients->full_name}}
                             </td>
                             <td>{{$bill->invoice_date}}</td>
                             <td>
@@ -71,18 +81,22 @@ $count = 0;
                                 @endif
                             </td>
                             <td>
-                                {{@$bill->sales->insuranceses->companies->name}}:
+                                {{@$bill->sales->insuranceses->schemes->companies->name}}:
                                 {{@$bill->sales->insuranceses->schemes->name}}
                             </td>
                             <td>
                                 <small>
-                                    <a target="blank" href="{{route('finance.bill.print', $bill->id)}}"> <i class="fa fa-print"></i></a>
+                                    <a target="blank" href="{{route('finance.bill.print', $bill->id)}}">
+                                        <i class="fa fa-print"></i>
+                                        print
+                                    </a>
                                 </small>
-                                @if($bill->status ==3)
+                                @if($bill->status ===3 ||$bill->status ===2)
                                 @else
                                 <small>
                                     <a href="{{route('finance.bill.cancel', $bill->id)}}">
                                         <i id="cancel" style="color:red" class="fa fa-times"></i>
+                                        cancel
                                     </a>
                                 </small>
                                 @endif
@@ -90,7 +104,7 @@ $count = 0;
                                 @if($bill->status ==1)
                                 <a href="{{route('finance.bill.pay', $bill->id)}}">
                                     <i class="fa fa-money"></i>
-                                    receive payment?
+                                    payment
                                 </a>
                                 @endif
                             </td>
