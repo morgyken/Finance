@@ -49,19 +49,27 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->route('finance.evaluation.summary');
                 });
 
-                $item->item('Insurance Workbench', function(Item $item) {
-                    $item->icon('fa fa-unsorted');
 
-                    $item->item('Checked In Patients', function (Item $item) {
-                        $item->icon('fa fa-coffee');
-                        $item->route('finance.evaluation.insurance');
-                    });
+                /* $item->item('Insurance Workbench', function(Item $item) {
+                  $item->icon('fa fa-unsorted');
 
-                    $item->item('Pharmacy Clients', function(Item $item) {
-                        $item->icon('fa fa-yelp');
-                        $item->route('finance.billing');
-                        // $item->authorize($this->auth->hasAccess('finance.billing'));
-                    });
+                  $item->item('Checked In Patients', function (Item $item) {
+                  $item->icon('fa fa-coffee');
+                  $item->route('finance.evaluation.insurance');
+                  });
+
+                  $item->item('Pharmacy Clients', function(Item $item) {
+                  $item->icon('fa fa-yelp');
+                  $item->route('finance.billing');
+                  // $item->authorize($this->auth->hasAccess('finance.billing'));
+                  });
+                  });
+                 */
+
+
+                $item->item('Insurance Workbench', function (Item $item) {
+                    $item->icon('fa fa-coffee');
+                    $item->route('finance.evaluation.insurance');
                 });
 
                 $item->item('Cash Bills', function (Item $item) {
