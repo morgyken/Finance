@@ -49,7 +49,7 @@
                                 <input name="ChequeName" placeholder="Ac Holder Name" type="text" size=20 maxlength=100/>
                             </div>
                             <div class="col-xs-4">
-                                <input name="ChequeDate" placeholder="Date on Cheque Leaf:" type="text"  size=20 class="datepicker"/>
+                                <input name="ChequeDate" placeholder="Date on Cheque Leaf:" type="text" id="date"  size=20 class="date"/>
                             </div>
                         </div>
 
@@ -74,7 +74,7 @@
                     <div class="form-group row">
                         <label class="col-xs-4 col-form-label">Amount</label>
                         <div class="col-xs-8">
-                            <input type="text" id="amount" value="{{$data['amnt']}}" class="form-control" name = "amount" title = "Enter Amount">
+                            <input type="text" readonly="" id="amount" value="{{$data['amnt']}}" class="form-control" name = "amount" title = "Enter Amount">
                         </div>
                     </div>
 
@@ -95,6 +95,7 @@
         $(this).find("option:selected").each(function () {
             if ($(this).attr("value") == "cheque") {
                 $("#cheque").show();
+                $("#date").datepicker({dateFormat: 'yy-mm-dd'});
             } else {
                 $("#cheque").hide();
             }

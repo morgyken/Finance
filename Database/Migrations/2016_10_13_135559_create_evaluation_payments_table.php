@@ -38,7 +38,7 @@ class CreateEvaluationPaymentsTable extends Migration {
                     ->onUpdate('cascade')
                     ->onDelete('cascade');
 
-            $column->foreign('sales')
+            $column->foreign('sale')
                     ->references('id')
                     ->on('inventory_batch_sales')
                     ->onUpdate('cascade')

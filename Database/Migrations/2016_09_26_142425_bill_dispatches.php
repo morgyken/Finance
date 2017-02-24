@@ -14,7 +14,7 @@ class BillDispatches extends Migration {
         Schema::create('finance_bill_dispatches', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('user')->unsigned();
-            $table->integer('firm')->unsigned();
+            $table->integer('firm')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('user')->references('id')->on('users')

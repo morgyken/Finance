@@ -153,17 +153,18 @@
                 <div>Email:<a href="mailto:{{config('practice.email')}}">{{config('practice.email')}}</a></div>
             </div>
             <div id="project">
-                <div><span>DATE:</span> {{smart_date($bill->created_at)}}</div>
+                <div><span>DATE:</span>
+                    {{smart_date($bill->created_at)}}</div>
                 <div><span>Client:</span>
-                    {{$bill->sales->insuranceses->clients->first_name}}
-                    {{$bill->sales->insuranceses->clients->last_name}}
+                    {{$bill->sales->patients->full_name}}
                 </div>
-                <div><span>Scheme:</span>
-                    {{$bill->sales->insuranceses->companies->name}}:
-                    {{$bill->sales->insuranceses->schemes->name}}
+                <div>
+                    <span>Scheme:</span>
+                    {{@$bill->sales->insuranceses->schemes->companies->name}}:
+                    {{@$bill->sales->insuranceses->name}}
                 </div>
                 <div><span>Policy Number:</span>
-                    {{$bill->sales->insuranceses->policy_no}}
+                    {{$bill->sales->insuranceses->policy_number}}
                 </div>
             </div>
         </header>
