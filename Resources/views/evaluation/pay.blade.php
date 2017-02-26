@@ -51,7 +51,7 @@ $__visits = $patient->visits;
                         <input type="hidden" name="dispensing{{$disp->id}}" value="{{$disp->id}}">
                         @foreach($disp->details as $item)
                         <tr>
-                            @if($item->paid===1)
+                            @if($item->status===1)
                             <td><input type="checkbox" disabled/></td>
                             <td>
                                 <div class="label label-success">Paid</div>

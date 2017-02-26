@@ -88,6 +88,16 @@ class EvaluationLibrary implements EvaluationRepository {
                     $sale->save();
                 }
             }
+
+            //dd($this->request);
+            if (isset($this->request->dispensing)) {
+                foreach ($this->request->dispensing as $disp) {
+                    $sale = DispensingDetails::find($disp);
+                    $sale->status = 1;
+                    $sale->save();
+                }
+            }
+
             $payment = new EvaluationPayments;
             $payment->patient = $this->request->patient;
             $payment->receipt = generate_receipt_no();
