@@ -11,43 +11,68 @@
   $pays = paymentFor($payment); */
 extract($data);
 ?>
+
 <style>
-    #items {
+    table{
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
     }
 
-    #items td, #items th {
+    table th{
         border: 1px solid #ddd;
         text-align: left;
-        padding: 8px;
+        padding: 1px;
     }
 
-    #items tr:nth-child(even){background-color: #f2f2f2}
+    table tr:nth-child(even){background-color: #f2f2f2}
 
-    #items tr:hover {background-color: #ddd;}
+    table tr:hover {background-color: #ddd;}
 
-    #items th {
-        padding-top: 5px;
-        padding-bottom: 5px;
+    table th{
+        padding-top: 1px;
+        padding-bottom: 1px;
         background-color: /*#4CAF50*/ #BBBBBB;
         color: white;
     }
+    .left{
+        width: 60%;
+        float: left;
+    }
+    .right{
+        float: left;
+        width: 40%;
+    }
+    .clear{
+        clear: both;
+    }
+    img{
+        width:50%;
+        height: 50%/*auto*/;
+        float: right;
+    }
+    td{
+        font-size: 70%;
+    }
+    div #footer{
+        font-size: 70%;
+    }
+    th{
+        font-size: 80%;
+    }
 </style>
 <div class="box box-info">
-    <center><img width="80px" height="100px" src="{{realpath(base_path('/public/img/image.jpg'))}}"/></center>
+    <img src="{{realpath(base_path('/public/logo.png'))}}"/>
     <div class="box-header with-border">
-        <center><h3 class="box-title">{{config('practice.name')}}</h3></center>
-        <h5><center>{{get_clinic_name(config('practice.clinic'))}} Clinic</center></h5>
-        <h6><center>P.O BOX {{config('practice.address')}}, {{config('practice.town')}}</center></h6>
+        <h3 class="box-title">{{config('practice.name')}}</h3>
+        <h5>{{get_clinic_name(config('practice.clinic'))}} Clinic</h5>
+        <h6>P.O BOX {{config('practice.address')}}, {{config('practice.town')}}</h6>
     </div>
     <div class="box-body">
         <div class="col-md-12">
             <strong>Name:</strong><span class="content"> {{$payment->patients->full_name}}</span><br/>
             <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
             <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
-
         </div>
         <div class="col-md-6">
             @if(isset($payment))
