@@ -63,13 +63,14 @@ $__visits = $patient->visits;
                         <input type="hidden" name="dispensing[]" value="{{$disp->id}}">
                         <td><input type="checkbox" value="{{$item->id}}"
                                    name="item{{$item->id}}" />
-                        <td>{{$item->drug->name}} <i class="small">(dispensed drug)</i>
-                            Ksh <span class="topay">{{$item->price*$item->quantity}}</span></td>
-                        @endif
-                        </tr>
-                        @endforeach
-                        @endforeach
-                        </tbody>
+                        <td>{{$item->drug->name}} <i class="small">(dispensed drug) - {{$item->price*$item->quantity}}</i><br>
+                            <small>{{$item->discount}}% discount ({{($item->discount/100)*$item->price*$item->quantity}})</small>
+                            Ksh <span class="topay">{{ceil($item->price*$item->quantity-($item->discount/100)*$item->price*$item->quantity)}}</span>
+                            @endif
+                            </tr>
+                            @endforeach
+                            @endforeach
+                            </tbody>
                     </table>
                 </div>
                 @endforeach
