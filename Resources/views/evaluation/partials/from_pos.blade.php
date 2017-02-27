@@ -14,7 +14,11 @@
     </td>
     <ul>
         @foreach($sales->goodies as $g)
-        <li>{{$g->products->name}} x {{$g->quantity}} -- {{$g->quantity*$g->price}}.00/=</li>
+        <li>
+            {{$g->products->name}} x {{$g->quantity}},
+            {{$g->discount}}%discount --
+            {{$g->quantity*$g->price-($g->discount/100*$g->quantity*$g->price)}}.00/=
+        </li>
         @endforeach
     </ul>
     @else
@@ -27,7 +31,11 @@
     </td>
     <ul>
         @foreach($sales->goodies as $g)
-        <li>{{$g->products->name}} x {{$g->quantity}} -- {{$g->quantity*$g->price}}.00/=</li>
+        <li>
+            {{$g->products->name}} x {{$g->quantity}},
+            {{$g->discount}}%discount --
+            {{$g->quantity*$g->price-($g->discount/100*$g->quantity*$g->price)}}.00/=
+        </li>
         @endforeach
     </ul>
     @endif

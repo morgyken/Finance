@@ -143,8 +143,7 @@
     </head>
     <body>
         <header class="clearfix">
-            <div id="logo">
-            </div>
+            <img src="{{realpath(base_path('/public/logo.png'))}}"/>
             <h1>RECEIPT::{{ $payment->id }}</h1><br>
             <div id="company" class="clearfix">
                 <div>{{config('practice.name')}}</div>

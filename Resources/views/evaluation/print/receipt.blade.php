@@ -65,11 +65,15 @@ extract($data);
     <img src="{{realpath(base_path('/public/logo.png'))}}"/>
     <div class="box-header with-border">
         <h3 class="box-title">{{config('practice.name')}}</h3>
-        <h5>{{get_clinic_name(config('practice.clinic'))}} Clinic</h5>
-        <h6>P.O BOX {{config('practice.address')}}, {{config('practice.town')}}</h6>
+        {{config('practice.building')?config('practice.building').',':''}}
+        {{config('practice.street')?config('practice.street').',':''}}
+        {{config('practice.town')}}<br>
+        {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
+
     </div>
     <div class="box-body">
         <div class="col-md-12">
+            <br>
             <strong>Name:</strong><span class="content"> {{$payment->patients->full_name}}</span><br/>
             <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
             <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
@@ -86,13 +90,14 @@ extract($data);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $inv_amount = 0; ?>
+                        <?php $inv_amount = 0;
+                        ?>
                         @if(isset($payment->visits->investigations))
                         @foreach($payment->visits->investigations as $i)
                         <?php $inv_amount+=$i->price ?>
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$i->procedures->name}} <i
+                            <td>{{substr($i->procedures->name, 0, 40)}} <i
                                     class="small">({{$i->type}})</i></td>
                             <td>{{$i->price}}</td>
                         </tr>
@@ -110,7 +115,7 @@ extract($data);
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$item->drug->name}} <i
                                         class="small">(x{{$item->quantity}})</i></td>
-                                <td>{{$item->price}}</td>
+                                <td>{{ceil($item->price-($item->discount/100*$item->price))}}</td>
                             </tr>
                             @endforeach
                             @endforeach
@@ -129,7 +134,7 @@ extract($data);
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$item->drugs->name}} <i
                                         class="small">(x{{$item->quantity}})</i></td>
-                                <td>{{$item->price}}</td>
+                                <td>{{ceil($item->price-($item->discount/100*$item->price))}}</td>
                             </tr>
                             @endforeach
                             @endforeach
@@ -159,6 +164,7 @@ extract($data);
                             <th>Item</th>
                             <th>Quantity</th>
                             <th>Unit Price</th>
+                            <th>Discount(%)</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -168,15 +174,14 @@ extract($data);
                             <td>{{$item->products->name}}</td>
                             <td>{{$item->quantity}}</td>
                             <td>{{$item->price}}</td>
-                            <td>{{$item->price*$item->quantity}}</td>
+                            <td>{{$item->discount}}</td>
+                            <td>{{ceil($item->price*$item->quantity-(($item->discount/100)*$item->price*$item->quantity))}}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Total Amount</th>
-                            <th></th>
-                            <th></th>
+                            <th colspan="4">Total Amount</th>
                             <th>
                                 {{$payment->sales->amount}}
                             </th>

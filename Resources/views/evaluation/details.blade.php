@@ -112,6 +112,7 @@ extract($data);
                         <th>Item</th>
                         <th>Quantity</th>
                         <th>Unit Price</th>
+                        <th>Discount</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -121,13 +122,15 @@ extract($data);
                         <td>{{$item->products->name}}</td>
                         <td>{{$item->quantity}}</td>
                         <td>{{$item->price}}</td>
-                        <td>{{$item->price*$item->quantity}}</td>
+                        <td>{{$item->discount}}</td>
+                        <td>{{$item->price*$item->quantity-(($item->discount/100)*$item->price*$item->quantity)}}</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
                         <th>Total Amount</th>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th>

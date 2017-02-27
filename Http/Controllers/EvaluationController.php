@@ -44,11 +44,56 @@ class EvaluationController extends AdminBaseController {
         return view('finance::evaluation.sale_preview', ['data' => $this->data]);
     }
 
+    /*
+      public function printNormalReceipt(Request $request) {
+      $this->data['payment'] = EvaluationPayments::find($request->payment);
+      $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
+      $pdf->setPaper('a4', 'Landscape');
+      return $pdf->stream('Bill' . $request->id . '.pdf');
+      } */
+
     public function printNormalReceipt(Request $request) {
-        $this->data['payment'] = EvaluationPayments::find($request->payment);
+        //$this->data['sales'] = InventoryBatchProductSales::find($id);
+        $this->data['payment'] = $payment = EvaluationPayments::find($request->payment);
+        //dd($this->data);
+        $min_height = 420;
+        /*
+          foreach ($this->data['pa']->goodies as $n) {
+          $min_height += 20;
+          } */
+
+        if (isset($payment->visits->investigations)) {
+            foreach ($payment->visits->investigations as $i) {
+                $min_height+=15;
+            }
+        }
+
+        if (isset($payment->visits->dispensing)) {
+            foreach ($payment->visits->dispensing as $item) {
+                foreach ($item->details as $item) {
+                    $min_height+=15;
+                }
+            }
+        }
+
+        if (isset($payment->visits->drug_purchases)) {
+            foreach ($payment->visits->drug_purchases as $item) {
+                foreach ($item->details as $item) {
+                    $min_height+=15;
+                }
+            }
+        }
+
+        if ($payment->sale > 0) {
+            foreach ($payment->sales->goodies as $item) {
+                $min_height+=15;
+            }
+        }
+
         $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
-        $pdf->setPaper('a4', 'Landscape');
-        return $pdf->stream('Bill' . $request->id . '.pdf');
+        $customPaper = [0, 0, 300, $min_height];
+        $pdf->setPaper($customPaper);
+        return $pdf->stream('receipt_' . $request->payment . '.pdf');
     }
 
     public function pay_save(PaymentsRequest $request) {
@@ -64,7 +109,7 @@ class EvaluationController extends AdminBaseController {
         }
         $this->data['patients'] = get_patients_with_bills();
 
-        $this->data['with_drugs'] = get_patients_with_drugs();
+        $this->data['with_drugs'] = $this->get_patients_with_drugs();
 
         $this->data['from_pos'] = Patients::whereHas('drug_purchases', function ($query) {
                     $query->wherePaid(0);
@@ -77,6 +122,15 @@ class EvaluationController extends AdminBaseController {
         //dd($this->data['sales']);
 
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
+    }
+
+    public function get_patients_with_drugs() {
+        return Patients::whereHas('visits', function ($query) {
+                    $query->wherePaymentMode('cash');
+                    $query->whereHas('dispensing', function ($q) {
+                        $q->wherePayment_status(0);
+                    });
+                })->get();
     }
 
     public function sale_pay($sale = null) {
