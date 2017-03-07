@@ -85,6 +85,13 @@ class EvaluationController extends AdminBaseController {
             }
         }
 
+        $drugs = Visit::wherePatient($payment->patient)
+                ->wherePaymentMode('cash')
+                ->whereHas('dispensing', function ($q) {
+            $q->wherePayment_status(0);
+        });
+        $this->data['visits'] = $drugs->get();
+
         $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
         $customPaper = [0, 0, 300, $min_height];
         $pdf->setPaper($customPaper);
@@ -120,6 +127,12 @@ class EvaluationController extends AdminBaseController {
     public function payment_details($id) {
         $this->data['payment'] = $payment = EvaluationPayments::find($id);
         $this->data['patient'] = Patients::find($payment->patient);
+        $drugs = Visit::wherePatient($payment->patient)
+                ->wherePaymentMode('cash')
+                ->whereHas('dispensing', function ($q) {
+            $q->wherePayment_status(0);
+        });
+        $this->data['visits'] = $drugs->get();
         return view('finance::evaluation.details', ['data' => $this->data]);
     }
 
@@ -335,7 +348,9 @@ class EvaluationController extends AdminBaseController {
         return back();
     }
 
-    public function printDispatch(Request $request) {
+    public function printDispatch(Request
+
+    $request) {
         $dispatch = Dispatch::find($request->id);
         $pdf = \PDF::loadView('finance::evaluation.print.dispatch', ['dispatch' => $dispatch]);
         $pdf->setPaper('a4', 'Landscape');
@@ -353,7 +368,9 @@ class EvaluationController extends AdminBaseController {
         }
         $batch = Dispatch::find($item);
         $batch->delete();
-        flash("Dispatch Cancelled");
+        flash("Dispatch Cancelled
+
+            ");
         return redirect()->route('finance.evaluation.dispatched');
     }
 

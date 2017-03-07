@@ -61,7 +61,7 @@ $__visits = $patient->visits;
                                 Ksh {{$item->price*$item->quantity}}
                             </td>
                             @else
-                        <input type="hidden" name="disp[]" value="1">
+                        <input type="hidden" name="disp[]" value="{{$item->id}}">
                         <input type="hidden" name="dispensing[]" value="{{$disp->id}}">
                         <td>
                             <input type="checkbox" value="{{$item->id}}"

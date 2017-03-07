@@ -54,23 +54,27 @@ $last_visit = 0;
                                 class="small">({{$d->investigations->type}})</i></td>
                         <td>{{$d->price}}</td>
                     </tr>
+                    @endforeach
+                    @endif
 
-                    @foreach($d->visits->dispensing as $item)
-                    @foreach($item->details as $drg)
-                    <tr id="drg_{{$d->visits->id}}">
-                        <td>{{$d->visits->id}}</td>
+
+                    @foreach($visits as $item)
+                    @foreach($item->dispensing as $disp)
+                    @foreach($disp->details as $d)
+                    <tr>
+                        <td>#</td>
                         <td>
-                            {{$drg->drug->name}}
-                            <small>x {{$drg->quantity}}</small>
+                            {{$d->drug->name}}
+                            <small>x {{$d->quantity}}</small>
                             (drug)
                         </td>
-                        <td>{{$drg->price*$drg->quantity}}</td>
+                        <td>{{$d->price*$d->quantity}}</td>
                     </tr>
                     @endforeach
                     @endforeach
-
                     @endforeach
-                    @endif
+
+
                 </tbody>
                 <tfoot>
                     <tr>
