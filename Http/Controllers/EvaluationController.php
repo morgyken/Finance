@@ -34,11 +34,6 @@ class EvaluationController extends AdminBaseController {
         $this->evaluationRepository = $evaluationRepository;
     }
 
-    public function payment_details($id) {
-        $this->data['payment'] = EvaluationPayments::find($id);
-        return view('finance::evaluation.details', ['data' => $this->data]);
-    }
-
     public function sale_details(Request $request) {
         $this->data['sales'] = InventoryBatchProductSales::find($request->sale);
         return view('finance::evaluation.sale_preview', ['data' => $this->data]);
@@ -119,9 +114,13 @@ class EvaluationController extends AdminBaseController {
                 ->whereNull('insurance')
                 ->get();
 
-        //dd($this->data['sales']);
-
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
+    }
+
+    public function payment_details($id) {
+        $this->data['payment'] = $payment = EvaluationPayments::find($id);
+        $this->data['patient'] = Patients::find($payment->patient);
+        return view('finance::evaluation.details', ['data' => $this->data]);
     }
 
     public function get_patients_with_drugs() {

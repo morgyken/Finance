@@ -101,9 +101,10 @@ class EvaluationLibrary implements EvaluationRepository {
             $payment = new EvaluationPayments;
             $payment->patient = $this->request->patient;
             $payment->receipt = generate_receipt_no();
-            if (isset($this->request->visit)) {
-                $payment->visit = $this->request->visit;
-            }
+            /*
+              if (isset($this->request->visit)) {
+              $payment->visit = $this->request->visit;
+              } */
             if (isset($this->request->sale)) {
                 $payment->sale = $this->request->sale;
             }
@@ -111,10 +112,27 @@ class EvaluationLibrary implements EvaluationRepository {
             $payment->save();
             $payment->amount = $this->payment_methods($payment);
             $payment->save();
-            $this->payment_details($payment);
+            $this->payment_details($this->request, $payment);
             $this->pay_id = $payment->id;
         });
         return $this->pay_id;
+    }
+
+    private function payment_details(Request $request, $payment) {
+        $__investigations = $this->__get_selected_stack();
+        foreach ($__investigations as $item) {
+            $visit = 'visit' . $item;
+            $investigation = Investigations::find($item);
+            if (isset($investigation)) {
+                $detail = new EvaluationPaymentsDetails;
+                $detail->price = $investigation->price;
+                $detail->investigation = $item;
+                $detail->visit = $request->$visit;
+                $detail->payment = $payment->id;
+                $detail->cost = $investigation->procedures->price;
+                $detail->save();
+            }
+        }
     }
 
     /**
@@ -173,21 +191,6 @@ class EvaluationLibrary implements EvaluationRepository {
             return $paid;
         } else {
             return 0;
-        }
-    }
-
-    private function payment_details(EvaluationPayments $payment) {
-        $__investigations = $this->__get_selected_stack();
-        foreach ($__investigations as $item) {
-            $investigation = Investigations::find($item);
-            if (isset($investigation)) {
-                $detail = new EvaluationPaymentsDetails;
-                $detail->price = $investigation->price;
-                $detail->investigation = $item;
-                $detail->payment = $payment->id;
-                $detail->cost = $investigation->procedures->price;
-                $detail->save();
-            }
         }
     }
 
