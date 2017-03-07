@@ -90,8 +90,8 @@ class EvaluationLibrary implements EvaluationRepository {
             }
 
             //dd($this->request);
-            if (isset($this->request->dispensing)) {
-                foreach ($this->request->dispensing as $disp) {
+            if (isset($this->request->disp)) {
+                foreach ($this->request->disp as $disp) {
                     $sale = DispensingDetails::find($disp);
                     $sale->status = 1;
                     $sale->save();
@@ -101,10 +101,10 @@ class EvaluationLibrary implements EvaluationRepository {
             $payment = new EvaluationPayments;
             $payment->patient = $this->request->patient;
             $payment->receipt = generate_receipt_no();
-            /*
-              if (isset($this->request->visit)) {
-              $payment->visit = $this->request->visit;
-              } */
+
+            if (isset($this->request->visit)) {
+                $payment->visit = $this->request->visit;
+            }
             if (isset($this->request->sale)) {
                 $payment->sale = $this->request->sale;
             }

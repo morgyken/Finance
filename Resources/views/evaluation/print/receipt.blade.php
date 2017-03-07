@@ -101,32 +101,29 @@ $t = 0;
 
                             <td>{{$d->price}}</td>
                         </tr>
+                        @endforeach
+                        @endif
 
-                        @foreach($d->visits->dispensing as $item)
-                        @foreach($item->details as $drg)
-                        <?php $t+=ceil($drg->price - ($drg->discount / 100 * $drg->price)); ?>
-                        <tr id="drg_{{$d->visits->id}}">
+                        @foreach($visits as $item)
+                        @foreach($item->dispensing as $disp)
+                        @foreach($disp->details as $d)
+                        <?php $t+=$d->price * $d->quantity; ?>
+                        <tr>
                             <td>#</td>
                             <td>
-                                {{$drg->drug->name}}
-                                <small>x {{$drg->quantity}}</small>
+                                {{$d->drug->name}}
+                                <small>x {{$d->quantity}}</small>
                                 (drug)
                             </td>
-                            <td>{{ceil($drg->price-($drg->discount/100*$drg->price))}}</td>
+                            <td>{{$d->price*$d->quantity}}</td>
                         </tr>
                         @endforeach
                         @endforeach
-
                         @endforeach
-                        @endif
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan='2'>Total Bill</th>
-                            <th>{{$t}}</th>
-                        </tr>
-                        <tr>
-                            <th colspan='2'>Amount Paid</th>
+                            <th style="text-align:right" colspan='2'>Amount Paid</th>
                             <th>{{$payment->total}}</th>
                         </tr>
                     </tfoot>
