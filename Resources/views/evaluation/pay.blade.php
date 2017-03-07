@@ -39,6 +39,8 @@ $__visits = $patient->visits;
                                 @else
                                 <td><input type="checkbox" value="{{$item->id}}"
                                            name="item{{$item->id}}" />
+                                    <input type="hidden" value="{{$visit->id}}"
+                                           name="visit{{$item->id}}" />
                                 <td>{{$item->procedures->name}} <i class="small">({{ucwords($item->type)}})</i> -
                                     Ksh <span class="topay">{{$item->price}}</span></td>
                                 @endif
@@ -61,8 +63,12 @@ $__visits = $patient->visits;
                             @else
                         <input type="hidden" name="disp[]" value="1">
                         <input type="hidden" name="dispensing[]" value="{{$disp->id}}">
-                        <td><input type="checkbox" value="{{$item->id}}"
+                        <td>
+                            <input type="checkbox" value="{{$item->id}}"
                                    name="item{{$item->id}}" />
+
+                            <input type="hidden" value="{{$visit->id}}"
+                                   name="visit{{$item->id}}" />
                         <td>{{$item->drug->name}} <i class="small">(dispensed drug) - {{$item->price*$item->quantity}}</i><br>
                             <small>{{$item->discount}}% discount ({{($item->discount/100)*$item->price*$item->quantity}})</small>
                             Ksh <span class="topay">{{ceil($item->price*$item->quantity-($item->discount/100)*$item->price*$item->quantity)}}</span>

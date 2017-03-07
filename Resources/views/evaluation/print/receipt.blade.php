@@ -10,6 +10,7 @@
   $patient = Ignite\Reception\Entities\Patients::find($payment->patient);
   $pays = paymentFor($payment); */
 extract($data);
+$t = 0;
 ?>
 
 <style>
@@ -90,67 +91,42 @@ extract($data);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $inv_amount = 0;
-                        ?>
-                        @if(isset($payment->visits->investigations))
-                        @foreach($payment->visits->investigations as $i)
-                        <?php $inv_amount+=$i->price ?>
+                        @if(isset($payment->details))
+                        @foreach($payment->details as $d)
+                        <?php $t+=$d->price ?>
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{substr($i->procedures->name, 0, 40)}} <i
-                                    class="small">({{$i->type}})</i></td>
-                            <td>{{$i->price}}</td>
+                            <td>{{substr($d->investigations->procedures->name,0,40)}} <i
+                                    class="small">({{$d->investigations->type}})</i></td>
+
+                            <td>{{$d->price}}</td>
+                        </tr>
+
+                        @foreach($d->visits->dispensing as $item)
+                        @foreach($item->details as $drg)
+                        <?php $t+=ceil($drg->price - ($drg->discount / 100 * $drg->price)); ?>
+                        <tr id="drg_{{$d->visits->id}}">
+                            <td>#</td>
+                            <td>
+                                {{$drg->drug->name}}
+                                <small>x {{$drg->quantity}}</small>
+                                (drug)
+                            </td>
+                            <td>{{ceil($drg->price-($drg->discount/100*$drg->price))}}</td>
                         </tr>
                         @endforeach
+                        @endforeach
+
+                        @endforeach
                         @endif
-                        <!--Drugs Dispensed -->
-                        <?php
-                        $disp_amount = 0;
-                        if (isset($payment->visits->dispensing)) {
-                            ?>
-                            @foreach($payment->visits->dispensing as $item)
-                            <?php $disp_amount+=$item->amount ?>
-                            @foreach($item->details as $item)
-                            <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$item->drug->name}} <i
-                                        class="small">(x{{$item->quantity}})</i></td>
-                                <td>{{ceil($item->price-($item->discount/100*$item->price))}}</td>
-                            </tr>
-                            @endforeach
-                            @endforeach
-                            <?php
-                        }
-                        ?>
-                        <!--POS -->
-                        <?php
-                        $pos_amount = 0;
-                        if (isset($payment->visits->drug_purchases)) {
-                            ?>
-                            @foreach($payment->visits->drug_purchases as $item)
-                            <?php $pos_amount+=$item->amount ?>
-                            @foreach($item->details as $item)
-                            <tr>
-                                <td>{{$loop->iteration}}</td>
-                                <td>{{$item->drugs->name}} <i
-                                        class="small">(x{{$item->quantity}})</i></td>
-                                <td>{{ceil($item->price-($item->discount/100*$item->price))}}</td>
-                            </tr>
-                            @endforeach
-                            @endforeach
-                            <?php
-                        }
-                        ?>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Total Bill</th>
-                            <th></th>
-                            <th>{{$inv_amount+$disp_amount+$pos_amount}}</th>
+                            <th colspan='2'>Total Bill</th>
+                            <th>{{$t}}</th>
                         </tr>
                         <tr>
-                            <th>Amount Paid</th>
-                            <th></th>
+                            <th colspan='2'>Amount Paid</th>
                             <th>{{$payment->total}}</th>
                         </tr>
                     </tfoot>

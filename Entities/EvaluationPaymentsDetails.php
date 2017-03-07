@@ -36,4 +36,12 @@ class EvaluationPaymentsDetails extends Model {
         return $this->belongsTo(Investigations::class, 'investigation', 'id');
     }
 
+    public function batch() {
+        return $this->belongsTo(EvaluationPayments::class, 'payment');
+    }
+
+    public function visits() {
+        return $this->belongsTo(\Ignite\Evaluation\Entities\Visit::class, 'visit', 'id');
+    }
+
 }

@@ -5,6 +5,8 @@
  *  Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
 extract($data);
+$t = 0;
+$last_visit = 0;
 ?>
 @extends('layouts.app')
 @section('content_title','Payment Details')
@@ -43,64 +45,39 @@ extract($data);
                 </thead>
                 <tbody>
                     <?php $inv_amount = 0; ?>
-                    @if(isset($payment->visits->investigations))
-                    @foreach($payment->visits->investigations as $i)
-                    <?php $inv_amount+=$i->price ?>
+                    @if(isset($payment->details))
+                    @foreach($payment->details as $d)
+                    <?php $t+=$d->price ?>
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td>{{$i->procedures->name}} <i
-                                class="small">({{$i->type}})</i></td>
-                        <td>{{$i->price}}</td>
+                        <td>{{$d->investigations->procedures->name}} <i
+                                class="small">({{$d->investigations->type}})</i></td>
+                        <td>{{$d->price}}</td>
+                    </tr>
+
+                    @foreach($d->visits->dispensing as $item)
+                    @foreach($item->details as $drg)
+                    <tr id="drg_{{$d->visits->id}}">
+                        <td>{{$d->visits->id}}</td>
+                        <td>
+                            {{$drg->drug->name}}
+                            <small>x {{$drg->quantity}}</small>
+                            (drug)
+                        </td>
+                        <td>{{$drg->price*$drg->quantity}}</td>
                     </tr>
                     @endforeach
+                    @endforeach
+
+                    @endforeach
                     @endif
-                    <!--Drugs Dispensed -->
-                    <?php
-                    $disp_amount = 0;
-                    if (isset($payment->visits->dispensing)) {
-                        ?>
-                        @foreach($payment->visits->dispensing as $item)
-                        <?php $disp_amount+=$item->amount ?>
-                        @foreach($item->details as $item)
-                        <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$item->drug->name}} <i
-                                    class="small">(x{{$item->quantity}})</i></td>
-                            <td>{{$item->price}}</td>
-                        </tr>
-                        @endforeach
-                        @endforeach
-                        <?php
-                    }
-                    ?>
-                    <!--POS -->
-                    <?php
-                    $pos_amount = 0;
-                    if (isset($payment->visits->drug_purchases)) {
-                        ?>
-                        @foreach($payment->visits->drug_purchases as $item)
-                        <?php
-                        $pos_amount+=$item->amount;
-                        ?>
-                        @foreach($item->details as $item)
-                        <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$item->drugs->name}} <i
-                                    class="small">(x{{$item->quantity}})</i></td>
-                            <td>{{$item->price}}</td>
-                        </tr>
-                        @endforeach
-                        @endforeach
-                        <?php
-                    }
-                    ?>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th>Total Bill</th>
                         <th></th>
                         <th>
-                            {{$inv_amount+$disp_amount+$pos_amount}}
+                            {{$t}}
                         </th>
                     </tr>
                 </tfoot>
@@ -179,4 +156,14 @@ extract($data);
         {{Form::close()}}
     </div>
 </div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('[id]').each(function () {
+            //$('[id="' + this.id + '"]:gt(0)').remove();
+        });
+
+    });
+</script>
 @endsection
