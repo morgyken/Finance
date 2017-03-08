@@ -79,7 +79,12 @@ class EvaluationLibrary implements EvaluationRepository {
                     $disp->payment_status = 1;
                     $disp->save();
                 }
+
+                $dispense = \GuzzleHttp\json_encode($this->request->dispensing);
             }
+
+
+            //dd($dispense);
             //dd($this->request);
             if (isset($this->request->batch)) {
                 foreach ($this->request->batch as $bitch) {
@@ -108,6 +113,10 @@ class EvaluationLibrary implements EvaluationRepository {
             if (isset($this->request->sale)) {
                 $payment->sale = $this->request->sale;
             }
+            if (isset($this->request->dispensing)) {
+                $dispense = \GuzzleHttp\json_encode($this->request->dispensing);
+                $payment->dispensing = \GuzzleHttp\json_encode(array_unique(json_decode($dispense, true)));
+            }
             $payment->user = $this->user;
             $payment->save();
             $payment->amount = $this->payment_methods($payment);
@@ -121,7 +130,8 @@ class EvaluationLibrary implements EvaluationRepository {
     private function payment_details(Request $request, $payment) {
         $__investigations = $this->__get_selected_stack();
         foreach ($__investigations as $item) {
-            $visit = 'visit' . $item;
+            $visit = 'visits' . $item;
+
             $investigation = Investigations::find($item);
             if (isset($investigation)) {
                 $detail = new EvaluationPaymentsDetails;

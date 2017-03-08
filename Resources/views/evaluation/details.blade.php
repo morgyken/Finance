@@ -44,7 +44,6 @@ $last_visit = 0;
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $inv_amount = 0; ?>
                     @if(isset($payment->details))
                     @foreach($payment->details as $d)
                     <?php $t+=$d->price ?>
@@ -57,31 +56,35 @@ $last_visit = 0;
                     @endforeach
                     @endif
 
-
-                    @foreach($visits as $item)
-                    @foreach($item->dispensing as $disp)
-                    @foreach($disp->details as $d)
-                    <tr>
-                        <td>#</td>
-                        <td>
-                            {{$d->drug->name}}
-                            <small>x {{$d->quantity}}</small>
-                            (drug)
-                        </td>
-                        <td>{{$d->price*$d->quantity}}</td>
-                    </tr>
-                    @endforeach
-                    @endforeach
-                    @endforeach
-
+                    <?php
+                    if (isset($disp)) {
+                        foreach ($disp as $key => $value) {
+                            $__dispensing = \Ignite\Evaluation\Entities\Dispensing::find($value);
+                            ?>
+                            @foreach($__dispensing->details as $d)
+                            <?php $t+=$d->price * $d->quantity ?>
+                            <tr>
+                                <td>#</td>
+                                <td>
+                                    {{$d->drug->name}}
+                                    <small>x {{$d->quantity}}</small>
+                                    (drug)
+                                </td>
+                                <td>{{$d->price*$d->quantity}}</td>
+                            </tr>
+                            @endforeach
+                            <?php
+                        }
+                    }
+                    ?>
 
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>Total Bill</th>
+                        <th>Total</th>
                         <th></th>
                         <th>
-                            {{$t}}
+                            {{$payment->total}}
                         </th>
                     </tr>
                 </tfoot>

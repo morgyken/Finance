@@ -104,22 +104,28 @@ $t = 0;
                         @endforeach
                         @endif
 
-                        @foreach($visits as $item)
-                        @foreach($item->dispensing as $disp)
-                        @foreach($disp->details as $d)
-                        <?php $t+=$d->price * $d->quantity; ?>
-                        <tr>
-                            <td>#</td>
-                            <td>
-                                {{$d->drug->name}}
-                                <small>x {{$d->quantity}}</small>
-                                (drug)
-                            </td>
-                            <td>{{$d->price*$d->quantity}}</td>
-                        </tr>
-                        @endforeach
-                        @endforeach
-                        @endforeach
+                        <?php
+                        if (isset($disp)) {
+                            foreach ($disp as $key => $value) {
+                                $__dispensing = \Ignite\Evaluation\Entities\Dispensing::find($value);
+                                ?>
+                                @foreach($__dispensing->details as $d)
+                                <?php $t+=$d->price * $d->quantity ?>
+                                <tr>
+                                    <td>#</td>
+                                    <td>
+                                        {{$d->drug->name}}
+                                        <small>x {{$d->quantity}}</small>
+                                        (drug)
+                                    </td>
+                                    <td>{{$d->price*$d->quantity}}</td>
+                                </tr>
+                                @endforeach
+                                <?php
+                            }
+                        }
+                        ?>
+
                     </tbody>
                     <tfoot>
                         <tr>
