@@ -85,12 +85,7 @@ class EvaluationController extends AdminBaseController {
             }
         }
 
-        $drugs = Visit::wherePatient($payment->patient)
-                ->wherePaymentMode('cash')
-                ->whereHas('dispensing', function ($q) {
-            $q->wherePayment_status(0);
-        });
-        $this->data['visits'] = $drugs->get();
+        $this->data['disp'] = json_decode($payment->dispensing);
 
         $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
         $customPaper = [0, 0, 300, $min_height];
@@ -126,13 +121,8 @@ class EvaluationController extends AdminBaseController {
 
     public function payment_details($id) {
         $this->data['payment'] = $payment = EvaluationPayments::find($id);
+        $this->data['disp'] = json_decode($payment->dispensing);
         $this->data['patient'] = Patients::find($payment->patient);
-        $drugs = Visit::wherePatient($payment->patient)
-                ->wherePaymentMode('cash')
-                ->whereHas('dispensing', function ($q) {
-            $q->wherePayment_status(0);
-        });
-        $this->data['visits'] = $drugs->get();
         return view('finance::evaluation.details', ['data' => $this->data]);
     }
 

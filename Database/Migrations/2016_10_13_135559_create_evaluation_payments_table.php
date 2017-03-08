@@ -18,6 +18,7 @@ class CreateEvaluationPaymentsTable extends Migration {
             $column->integer('user')->unsigned();
             $column->integer('visit')->unsigned()->nullable();
             $column->integer('sale')->unsigned()->nullable();
+            $column->string('dispensing')->nullable();
             $column->timestamps();
 
             $column->foreign('patient')

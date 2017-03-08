@@ -40,7 +40,7 @@ $__visits = $patient->visits;
                                 <td><input type="checkbox" value="{{$item->id}}"
                                            name="item{{$item->id}}" />
                                     <input type="hidden" value="{{$visit->id}}"
-                                           name="visit{{$item->id}}" />
+                                           name="visits{{$item->id}}" />
                                 <td>{{$item->procedures->name}} <i class="small">({{ucwords($item->type)}})</i> -
                                     Ksh <span class="topay">{{$item->price}}</span></td>
                                 @endif
@@ -49,7 +49,6 @@ $__visits = $patient->visits;
 
                             <!-- pharmacy queue -->
                             @foreach($visit->dispensing as $disp)
-                        <input type="hidden" name="disp[]" value="1">
                         <input type="hidden" name="dispensing{{$disp->id}}" value="{{$disp->id}}">
                         @foreach($disp->details as $item)
                         <tr>
@@ -68,7 +67,7 @@ $__visits = $patient->visits;
                                    name="item{{$item->id}}" />
 
                             <input type="hidden" value="{{$visit->id}}"
-                                   name="visit{{$item->id}}" />
+                                   name="visits{{$item->id}}" />
                         <td>{{$item->drug->name}} <i class="small">(dispensed drug) - {{$item->price*$item->quantity}}</i><br>
                             <small>{{$item->discount}}% discount ({{($item->discount/100)*$item->price*$item->quantity}})</small>
                             Ksh <span class="topay">{{ceil($item->price*$item->quantity-($item->discount/100)*$item->price*$item->quantity)}}</span>

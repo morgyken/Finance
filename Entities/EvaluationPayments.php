@@ -99,4 +99,8 @@ class EvaluationPayments extends Model {
         return $this->belongsTo(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'sale');
     }
 
+    public function dispensing() {
+        return $this->hasMany(\Ignite\Evaluation\Entities\Dispensing::class, 'dispensing', 'id');
+    }
+
 }
