@@ -73,18 +73,7 @@ class EvaluationLibrary implements EvaluationRepository {
      */
     public function record_payment() {
         DB::transaction(function () {
-            if (isset($this->request->dispensing)) {
-                foreach ($this->request->dispensing as $d) {
-                    $disp = Dispensing::find($d);
-                    $disp->payment_status = 1;
-                    $disp->save();
-                }
 
-                $dispense = \GuzzleHttp\json_encode($this->request->dispensing);
-            }
-
-
-            //dd($dispense);
             //dd($this->request);
             if (isset($this->request->batch)) {
                 foreach ($this->request->batch as $bitch) {
@@ -94,9 +83,9 @@ class EvaluationLibrary implements EvaluationRepository {
                 }
             }
 
-            //dd($this->request);
-            if (isset($this->request->disp)) {
-                foreach ($this->request->disp as $disp) {
+            //Update dispensing details
+            if (isset($this->request->dispense)) {
+                foreach ($this->request->dispense as $disp) {
                     $sale = DispensingDetails::find($disp);
                     $sale->status = 1;
                     $sale->save();
@@ -113,8 +102,8 @@ class EvaluationLibrary implements EvaluationRepository {
             if (isset($this->request->sale)) {
                 $payment->sale = $this->request->sale;
             }
-            if (isset($this->request->dispensing)) {
-                $dispense = \GuzzleHttp\json_encode($this->request->dispensing);
+            if (isset($this->request->dispense)) {
+                $dispense = \GuzzleHttp\json_encode($this->request->dispense);
                 $payment->dispensing = \GuzzleHttp\json_encode(array_unique(json_decode($dispense, true)));
             }
             $payment->user = $this->user;

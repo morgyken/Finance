@@ -5,7 +5,6 @@
  *  Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
 extract($data);
-$t = 0;
 $last_visit = 0;
 ?>
 @extends('layouts.app')
@@ -46,7 +45,6 @@ $last_visit = 0;
                 <tbody>
                     @if(isset($payment->details))
                     @foreach($payment->details as $d)
-                    <?php $t+=$d->price ?>
                     <tr>
                         <td>{{$loop->iteration}}</td>
                         <td>{{$d->investigations->procedures->name}} <i
@@ -59,18 +57,17 @@ $last_visit = 0;
                     <?php
                     if (isset($disp)) {
                         foreach ($disp as $key => $value) {
-                            $__dispensing = \Ignite\Evaluation\Entities\Dispensing::find($value);
+                            $__dispensing = \Ignite\Evaluation\Entities\DispensingDetails::whereId($value)->get();
                             ?>
-                            @foreach($__dispensing->details as $d)
-                            <?php $t+=$d->price * $d->quantity ?>
+                            @foreach($__dispensing as $item)
                             <tr>
                                 <td>#</td>
                                 <td>
-                                    {{$d->drug->name}}
-                                    <small>x {{$d->quantity}}</small>
+                                    {{$item->drug->name}}
+                                    <small>{{$item->price}} x {{$item->quantity}}</small>
                                     (drug)
                                 </td>
-                                <td>{{$d->price*$d->quantity}}</td>
+                                <td>{{$item->price*$item->quantity}}</td>
                             </tr>
                             @endforeach
                             <?php
@@ -79,6 +76,7 @@ $last_visit = 0;
                     ?>
 
                 </tbody>
+
                 <tfoot>
                     <tr>
                         <th>Total</th>
@@ -88,6 +86,7 @@ $last_visit = 0;
                         </th>
                     </tr>
                 </tfoot>
+
             </table>
             @else
             <table class="table table-striped">
