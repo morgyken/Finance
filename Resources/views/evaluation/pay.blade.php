@@ -52,7 +52,7 @@ $__visits = $patient->visits;
                         <input type="hidden" name="dispensing{{$disp->id}}" value="{{$disp->id}}">
                         @foreach($disp->details as $item)
                         <tr>
-                            @if($item->status===1)
+                            @if($item->status==1)
                             <td><input type="checkbox" disabled/></td>
                             <td>
                                 <div class="label label-success">Paid</div>
@@ -60,22 +60,26 @@ $__visits = $patient->visits;
                                 Ksh {{$item->price*$item->quantity}}
                             </td>
                             @else
-                        <input type="hidden" name="disp[]" value="{{$item->id}}">
-                        <input type="hidden" name="dispensing[]" value="{{$disp->id}}">
-                        <td>
-                            <input type="checkbox" value="{{$item->id}}"
-                                   name="item{{$item->id}}" />
-
-                            <input type="hidden" value="{{$visit->id}}"
-                                   name="visits{{$item->id}}" />
-                        <td>{{$item->drug->name}} <i class="small">(dispensed drug) - {{$item->price*$item->quantity}}</i><br>
-                            <small>{{$item->discount}}% discount ({{($item->discount/100)*$item->price*$item->quantity}})</small>
-                            Ksh <span class="topay">{{ceil($item->price*$item->quantity-($item->discount/100)*$item->price*$item->quantity)}}</span>
+                            <td>
+                                <input type="hidden" name="disp[]" value="{{$item->id}}">
+                                <input type="hidden" name="dispensing[]" value="{{$disp->id}}">
+                                <input type="checkbox" value="{{$item->id}}"name="dispense[]" />
+                                <input type="hidden" value="{{$visit->id}}" name="visits{{$item->id}}" />
+                            </td>
+                            <td>
+                                {{$item->drug->name}}
+                                <i class="small">
+                                    (dispensed drug) - {{$item->price*$item->quantity}}</i>
+                                <br>
+                                <small>
+                                    {{$item->discount}}% discount ({{($item->discount/100)*$item->price*$item->quantity}})</small>
+                                Ksh <span class="topay">{{ceil($item->price*$item->quantity-($item->discount/100)*$item->price*$item->quantity)}}</span>
+                            </td>
                             @endif
-                            </tr>
-                            @endforeach
-                            @endforeach
-                            </tbody>
+                        </tr>
+                        @endforeach
+                        @endforeach
+                        </tbody>
                     </table>
                 </div>
                 @endforeach

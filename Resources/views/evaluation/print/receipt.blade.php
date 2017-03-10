@@ -93,12 +93,10 @@ $t = 0;
                     <tbody>
                         @if(isset($payment->details))
                         @foreach($payment->details as $d)
-                        <?php $t+=$d->price ?>
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{substr($d->investigations->procedures->name,0,40)}} <i
+                            <td>{{$d->investigations->procedures->name}} <i
                                     class="small">({{$d->investigations->type}})</i></td>
-
                             <td>{{$d->price}}</td>
                         </tr>
                         @endforeach
@@ -107,25 +105,23 @@ $t = 0;
                         <?php
                         if (isset($disp)) {
                             foreach ($disp as $key => $value) {
-                                $__dispensing = \Ignite\Evaluation\Entities\Dispensing::find($value);
+                                $__dispensing = \Ignite\Evaluation\Entities\DispensingDetails::whereId($value)->get();
                                 ?>
-                                @foreach($__dispensing->details as $d)
-                                <?php $t+=$d->price * $d->quantity ?>
+                                @foreach($__dispensing as $item)
                                 <tr>
                                     <td>#</td>
                                     <td>
-                                        {{$d->drug->name}}
-                                        <small>x {{$d->quantity}}</small>
+                                        {{$item->drug->name}}
+                                        <small>{{$item->price}} x {{$item->quantity}}</small>
                                         (drug)
                                     </td>
-                                    <td>{{$d->price*$d->quantity}}</td>
+                                    <td>{{$item->price*$item->quantity}}</td>
                                 </tr>
                                 @endforeach
                                 <?php
                             }
                         }
                         ?>
-
                     </tbody>
                     <tfoot>
                         <tr>
