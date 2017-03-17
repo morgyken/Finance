@@ -68,18 +68,22 @@ extract($data);
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Sale ID</th>
                                 <th>Receipt Number</th>
-                                <th>Sale Time</th>
+                                <th>Sale Date/Time</th>
+                                <th>Amount</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($sales as $sale)
                             <tr>
+                                <td>{{$loop->iteration}}</td>
                                 <td>{{$sale->id}}</td>
                                 <td>{{$sale->receipt}}</td>
                                 <td>{{$sale->created_at}}</td>
+                                <td>{{number_format($sale->amount,2)}}</td>
                                 <td>
                                     <a class="btn btn-primary btn-xs" href="{{route('finance.evaluation.sale.pay',$sale->id)}}">
                                         <i class="fa fa-hand-lizard-o"></i> Receive Payments</a>

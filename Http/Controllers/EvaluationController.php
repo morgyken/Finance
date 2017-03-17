@@ -113,6 +113,7 @@ class EvaluationController extends AdminBaseController {
 
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
                 ->whereNull('insurance')
+                ->orderBy('created_at', 'desc')
                 ->get();
 
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
