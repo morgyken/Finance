@@ -93,7 +93,10 @@ class EvaluationLibrary implements EvaluationRepository {
             }
 
             $payment = new EvaluationPayments;
-            $payment->patient = $this->request->patient;
+            $p = \Ignite\Reception\Entities\Patients::find($this->request->patient);
+            if (!is_null($p)) {
+                $payment->patient = $this->request->patient;
+            }
             $payment->receipt = generate_receipt_no();
 
             if (isset($this->request->visit)) {
