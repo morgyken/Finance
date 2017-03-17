@@ -21,7 +21,7 @@ $last_visit = 0;
         <div class="col-md-12">
             <div class="col-md-6">
                 <dl class="dl-horizontal">
-                    <dt>Name:</dt><dd>{{$payment->patients->full_name}}</dd>
+                    <dt>Name:</dt><dd>{{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</dd>
                     <dt>Receipt:</dt><dd>#{{$payment->receipt}}</dd>
                 </dl>
             </div>
