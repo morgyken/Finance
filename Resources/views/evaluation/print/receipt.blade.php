@@ -75,7 +75,7 @@ $t = 0;
     <div class="box-body">
         <div class="col-md-12">
             <br>
-            <strong>Name:</strong><span class="content"> {{$payment->patients->full_name}}</span><br/>
+            <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>
             <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
             <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
         </div>
