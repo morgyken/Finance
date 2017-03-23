@@ -35,4 +35,8 @@ class InsuranceInvoicePayment extends Model {
         return $this->belongsTo(InsuranceInvoice::class, 'insurance_invoice');
     }
 
+    public function users() {
+        return $this->belongsTo(\Ignite\Users\Entities\User::class, 'user');
+    }
+
 }

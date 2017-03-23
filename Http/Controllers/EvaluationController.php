@@ -103,6 +103,7 @@ class EvaluationController extends AdminBaseController {
             $this->data['patient'] = Patients::find($patient);
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
+
         $this->data['patients'] = get_patients_with_bills();
 
         //$this->data['with_drugs'] = $this->get_patients_with_drugs();

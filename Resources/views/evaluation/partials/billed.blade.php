@@ -34,7 +34,7 @@
                 {{$item->invoice_no}}
             </td>
             <td>{{$item->visits->patients->full_name}}</td>
-            <td>{{$item->visits->patient_scheme->schemes->companies->name}}::{{$item->visits->patient_scheme->schemes->name}}</td>
+            <td>{{$item->visits->patient_scheme?$item->visits->patient_scheme->schemes->companies->name:''}}::{{$item->visits->patient_scheme?$item->visits->patient_scheme->schemes->name:''}}</td>
             <td>
                 {{$item->payment}}
                 <input type="hidden" name="amount[]" value="{{$item->payment}}">
