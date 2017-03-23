@@ -33,8 +33,8 @@
                 <td>{{$visit->id}}</td>
                 <td>{{$visit->patients->full_name}}</td>
                 <td>{{(new Date($visit->created_at))->format('dS M y g:i a')}} - Clinic {{$visit->clinics->name}}</td>
-                <td>{{$visit->patient_scheme->schemes->companies->name}}</td>
-                <td>{{$visit->patient_scheme->schemes->name}}</td>
+                <td>{{$visit->patient_scheme?$visit->patient_scheme->schemes->companies->name:''}}</td>
+                <td>{{$visit->patient_scheme?$visit->patient_scheme->schemes->name:''}}</td>
                 <td>{{$visit->unpaid_amount}}</td>
                 <td>
                     @if($visit->unpaid_amount>0)

@@ -221,25 +221,29 @@ class BillingApiController extends \Illuminate\Routing\Controller {
             foreach ($billed as $inv) {
                 $bal = $inv->payment - $inv->paid;
                 ?>
-                <?php $t+= $inv->visits->unpaid_amount ?>
-                <tr>
-                    <td><?php echo $n+=1 ?></td>
-                    <td>
-                        <input onclick="updateAmount(<?php echo $bal ?>, <?php echo $inv->id; ?>)" id="pay_check<?php echo $inv->id; ?>" type="checkbox" name="invoice[]" value="<?php echo $inv->id; ?>">
-                        <?php echo $inv->invoice_no ?>
-                    </td>
-                    <td><?php echo $inv->visits->patients->full_name ?></td>
-                    <td><?php echo (new \Date($inv->visits->created_at))->format('dS M y') ?> </td>
-                    <td><?php echo $inv->visits->patient_scheme->schemes->companies->name ?>:
-                        <?php echo $inv->visits->patient_scheme->schemes->name ?></td>
-                    <td><?php echo $inv->payment ?></td>
-                    <td><?php echo $inv->paid ?></td>
-                    <td>
-                        <input type="text" size="5" name="amount<?php echo $inv->id ?>" id="amount<?php echo $inv->id ?>" value="<?php echo $inv->payment ?>">
-                        <input type="hidden" name="patient" value="<?php echo $inv->visits->patients->id ?>">
-                    </td>
-                </tr>
                 <?php
+                $t+= $inv->visits->unpaid_amount;
+                if ($inv->status !== 3) {
+                    ?>
+                    <tr>
+                        <td><?php echo $n+=1 ?></td>
+                        <td>
+                            <input onclick="updateAmount(<?php echo $bal ?>, <?php echo $inv->id; ?>)" id="pay_check<?php echo $inv->id; ?>" type="checkbox" name="invoice[]" value="<?php echo $inv->id; ?>">
+                            <?php echo $inv->invoice_no ?>
+                        </td>
+                        <td><?php echo $inv->visits->patients->full_name ?></td>
+                        <td><?php echo (new \Date($inv->visits->created_at))->format('dS M y') ?> </td>
+                        <td><?php echo $inv->visits->patient_scheme->schemes->companies->name ?>:
+                            <?php echo $inv->visits->patient_scheme->schemes->name ?></td>
+                        <td><?php echo $inv->payment ?></td>
+                        <td><?php echo $inv->paid ?></td>
+                        <td>
+                            <input type="text" size="5" name="amount<?php echo $inv->id ?>" id="amount<?php echo $inv->id ?>" value="<?php echo $inv->payment ?>">
+                            <input type="hidden" name="patient" value="<?php echo $inv->visits->patients->id ?>">
+                        </td>
+                    </tr>
+                    <?php
+                }
             }
             //Paid
         } elseif ($mode == 'paid') {

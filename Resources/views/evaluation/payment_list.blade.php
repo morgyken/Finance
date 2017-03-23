@@ -71,6 +71,7 @@ extract($data);
                                 <th>#</th>
                                 <th>Sale ID</th>
                                 <th>Receipt Number</th>
+                                <th>Client</th>
                                 <th>Sale Date/Time</th>
                                 <th>Amount</th>
                                 <th>Actions</th>
@@ -82,6 +83,7 @@ extract($data);
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$sale->id}}</td>
                                 <td>{{$sale->receipt}}</td>
+                                <td>{{$sale->patients?$sale->patients->full_name:'not set (walk in)'}}</td>
                                 <td>{{$sale->created_at}}</td>
                                 <td>{{number_format($sale->amount,2)}}</td>
                                 <td>

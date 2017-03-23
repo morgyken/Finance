@@ -81,6 +81,7 @@
         $t+= $inv->visits->unpaid_amount;
         $bal = $inv->payment - $inv->paid;
         ?>
+        @if($inv->status !==3)
         <tr>
             <td>{{$n+=1}}</td>
             <td>
@@ -98,6 +99,7 @@
                 {!! Form::hidden('patient',$inv->visits->patients->id) !!}
             </td>
         </tr>
+        @endif
         @endforeach
     </tbody>
     <tfoot>
