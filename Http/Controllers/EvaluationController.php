@@ -106,8 +106,6 @@ class EvaluationController extends AdminBaseController {
 
         $this->data['patients'] = get_patients_with_bills();
 
-        //$this->data['with_drugs'] = $this->get_patients_with_drugs();
-
         $this->data['from_pos'] = Patients::whereHas('drug_purchases', function ($query) {
                     $query->wherePaid(0);
                 })->get();
