@@ -14,9 +14,6 @@ $t = 0;
 ?>
 
 <style>
-    body{
-        font-weight: bold;
-    }
     table{
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
@@ -52,7 +49,7 @@ $t = 0;
         clear: both;
     }
     img{
-        width:100%;
+        width:80%;
         height: auto;
     }
     td{
