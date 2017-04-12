@@ -12,9 +12,7 @@ extract($data);
 
 @section('content')
 <div class="box box-info">
-
-
-
+    <br>
     <div class="form-horizontal">
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -25,7 +23,7 @@ extract($data);
                 </li>
                 <li>
                     <a href="#sales" data-toggle="tab">
-                        Pharmacy Sales
+                        Point Of Sale
                         <span class="badge alert-info">
                             {{$sales->count()}}
                         </span>

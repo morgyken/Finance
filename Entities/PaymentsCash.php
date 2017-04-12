@@ -28,4 +28,8 @@ class PaymentsCash extends Model {
         return $this->belongsTo(EvaluationPayments::class, 'payment');
     }
 
+    public function _payment() {
+        return $this->hasOne(EvaluationPayments::class, 'payment');
+    }
+
 }

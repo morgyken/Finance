@@ -73,4 +73,13 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('purge/dispatch/{id}', ['as' => 'purge_dispatch', 'uses' => 'EvaluationController@purgeDispatch']);
 
     $router->get('company/statements', ['as' => 'company.stmt', 'uses' => 'EvaluationController@companyStatements']);
+
+
+    $router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function(Router $router) {
+        $router->get('quickbooks/connect', ['as' => 'connect', 'uses' => 'QuickBooksController@index']);
+        $router->get('quickbooks/oauth', ['as' => 'oauth', 'uses' => 'QuickBooksController@qboOauth']);
+        $router->get('quickbooks/success', ['as' => 'success', 'uses' => 'QuickBooksController@qboSuccess']);
+        $router->get('quickbooks/disconnect', ['as' => 'disconnect', 'uses' => 'QuickBooksController@qboDisconnect']);
+        $router->get('quickbooks/create-user', ['as' => 'create_user', 'uses' => 'QuickBooksController@createCustomer']);
+    });
 });
