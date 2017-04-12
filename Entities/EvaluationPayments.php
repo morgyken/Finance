@@ -67,6 +67,14 @@ class EvaluationPayments extends Model {
         return $this->hasOne(PaymentsCash::class, 'payment');
     }
 
+    public function getCashAmountAttribute() {
+        $total = 0;
+        if (!empty($this->cash)) {
+            $total += $this->cash->amount;
+        }
+        return $total;
+    }
+
     public function mpesa() {
         return $this->hasOne(PaymentsMpesa::class, 'payment');
     }
