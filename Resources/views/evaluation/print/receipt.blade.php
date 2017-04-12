@@ -18,7 +18,6 @@ $t = 0;
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
-        font-size: 12;
     }
 
     table th{
@@ -49,8 +48,9 @@ $t = 0;
         clear: both;
     }
     img{
-        width:80%;
-        height: auto;
+        width:50%;
+        height: 50%/*auto*/;
+        float: right;
     }
     td{
         font-size: 70%;
@@ -156,7 +156,7 @@ $t = 0;
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="4">Total</th>
+                            <th colspan="4">Total Amount</th>
                             <th>
                                 {{$payment->sales->amount}}
                             </th>
