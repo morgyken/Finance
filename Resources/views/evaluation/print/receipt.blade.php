@@ -21,13 +21,13 @@ $t = 0;
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
-        font-size: 12;
     }
 
     table th{
         border: 1px solid #ddd;
         text-align: left;
         padding: 1px;
+        font-size: 90%;
     }
 
     table tr:nth-child(even){background-color: #f2f2f2}
@@ -39,6 +39,7 @@ $t = 0;
         padding-bottom: 1px;
         background-color: /*#4CAF50*/ #BBBBBB;
         color: black;
+        font-size: 90%;
     }
     .left{
         width: 60%;
@@ -56,23 +57,27 @@ $t = 0;
         height: auto;
     }
     td{
-        font-size: 70%;
+        font-size: 90%;
     }
     div #footer{
-        font-size: 70%;
+        font-size: 90%;
     }
     th{
-        font-size: 80%;
+        font-size: 90%;
     }
 </style>
 <div class="box box-info">
     <img src="{{realpath(base_path('/public/logo.png'))}}"/>
     <div class="box-header with-border">
-        <h3 class="box-title">{{config('practice.name')}}</h3>
-        {{config('practice.building')?config('practice.building').',':''}}
-        {{config('practice.street')?config('practice.street').',':''}}
-        {{config('practice.town')}}<br>
-        {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
+        <center>
+            <h2 class="box-title">{{config('practice.name')}}</h2>
+        </center>
+        <p style="font-size: 90%;">
+            {{config('practice.building')?config('practice.building').',':''}}
+            {{config('practice.street')?config('practice.street').',':''}}
+            {{config('practice.town')}}<br>
+            {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
+        </p>
 
     </div>
     <div class="box-body">
@@ -89,7 +94,7 @@ $t = 0;
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Procedures/Drug</th>
+                            <th>Item</th>
                             <th>Cost (Ksh.)</th>
                         </tr>
                     </thead>
