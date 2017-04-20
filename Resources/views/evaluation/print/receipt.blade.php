@@ -67,11 +67,9 @@ $t = 0;
     }
 </style>
 <div class="box box-info">
-    <img src="{{realpath(base_path('/public/logo.png'))}}"/>
+    <img style="width:100; height:auto; float: right" src="{{realpath(base_path('/public/logo.jpg'))}}"/>
     <div class="box-header with-border">
-        <center>
-            <h2 class="box-title">{{config('practice.name')}}</h2>
-        </center>
+        <h2 class="box-title">{{config('practice.name')}}</h2>
         <p style="font-size: 90%;">
             {{config('practice.building')?config('practice.building').',':''}}
             {{config('practice.street')?config('practice.street').',':''}}
