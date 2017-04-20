@@ -39,18 +39,20 @@ class EvaluationController extends AdminBaseController {
         return view('finance::evaluation.sale_preview', ['data' => $this->data]);
     }
 
-    /*
-      public function printNormalReceipt(Request $request) {
-      $this->data['payment'] = EvaluationPayments::find($request->payment);
-      $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
-      $pdf->setPaper('a4', 'Landscape');
-      return $pdf->stream('Bill' . $request->id . '.pdf');
-      } */
+    public function printA4Receipt(Request $request) {
+        $this->data['payment'] = $payment = EvaluationPayments::find($request->payment);
+        $this->data['disp'] = json_decode($payment->dispensing);
+        $this->data['a4'] = 1;
+        $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
+        $pdf->setPaper('a4', 'Landscape');
+        return $pdf->stream('Bill' . $request->id . '.pdf');
+    }
 
     public function printNormalReceipt(Request $request) {
+
         //$this->data['sales'] = InventoryBatchProductSales::find($id);
         $this->data['payment'] = $payment = EvaluationPayments::find($request->payment);
-        //dd($this->data);
+        ///dd($this->data);
         $min_height = 420;
         /*
           foreach ($this->data['pa']->goodies as $n) {
@@ -59,14 +61,14 @@ class EvaluationController extends AdminBaseController {
 
         if (isset($payment->visits->investigations)) {
             foreach ($payment->visits->investigations as $i) {
-                $min_height+=15;
+                $min_height+=20;
             }
         }
 
         if (isset($payment->visits->dispensing)) {
             foreach ($payment->visits->dispensing as $item) {
                 foreach ($item->details as $item) {
-                    $min_height+=15;
+                    $min_height+=20;
                 }
             }
         }
@@ -74,14 +76,14 @@ class EvaluationController extends AdminBaseController {
         if (isset($payment->visits->drug_purchases)) {
             foreach ($payment->visits->drug_purchases as $item) {
                 foreach ($item->details as $item) {
-                    $min_height+=15;
+                    $min_height+=20;
                 }
             }
         }
 
         if ($payment->sale > 0) {
             foreach ($payment->sales->goodies as $item) {
-                $min_height+=15;
+                $min_height+=20;
             }
         }
 

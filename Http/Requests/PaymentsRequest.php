@@ -25,7 +25,7 @@ class PaymentsRequest extends FormRequest {
     private function mpesa_rules() {
         if ($this->has('MpesaAmount')) {
             $this->rules['MpesaAmount'] = 'required|numeric';
-            $this->rules['MpesaCode'] = 'required';
+            /// $this->rules['MpesaCode'] = 'required';
         }
     }
 
@@ -38,21 +38,21 @@ class PaymentsRequest extends FormRequest {
     private function card_rules() {
         if ($this->has('CardAmount')) {
             $this->rules['CardAmount'] = 'required|numeric';
-            $this->rules['CardType'] = 'required';
-            $this->rules['CardNames'] = 'required';
+            //$this->rules['CardType'] = 'required';
+            // $this->rules['CardNames'] = 'required';
             $this->rules['CardNumber'] = 'digits:16';
-            $this->rules['CardExpiry'] = 'required';
+            // $this->rules['CardExpiry'] = 'required';
         }
     }
 
     private function cheque_rules() {
         if ($this->has('ChequeAmount')) {
-            $this->rules['ChequeName'] = 'required';
-            $this->rules['ChequeDate'] = 'required';
+            //$this->rules['ChequeName'] = 'required';
+            //$this->rules['ChequeDate'] = 'required';
             $this->rules['ChequeAmount'] = 'required|numeric';
-            $this->rules['ChequeBank'] = 'required';
-            $this->rules['ChequeBankBranch'] = 'required';
-            $this->rules['ChequeNumber'] = 'required|numeric';
+            //$this->rules['ChequeBank'] = 'required';
+            // $this->rules['ChequeBankBranch'] = 'required';
+            $this->rules['ChequeNumber'] = 'numeric';
         }
     }
 

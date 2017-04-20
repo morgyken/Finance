@@ -155,11 +155,21 @@ $last_visit = 0;
         </div>
     </div>
     <div class="box-footer">
-        {!! Form::open(['route'=>'finance.evaluation.normal.rcpt.print','target'=>'_blank'])!!}
-        {!! Form::hidden('payment',$payment->id) !!}
-        <button class="btn btn-primary" type="submit">
-            <i class="fa fa-file-pdf-o"></i> Print Receipt</button>
-        {{Form::close()}}
+        <div class="col-md-4 col-lg-4 col-sm-12">
+            {!! Form::open(['route'=>'finance.evaluation.normal.rcpt.print','target'=>'_blank'])!!}
+            {!! Form::hidden('payment',$payment->id) !!}
+            <button class="btn btn-primary btn-sm" type="submit">
+                <i class="fa fa-file-pdf-o"></i> Print Receipt (Thermal Printer)</button>
+            {{Form::close()}}
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-sm-12">
+            {!! Form::open(['route'=>'finance.evaluation.a4.rcpt.print','target'=>'_blank'])!!}
+            {!! Form::hidden('payment',$payment->id) !!}
+            <button class="btn btn-primary btn-sm" type="submit">
+                <i class="fa fa-file-pdf-o"></i> Print Receipt (A4)</button>
+            {{Form::close()}}
+        </div>
     </div>
 </div>
 
