@@ -5,6 +5,15 @@
  *  Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
 extract($data);
+
+function amount_after_discount($discount, $amount) {
+    try {
+        $discounted = $amount - (($discount / 100) * $amount);
+        return ceil($discounted);
+    } catch (\Exception $e) {
+        return $amount;
+    }
+}
 ?>
 @extends('layouts.app')
 @section('content_title','Patient Accounts')
@@ -19,6 +28,9 @@ extract($data);
                 <li class="active">
                     <a href="#patients" data-toggle="tab">
                         Patients
+                        <span class="badge alert-info">
+                            {{$patients->count()}}
+                        </span>
                     </a>
                 </li>
                 <li>
@@ -34,10 +46,11 @@ extract($data);
                 <!--Patient List Tab -->
                 <div class="tab-pane active" id="patients">
 
-                    <table class="table table-condensed table-responsive" id="patients">
+                    <table class="table table-striped table-condensed table-responsive" id="patients">
                         <tbody>
                             @foreach($patients as $patient)
                             <tr id="patient{{$patient->patient_id}}">
+                                <td>{{$loop->iteration}}</td>
                                 <td>{{$patient->full_name}}</td>
                                 <td>{{$patient->id_no}}</td>
                                 <td>{{$patient->mobile}}</td>
@@ -46,12 +59,15 @@ extract($data);
                                         <i class="fa fa-hand-lizard-o"></i> Receive Payments</a>
                                     <a class="btn btn-success btn-xs" href="{{route('finance.evaluation.individual_account',$patient->id)}}">
                                         <i class="fa fa-eye-slash"></i> View Account</a>
+                                    <a class="btn btn-danger btn-xs" href="{{route('finance.evaluation.remove.bill',$patient->id)}}">
+                                        <i class="fa fa-trash"></i> Remove</a>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th>Name</th>
                                 <th>ID Number</th>
                                 <th>Mobile</th>
@@ -71,7 +87,6 @@ extract($data);
                                 <th>Receipt Number</th>
                                 <th>Client</th>
                                 <th>Sale Date/Time</th>
-                                <th>Amount</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -83,12 +98,13 @@ extract($data);
                                 <td>{{$sale->receipt}}</td>
                                 <td>{{$sale->patients?$sale->patients->full_name:'not set (walk in)'}}</td>
                                 <td>{{$sale->created_at}}</td>
-                                <td>{{number_format($sale->amount,2)}}</td>
                                 <td>
                                     <a class="btn btn-primary btn-xs" href="{{route('finance.evaluation.sale.pay',$sale->id)}}">
                                         <i class="fa fa-hand-lizard-o"></i> Receive Payments</a>
                                     <a class="btn btn-success btn-xs" href="{{route('finance.evaluation.sale',$sale->id)}}">
                                         <i class="fa fa-eye-slash"></i> View</a>
+                                    <a class="btn btn-danger btn-xs" href="{{route('finance.evaluation.remove.sale_bill',$sale->id)}}">
+                                        <i class="fa fa-trash"></i> Remove</a>
                                 </td>
                             </tr>
                             @endforeach

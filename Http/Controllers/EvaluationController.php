@@ -366,4 +366,12 @@ class EvaluationController extends AdminBaseController {
         return redirect()->route('finance.evaluation.dispatched');
     }
 
+    public function RemoveBill(Request $request) {
+        
+    }
+
+    public function RemoveSaleBill(Request $request) {
+        dd($request);
+    }
+
 }
