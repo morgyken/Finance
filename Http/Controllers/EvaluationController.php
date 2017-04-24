@@ -113,6 +113,7 @@ class EvaluationController extends AdminBaseController {
                 })->get();
 
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
+                ->doesntHave('removed_bills')
                 ->whereNull('insurance')
                 ->orderBy('created_at', 'desc')
                 ->get();
@@ -364,14 +365,6 @@ class EvaluationController extends AdminBaseController {
 
             ");
         return redirect()->route('finance.evaluation.dispatched');
-    }
-
-    public function RemoveBill(Request $request) {
-        
-    }
-
-    public function RemoveSaleBill(Request $request) {
-        dd($request);
     }
 
 }

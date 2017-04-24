@@ -30,23 +30,52 @@ $__visits = $patient->visits;
                             @foreach($visit->investigations as $item)
                             <tr>
                                 @if($item->is_paid)
-                                <td><input type="checkbox" disabled/></td>
+                                <td>
+                                    <input type="checkbox" disabled/>
+                                </td>
                                 <td>
                                     <div class="label label-success">Paid</div>
                                     {{$item->procedures->name}} <i class="small">({{ucwords($item->type)}})</i> -
                                     Ksh {{$item->price}}
                                 </td>
                                 @else
-                                <td><input type="checkbox" value="{{$item->id}}"
-                                           name="item{{$item->id}}" />
-                                    <input type="hidden" value="{{$visit->id}}"
-                                           name="visits{{$item->id}}" />
-                                <td>{{$item->procedures->name}} <i class="small">({{ucwords($item->type)}})</i> -
-                                    Ksh <span class="topay">{{$item->price}}</span></td>
+                                <td>
+                                    <?php try { ?>
+                                        @if($item->removed_bills->isEmpty)
+                                        <input type="checkbox" value="{{$item->id}}" name="item{{$item->id}}" />
+                                        @else
+                                        <input disabled="" type="checkbox" value="{{$item->id}}" name="item{{$item->id}}" />
+                                        @endif
+                                    <?php } catch (Exception $ex) { ?>
+                                        <input type="checkbox" value="{{$item->id}}" name="item{{$item->id}}" />
+                                    <?php } ?>
+                                    <input type="hidden" value="{{$visit->id}}" name="visits{{$item->id}}" />
+                                <td>
+                                    {{$item->procedures->name}}
+                                    <i class="small">({{ucwords($item->type)}})</i> - Ksh <span class="topay">{{$item->price}}</span>
+
+
+
+                                    <?php try { ?>
+                                        @if($item->removed_bills->isEmpty)
+                                        <a href="#" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
+                                            <i class="fa fa-trash"></i>remove</a>
+                                        @else
+                                        <a href="#" onclick="#" class="btn btn-danger btn-xs">
+                                            <i class="fa fa-trash"></i>bill has been removed</a>
+
+                                        <a href="#" onclick="undo_remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-primary btn-xs">
+                                            <i class="fa fa-trash"></i>Undo</a>
+
+                                        @endif
+                                    <?php } catch (Exception $ex) { ?>
+                                        <a href="#" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
+                                            <i class="fa fa-trash"></i>remove</a>
+                                    <?php } ?>
+                                </td>
                                 @endif
                             </tr>
                             @endforeach
-
                             <!-- pharmacy queue -->
                             @foreach($visit->dispensing as $disp)
                         <input type="hidden" name="dispensing{{$disp->id}}" value="{{$disp->id}}">
@@ -63,8 +92,19 @@ $__visits = $patient->visits;
                             <td>
                                 <input type="hidden" name="disp[]" value="{{$item->id}}">
                                 <input type="hidden" name="dispensing[]" value="{{$disp->id}}">
-                                <input type="checkbox" value="{{$item->id}}"name="dispense[]" />
+
                                 <input type="hidden" value="{{$visit->id}}" name="visits{{$item->id}}" />
+
+                                <?php try { ?>
+                                    @if($disp->removed_bills->isEmpty)
+                                    <input type="checkbox" value="{{$item->id}}"name="dispense[]" />
+                                    @else
+                                    <input type="checkbox" disabled="" />
+                                    @endif
+                                <?php } catch (Exception $ex) { ?>
+                                    <input type="checkbox" value="{{$item->id}}"name="dispense[]" />
+                                <?php } ?>
+
                             </td>
                             <td>
                                 {{$item->drug->name}}
@@ -74,6 +114,25 @@ $__visits = $patient->visits;
                                 <small>
                                     {{$item->discount}}% discount ({{($item->discount/100)*$item->price*$item->quantity}})</small>
                                 Ksh <span class="topay">{{ceil($item->price*$item->quantity-($item->discount/100)*$item->price*$item->quantity)}}</span>
+
+                                <?php try { ?>
+                                    @if($disp->removed_bills->isEmpty)
+                                    <a href="#" onclick="remove_bill('dispensing', <?php echo $disp->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
+                                        <i class="fa fa-trash"></i>remove</a>
+                                    @else
+                                    <a href="#" onclick="#" class="btn btn-danger btn-xs">
+                                        <i class="fa fa-trash"></i>bill has been removed</a>
+
+                                    <a href="#" onclick="undo_remove_bill('dispensing', <?php echo $disp->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-primary btn-xs">
+                                        <i class="fa fa-trash"></i>Undo</a>
+
+                                    @endif
+                                <?php } catch (Exception $ex) { ?>
+                                    <a href="#" onclick="remove_bill('dispensing', <?php echo $disp->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
+                                        <i class="fa fa-trash"></i>remove</a>
+                                <?php } ?>
+
+
                             </td>
                             @endif
                         </tr>
@@ -99,6 +158,32 @@ $__visits = $patient->visits;
     </div>
 </div>
 {!! Form::close()!!}
+
+
+<script type="text/javascript">
+    function remove_bill(type, id, visit) {
+        $.ajax({
+            type: 'get',
+            url: "{{route('api.finance.evaluation.bill.remove')}}",
+            data: {type: type, id: id, visit: visit},
+            success: function (response) {
+                location.reload();
+            }
+        }); //ajax
+    }
+
+    function undo_remove_bill(type, id, visit) {
+        $.ajax({
+            type: 'get',
+            url: "{{route('api.finance.evaluation.bill.undoremove')}}",
+            data: {type: type, id: id, visit: visit},
+            success: function (response) {
+                location.reload();
+            }
+        }); //ajax
+    }
+</script>
+
 <script src="{{m_asset('evaluation:js/payments.min.js')}}"></script>
 <style type="text/css">
     #visits tbody tr.highlight {

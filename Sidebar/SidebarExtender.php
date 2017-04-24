@@ -49,6 +49,11 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                     $item->route('finance.evaluation.summary');
                 });
 
+                $item->item('QB', function (Item $item) {
+                    $item->icon('fa fa-yelp');
+                    $item->route('finance.quickbooks.connect');
+                });
+
 
                 /* $item->item('Insurance Workbench', function(Item $item) {
                   $item->icon('fa fa-unsorted');
