@@ -6,6 +6,23 @@
  */
 extract($data);
 $last_visit = 0;
+
+function amount_after_discount($discount, $amount) {
+    try {
+        $discounted = $amount - (($discount / 100) * $amount);
+        return ceil($discounted);
+    } catch (\Exception $e) {
+        return $amount;
+    }
+}
+
+function getAmount($sales) {
+    $total = 0;
+    foreach ($sales->goodies as $g) {
+        $total += amount_after_discount($g->discount, $g->unit_cost * $g->quantity);
+    }
+    return $total;
+}
 ?>
 @extends('layouts.app')
 @section('content_title','Payment Details')
@@ -104,20 +121,20 @@ $last_visit = 0;
                     <tr>
                         <td>{{$item->products->name}}</td>
                         <td>{{$item->quantity}}</td>
-                        <td>{{$item->price}}</td>
+                        <td>{{$item->unit_cost}}</td>
                         <td>{{$item->discount}}</td>
-                        <td>{{$item->price*$item->quantity-(($item->discount/100)*$item->price*$item->quantity)}}</td>
+                        <td>{{number_format(amount_after_discount($item->discount, $item->unit_cost*$item->quantity),2)}}</td>
                     </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>Total Amount</th>
+                        <th>Total Amount:</th>
                         <th></th>
                         <th></th>
                         <th></th>
                         <th>
-                            {{$payment->sales->amount}}
+                            {{number_format(getAmount($payment->sales),2)}}
                         </th>
                     </tr>
                 </tfoot>

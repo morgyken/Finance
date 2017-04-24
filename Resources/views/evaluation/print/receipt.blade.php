@@ -11,6 +11,23 @@
   $pays = paymentFor($payment); */
 extract($data);
 $t = 0;
+
+function amount_after_discount($discount, $amount) {
+    try {
+        $discounted = $amount - (($discount / 100) * $amount);
+        return ceil($discounted);
+    } catch (\Exception $e) {
+        return $amount;
+    }
+}
+
+function getAmount($sales) {
+    $total = 0;
+    foreach ($sales->goodies as $g) {
+        $total += amount_after_discount($g->discount, $g->unit_cost * $g->quantity);
+    }
+    return $total;
+}
 ?>
 
 <style>
@@ -115,13 +132,14 @@ $t = 0;
                                 ?>
                                 @foreach($__dispensing as $item)
                                 <tr>
-                                    <td>#</td>
+                                    <td></td>
                                     <td>
                                         {{$item->drug->name}}
                                         <small>{{$item->price}} x {{$item->quantity}}</small>
                                         (drug)
+                                        Discount (%) :{{$item->discount}}
                                     </td>
-                                    <td>{{$item->price*$item->quantity}}</td>
+                                    <td>{{amount_after_discount($item->discount, $item->price*$item->quantity)}}</td>
                                 </tr>
                                 @endforeach
                                 <?php
@@ -154,9 +172,9 @@ $t = 0;
                         <tr>
                             <td>{{$item->products->name}}</td>
                             <td>{{$item->quantity}}</td>
-                            <td>{{$item->price}}</td>
+                            <td>{{$item->unit_cost}}</td>
                             <td>{{$item->discount}}</td>
-                            <td>{{ceil($item->price*$item->quantity-(($item->discount/100)*$item->price*$item->quantity))}}</td>
+                            <td>{{number_format(amount_after_discount($item->discount, $item->unit_cost*$item->quantity),2)}}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -164,13 +182,11 @@ $t = 0;
                         <tr>
                             <th colspan="4">Total</th>
                             <th>
-                                {{$payment->sales->amount}}
+                                {{number_format(getAmount($payment->sales),2)}}
                             </th>
                         </tr>
                     </tfoot>
                 </table>
-
-
             <?php } ?>
             @endif
         </div>

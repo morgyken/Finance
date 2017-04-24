@@ -17,10 +17,11 @@ extract($data);
     </div>
     <div class="box-body">
         @if($patients->count()>0)
-        <table class="table table-condensed table-responsive" id="patients">
+        <table class="table table-striped table-condensed table-responsive" id="patients">
             <tbody>
                 @foreach($patients as $patient)
                 <tr id="patient{{$patient->patient_id}}">
+                    <td>{{$loop->iteration}}</td>
                     <td>{{$patient->full_name}}</td>
                     <td>{{$patient->id_no}}</td>
                     <td>{{$patient->mobile}}</td>
@@ -35,6 +36,7 @@ extract($data);
             </tbody>
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Name</th>
                     <th>ID Number</th>
                     <th>Mobile</th>

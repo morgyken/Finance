@@ -5,6 +5,15 @@
  *  Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
 extract($data);
+
+function amount_after_discount($discount, $amount) {
+    try {
+        $discounted = $amount - (($discount / 100) * $amount);
+        return ceil($discounted);
+    } catch (\Exception $e) {
+        return $amount;
+    }
+}
 ?>
 @extends('layouts.app')
 @section('content_title','Payment Details')

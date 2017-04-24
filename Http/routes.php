@@ -37,6 +37,9 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
 
     $router->get('sale/pay/{sale?}', ['as' => 'sale.pay', 'uses' => 'EvaluationController@sale_pay']);
     $router->get('sale/details/{sale}', ['uses' => 'EvaluationController@sale_details', 'as' => 'sale']);
+    //Remove Bill
+    $router->get('bill/sale/remove/{id?}/', ['uses' => 'EvaluationController@RemoveSaleBill', 'as' => 'remove.sale_bill']);
+    $router->get('bill/remove/{id?}/', ['uses' => 'EvaluationController@RemoveBill', 'as' => 'remove.bill']);
 
     $router->get('accounts/{patient}/show', ['uses' => 'EvaluationController@individual_account', 'as' => 'individual_account']);
     $router->post('payment', ['as' => 'pay.save', 'uses' => 'EvaluationController@pay_save']);
@@ -74,13 +77,12 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('purge/dispatch/{id}', ['as' => 'purge_dispatch', 'uses' => 'EvaluationController@purgeDispatch']);
 
     $router->get('company/statements', ['as' => 'company.stmt', 'uses' => 'EvaluationController@companyStatements']);
+});
 
-
-    $router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function(Router $router) {
-        $router->get('quickbooks/connect', ['as' => 'connect', 'uses' => 'QuickBooksController@index']);
-        $router->get('quickbooks/oauth', ['as' => 'oauth', 'uses' => 'QuickBooksController@qboOauth']);
-        $router->get('quickbooks/success', ['as' => 'success', 'uses' => 'QuickBooksController@qboSuccess']);
-        $router->get('quickbooks/disconnect', ['as' => 'disconnect', 'uses' => 'QuickBooksController@qboDisconnect']);
-        $router->get('quickbooks/create-user', ['as' => 'create_user', 'uses' => 'QuickBooksController@createCustomer']);
-    });
+$router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function(Router $router) {
+    $router->get('quickbooks/connect', ['as' => 'connect', 'uses' => 'QuickBooksController@index']);
+    $router->get('quickbooks/oauth', ['as' => 'oauth', 'uses' => 'QuickBooksController@qboOauth']);
+    $router->get('quickbooks/success', ['as' => 'success', 'uses' => 'QuickBooksController@qboSuccess']);
+    $router->get('quickbooks/disconnect', ['as' => 'disconnect', 'uses' => 'QuickBooksController@qboDisconnect']);
+    $router->get('quickbooks/create-user', ['as' => 'create_user', 'uses' => 'QuickBooksController@createCustomer']);
 });
