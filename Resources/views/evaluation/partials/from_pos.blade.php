@@ -21,7 +21,16 @@ function amount_after_discount($discount, $amount) {
     @else
     <input type="hidden" name="batch[]" value="{{$sales->id}}">
     <td>
-        <input type="checkbox" value="{{$sales->id}}"name="item{{$sales->id}}" />
+        <?php try { ?>
+            @if($sales->removed_bills->isEmpty)
+            <input type="checkbox" value="{{$sales->id}}"name="item{{$sales->id}}" />
+            @else
+            <input type="checkbox" disabled="" value="{{$sales->id}}"name="item{{$sales->id}}" />
+            <small style="color:red">Bill was removed</small>
+            @endif
+        <?php } catch (Exception $ex) { ?>
+            <input type="checkbox" value="{{$sales->id}}"name="item{{$sales->id}}" />
+        <?php } ?>
     </td>
     <td>
         <strong>
@@ -67,9 +76,45 @@ function show_sales($sales) {
         <tr style="font-weight: bold">
             <td></td>
             <td style="text-align: right" colspan="4">Total</td>
-            <td>{{number_format($total,2)}}</td>
+            <td>
+                {{number_format($total,2)}}<br>
+                <?php try { ?>
+                    @if($sales->removed_bills->isEmpty)
+                    <a href="#" onclick="remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i>remove</a>
+                    @else
+                    <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i>was removed</a>
+                    <a href="#" onclick="undo_remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-primary btn-xs"><i class="fa fa-undo"></i>Undo</a>
+                    @endif
+                <?php } catch (Exception $ex) { ?>
+                    <a href="#" onclick="remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i>remove</a>
+                <?php } ?>
+            </td>
         </tr>
     </table>
+    <script type="text/javascript">
+        function remove_bill(type, id, visit) {
+            $.ajax({
+                type: 'get',
+                url: "{{route('api.finance.evaluation.bill.remove')}}",
+                data: {type: type, id: id, visit: visit},
+                success: function (response) {
+                    location.reload();
+                }
+            }); //ajax
+        }
+
+
+        function undo_remove_bill(type, id, visit) {
+            $.ajax({
+                type: 'get',
+                url: "{{route('api.finance.evaluation.bill.undoremove')}}",
+                data: {type: type, id: id, visit: visit},
+                success: function (response) {
+                    location.reload();
+                }
+            }); //ajax
+        }
+    </script>
     <?php
 }
 

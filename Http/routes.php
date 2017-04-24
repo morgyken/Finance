@@ -38,8 +38,8 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('sale/pay/{sale?}', ['as' => 'sale.pay', 'uses' => 'EvaluationController@sale_pay']);
     $router->get('sale/details/{sale}', ['uses' => 'EvaluationController@sale_details', 'as' => 'sale']);
     //Remove Bill
-    $router->get('bill/sale/remove/{id?}/', ['uses' => 'EvaluationController@RemoveSaleBill', 'as' => 'remove.sale_bill']);
-    $router->get('bill/remove/{id?}/', ['uses' => 'EvaluationController@RemoveBill', 'as' => 'remove.bill']);
+    //$router->get('bill/sale/remove/{id?}/', ['uses' => 'EvaluationController@RemoveSaleBill', 'as' => 'remove.sale_bill']);
+    $router->post('bill/remove/', ['uses' => 'EvaluationController@RemoveBill', 'as' => 'remove.bill']);
 
     $router->get('accounts/{patient}/show', ['uses' => 'EvaluationController@individual_account', 'as' => 'individual_account']);
     $router->post('payment', ['as' => 'pay.save', 'uses' => 'EvaluationController@pay_save']);

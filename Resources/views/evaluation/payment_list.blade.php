@@ -59,8 +59,6 @@ function amount_after_discount($discount, $amount) {
                                         <i class="fa fa-hand-lizard-o"></i> Receive Payments</a>
                                     <a class="btn btn-success btn-xs" href="{{route('finance.evaluation.individual_account',$patient->id)}}">
                                         <i class="fa fa-eye-slash"></i> View Account</a>
-                                    <a class="btn btn-danger btn-xs" href="{{route('finance.evaluation.remove.bill',$patient->id)}}">
-                                        <i class="fa fa-trash"></i> Remove</a>
                                 </td>
                             </tr>
                             @endforeach
@@ -103,8 +101,6 @@ function amount_after_discount($discount, $amount) {
                                         <i class="fa fa-hand-lizard-o"></i> Receive Payments</a>
                                     <a class="btn btn-success btn-xs" href="{{route('finance.evaluation.sale',$sale->id)}}">
                                         <i class="fa fa-eye-slash"></i> View</a>
-                                    <a class="btn btn-danger btn-xs" href="{{route('finance.evaluation.remove.sale_bill',$sale->id)}}">
-                                        <i class="fa fa-trash"></i> Remove</a>
                                 </td>
                             </tr>
                             @endforeach
