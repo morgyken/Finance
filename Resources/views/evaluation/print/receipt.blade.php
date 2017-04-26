@@ -85,7 +85,7 @@ function getAmount($sales) {
 </style>
 <div class="box box-info">
     <div class="box-header with-border">
-        <h2 class="box-title">{{config('practice.name')}}</h2>
+        <h2 class="box-title" style="text-align: center">{{config('practice.name')}}</h2>
         
     </div>
     <div class="box-body">
@@ -97,14 +97,14 @@ function getAmount($sales) {
             {{config('practice.building')?config('practice.building').',':''}}
             {{config('practice.street')?config('practice.street').',':''}}
             {{config('practice.town')}}<br>
-            {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
+            {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}
         </p>
 
         </td>    
 
 
         <td class="col-md-4">
-           <img style="width:100; height:auto; float: left" src="{{realpath(base_path('/public/reciept.jpg'))}}"/>
+           <img style="width:150; height:auto; float: left" src="{{realpath(base_path('/public/reciept.jpg'))}}"/>
         </td>    
         <td class="col-md-4">
         </td>
@@ -116,11 +116,10 @@ function getAmount($sales) {
         
     <table class="row">
         <div class="col-md-6 col-lg-6">
-        <h2 class="box-title">RECIEPT</h2>
-            <br>
+        <h2 >RECIEPT</h2>
             <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>
             <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
-            <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
+            <strong>Receipt No: </strong><span>{{$payment->receipt}}</span>
         </div>
 
 

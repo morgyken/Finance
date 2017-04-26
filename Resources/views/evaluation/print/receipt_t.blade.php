@@ -83,9 +83,9 @@ function getAmount($sales) {
         font-size: 90%;
     }
 </style>
-<div class="box box-info">
+<div class="box box-info" style="text-align: center;">
         <div class="box-header with-border">
-        <h2 class="box-title">{{config('practice.name')}}</h2>
+        <strong>{{config('practice.name')}}</strong>
     <h5><img style="width:100; height:auto;" src="{{realpath(base_path('/public/reciept.jpg'))}}"/></h5>    
     </div>
     <div class="box-body">
@@ -97,7 +97,7 @@ function getAmount($sales) {
             {{config('practice.building')?config('practice.building').',':''}}
             {{config('practice.street')?config('practice.street').',':''}}
             {{config('practice.town')}}<br>
-            {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
+            {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}
         </p>
 
         </td>    
