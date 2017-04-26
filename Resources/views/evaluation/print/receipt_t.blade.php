@@ -84,15 +84,15 @@ function getAmount($sales) {
     }
 </style>
 <div class="box box-info">
-    <div class="box-header with-border">
+        <div class="box-header with-border">
         <h2 class="box-title">{{config('practice.name')}}</h2>
-        
+    <h5><img style="width:100; height:auto;" src="{{realpath(base_path('/public/reciept.jpg'))}}"/></h5>    
     </div>
     <div class="box-body">
 <table>
     <tbody>
         <tr>
-        <td class="col-md-4">
+        <td>
             <p style="font-size: 90%;">
             {{config('practice.building')?config('practice.building').',':''}}
             {{config('practice.street')?config('practice.street').',':''}}
@@ -103,11 +103,11 @@ function getAmount($sales) {
         </td>    
 
 
-        <td class="col-md-4">
-           <img style="width:100; height:auto; float: left" src="{{realpath(base_path('/public/reciept.jpg'))}}"/>
-        </td>    
-        <td class="col-md-4">
-        </td>
+      <!--   <td>
+            <img  src="{{realpath(base_path('/public/reciept.jpg'))}}" alt="Company Logo">
+        
+
+        </td> -->    
         </tr>
     </tbody>
 </table>
