@@ -133,9 +133,38 @@ function getAmount($sales) {
             <h1>RECEIPT</h1>
             <?php } ?>
             <br>
+        <h2 class="box-title" style="text-align: center">{{config('practice.name')}}</h2>
+        
+    </div>
+    <div class="box-body">
+<table>
+    <tbody>
+        <tr>
+        <td class="col-md-4">
+            <p style="font-size: 90%;">
+            {{config('practice.building')?config('practice.building').',':''}}
+            {{config('practice.street')?config('practice.street').',':''}}
+            {{config('practice.town')}}<br>
+            {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}
+        </p>
+
+        </td>    
+
+
+        <td class="col-md-4">
+           <img style="width:150; height:auto; float: left" src="{{realpath(base_path('/public/reciept.jpg'))}}"/>
+        </td>    
+        <td class="col-md-4">
+        </td>
+        </tr>
+    </tbody>
+</table>
+    <table class="row">
+        <div class="col-md-6 col-lg-6">
+        <h2 >RECIEPT</h2>
             <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>
             <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
-            <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
+            <strong>Receipt No: </strong><span>{{$payment->receipt}}</span>
         </div>
         <div class="col-md-6">
             @if(!$invoice_mode)
