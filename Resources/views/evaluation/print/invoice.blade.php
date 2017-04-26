@@ -3,162 +3,102 @@
     <head>
         <title>Credit Bill<</title>
         <link rel="stylesheet" href="style.css" media="all" />
-        <style>
-            .clearfix:after {
-                content: "";
-                display: table;
-                clear: both;
-            }
 
-            a {
-                text-decoration: underline;
-            }
+<style>
+    body{
+        font-weight: bold;
+    }
+    table{
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-            body {
-                position: relative;
-                width: 21cm;
-                height: 29.7cm;
-                margin: 0 auto;
-                color: #001028;
-                background: #FFFFFF;
-                font-family: Arial, sans-serif;
-                font-size: 12px;
-                font-family: Arial;
-            }
+    table th{
+        border: 1px solid #ddd;
+        text-align: left;
+        padding: 1px;
+        font-size: 90%;
+    }
 
-            header {
-                padding: 10px 0;
-                margin-bottom: 30px;
-            }
+    table tr:nth-child(even){background-color: #f2f2f2}
 
-            #logo {
-                text-align: center;
-                margin-bottom: 10px;
-            }
+    table tr:hover {background-color: #ddd;}
 
-            #logo img {
-                width: 90px;
-            }
-
-            h1 {
-                border-top: 1px solid  #5D6975;
-                border-bottom: 1px solid  #5D6975;
-                font-size: 2.4em;
-                line-height: 1.4em;
-                font-weight: normal;
-                text-align: center;
-                margin: 0 0 20px 0;
-                background: url(dimension.png);
-            }
-
-            #project {
-                float: left;
-            }
-
-            #project span {
-                color: #5D6975;
-                text-align: right;
-                width: 52px;
-                margin-right: 10px;
-                display: inline-block;
-                font-size: 0.8em;
-            }
-
-            #company {
-                float: right;
-                text-align: right;
-            }
-
-            #project div,
-            #company div {
-                white-space: nowrap;
-            }
-
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                border-spacing: 0;
-                margin-bottom: 20px;
-            }
-
-            table tr:nth-child(2n-1) td {
-                background: #F5F5F5;
-            }
-
-            table th,
-            table td {
-                text-align: center;
-            }
-
-            table th {
-                padding: 5px 20px;
-                border-bottom: 1px solid #C1CED9;
-                white-space: nowrap;
-                font-weight: bold;
-            }
-
-            table .service,
-            table .desc {
-                text-align: left;
-            }
-
-            table td {
-                padding: 20px;
-                text-align: center;
-            }
-            table .sums{
-                padding: 20px;
-                text-align: right;
-            }
-
-            table td.service,
-            table td.desc {
-                vertical-align: top;
-            }
-
-            table td.unit,
-            table td.qty,
-            table td.total {
-                font-size: 1.2em;
-            }
-
-            table td.grand {
-                border-top: 1px solid #5D6975;;
-            }
-
-            #notices .notice {
-                font-size: 1.2em;
-            }
-
-            footer {
-                width: 100%;
-                height: 30px;
-                position: absolute;
-                bottom: 0;
-                border-top: 1px solid #C1CED9;
-                padding: 8px 0;
-                text-align: center;
-            }
-        </style>
+    table th{
+        padding-top: 1px;
+        padding-bottom: 1px;
+        background-color: /*#4CAF50*/ #BBBBBB;
+        color: black;
+        font-size: 90%;
+    }
+    .left{
+        width: 60%;
+        float: left;
+    }
+    .right{
+        float: left;
+        width: 40%;
+    }
+    .clear{
+        clear: both;
+    }
+    img{
+        width:100%;
+        height: auto;
+    }
+    td{
+        font-size: 90%;
+    }
+    div #footer{
+        font-size: 90%;
+    }
+    th{
+        font-size: 90%;
+    }
+</style>
     </head>
     <body>
         <header class="clearfix">
             <div id="logo">
             </div>
-            <h1>Invoice::{{ $bill->id }}</h1><br>
-            <div id="company" class="clearfix">
-                <div>{{config('practice.name')}}</div>
-                <div>{{config('practice.building')}},<br /> {{config('practice.street')}}, {{config('practice.town')}}</div>
+            <h3 class="box-title">{{config('practice.name')}}</h1>
+            <br><br>
+            
+            <div id="project">
+            <br>
+          
+            <table>
+    <tbody>
+        <tr>
+        <td class="col-md-4">
+           <div>{{config('practice.building')}}, {{config('practice.street')}}, {{config('practice.town')}}</div>
                 <div>Telephone:{{config('practice.telephone')}}</div>
                 <div>Email:<a href="mailto:{{config('practice.email')}}">{{config('practice.email')}}</a></div>
-            </div>
-            <div id="project">
-                <div><span>DATE:</span> {{smart_date($bill->created_at)}}</div>
-                <div><span>Patient:</span> {{$bill->visits->patients->full_name}}</div>
+
+        </td>    
+
+
+        <td class="col-md-4">
+           <img style="width:100; height:auto; float: left" src="{{realpath(base_path('/public/reciept.jpg'))}}"/>
+        </td>    
+        <td class="col-md-4">
+        </td>
+        </tr>
+    </tbody>
+</table>
+
+
+            <h2 class="box-title">INVOICE</h2>
+                <div>DATE: {{smart_date($bill->created_at)}}</div>
+                <div>Patient: {{$bill->visits->patients->full_name}}</div>
+                <div>Invoice No: {{ $bill->id }}</div>
+                <div>Insurance Company: {{$bill->company}}</div>
+                <div>Scheme: {{$bill->payments}}</div>
             </div>
         </header>
         <main>
-            <br><br><br><br>
+            <br><br>
             <table>
                 <thead>
                     <tr>
@@ -187,8 +127,8 @@
                     @endforeach
                     @endforeach
                     <tr>
-                        <td style="text-align: right;" colspan="2" class="grand total">TOTAL Amount</td>
-                        <td class="grand total">{{ number_format($bill->payment,2) }}</td>
+                        <th style="text-align: right;" colspan="2" class="grand total">TOTAL Amount</th>
+                        <th class="grand total">{{ number_format($bill->payment,2) }}</th>
                     </tr>
                 </tbody>
             </table>
