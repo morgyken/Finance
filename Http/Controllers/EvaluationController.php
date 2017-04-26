@@ -391,10 +391,9 @@ class EvaluationController extends AdminBaseController {
         $this->data['cash'] = EvaluationPayments::all();
         return view('finance::evaluation.cash_bills', ['data' => $this->data]);
     }
-
+    
     public function printInvoice(Request $request) {
         $bill = InsuranceInvoice::find($request->id);
-        dd($bill);
         $pdf = \PDF::loadView('finance::evaluation.print.invoice', ['bill' => $bill]);
         $pdf->setPaper('a4', 'potrait');
         return $pdf->stream('Bill' . $request->id . '.pdf');
@@ -425,7 +424,7 @@ class EvaluationController extends AdminBaseController {
 
     public function purgeDispatch(Request $request) {
         $dispatch = DispatchDetails::whereDispatch($request->id)->get();
-        $item;
+        $item = null;
         foreach ($dispatch as $dis) {
             $inv = InsuranceInvoice::find($dis->insurance_invoice);
             $inv->status = 0;
@@ -434,9 +433,7 @@ class EvaluationController extends AdminBaseController {
         }
         $batch = Dispatch::find($item);
         $batch->delete();
-        flash("Dispatch Cancelled
-
-            ");
+        flash("Dispatch Cancelled");
         return redirect()->route('finance.evaluation.dispatched');
     }
 
