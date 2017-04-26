@@ -93,8 +93,8 @@
                 <div>DATE: {{smart_date($bill->created_at)}}</div>
                 <div>Patient: {{$bill->visits->patients->full_name}}</div>
                 <div>Invoice No: {{ $bill->id }}</div>
-                <div>Insurance Company: {{$bill->insurance}}</div>
-                <div>Scheme: {{$bill->scheme}}</div>
+                <div>Insurance Company: {{$bill->company}}</div>
+                <div>Scheme: {{$bill->payments}}</div>
             </div>
         </header>
         <main>

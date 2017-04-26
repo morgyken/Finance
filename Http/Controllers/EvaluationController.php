@@ -318,10 +318,9 @@ class EvaluationController extends AdminBaseController {
         $this->data['cash'] = EvaluationPayments::all();
         return view('finance::evaluation.cash_bills', ['data' => $this->data]);
     }
-
+    
     public function printInvoice(Request $request) {
         $bill = InsuranceInvoice::find($request->id);
-        dd($bill);
         $pdf = \PDF::loadView('finance::evaluation.print.invoice', ['bill' => $bill]);
         $pdf->setPaper('a4', 'Potrait');
         return $pdf->stream('Bill' . $request->id . '.pdf');
