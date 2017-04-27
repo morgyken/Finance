@@ -36,7 +36,7 @@ $__visits = $patient->visits;
                                 <td>
                                     <div class="label label-success">Paid</div>
                                     {{$item->procedures->name}} <i class="small">({{ucwords($item->type)}})</i> -
-                                    Ksh {{$item->price}}
+                                    Ksh {{$item->amount>0?$item->amount:$item->price}}
                                 </td>
                                 @else
                                 <td>
@@ -52,7 +52,7 @@ $__visits = $patient->visits;
                                     <input type="hidden" value="{{$visit->id}}" name="visits{{$item->id}}" />
                                 <td>
                                     {{$item->procedures->name}}
-                                    <i class="small">({{ucwords($item->type)}})</i> - Ksh <span class="topay">{{$item->price}}</span>
+                                    <i class="small">({{ucwords($item->type)}})</i> - Ksh <span class="topay">{{$item->amount>0?$item->amount:$item->price}}</span>
 
 
 
@@ -69,8 +69,10 @@ $__visits = $patient->visits;
 
                                         @endif
                                     <?php } catch (Exception $ex) { ?>
+                                        <!--
                                         <a href="#" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
                                             <i class="fa fa-trash"></i>remove</a>
+                                        -->
                                     <?php } ?>
                                 </td>
                                 @endif
@@ -128,8 +130,8 @@ $__visits = $patient->visits;
 
                                     @endif
                                 <?php } catch (Exception $ex) { ?>
-                                    <a href="#" onclick="remove_bill('dispensing', <?php echo $disp->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
-                                        <i class="fa fa-trash"></i>remove</a>
+                                    <!-- <a href="#" onclick="remove_bill('dispensing', <?php echo $disp->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
+                                        <i class="fa fa-trash"></i>remove</a> -->
                                 <?php } ?>
 
 
