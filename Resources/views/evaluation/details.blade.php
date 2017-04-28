@@ -56,7 +56,8 @@ function getAmount($sales) {
                     <tr>
                         <th>#</th>
                         <th>Procedures/Drug</th>
-                        <th>Cost (Ksh.)</th>
+                        <th>Discount(%)</th>
+                        <th>Amount (Ksh.)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,9 +65,12 @@ function getAmount($sales) {
                     @foreach($payment->details as $d)
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td>{{$d->investigations->procedures->name}} <i
-                                class="small">({{$d->investigations->type}})</i></td>
-                        <td>{{$d->price}}</td>
+                        <td>{{$d->investigations->procedures->name}}
+                            <i class="small">({{$d->investigations->type}})</i>
+                            x {{$d->investigations->quantity>0?$d->investigations->quantity:1}}
+                        </td>
+                        <td>{{$d->investigations->discount}}</td>
+                        <td>{{$d->investigations->amount>0?$d->investigations->amount:$d->price}}</td>
                     </tr>
                     @endforeach
                     @endif
@@ -96,8 +100,9 @@ function getAmount($sales) {
 
                 <tfoot>
                     <tr>
-                        <th>Total</th>
                         <th></th>
+                        <th></th>
+                        <th>Total</th>
                         <th>
                             {{$payment->total}}
                         </th>
