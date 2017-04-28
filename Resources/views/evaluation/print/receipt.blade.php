@@ -1,3 +1,10 @@
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>RECEIPT</title>
+
 <?php
 /*
  * Collabmed Solutions Ltd
@@ -147,10 +154,7 @@ function getAmount($sales) {
             {{config('practice.town')}}<br>
             {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}
         </p>
-
-        </td>    
-
-
+        </td>
         <td class="col-md-4">
            <img style="width:150; height:auto; float: left" src="{{realpath(base_path('/public/reciept.jpg'))}}"/>
         </td>    
@@ -159,7 +163,8 @@ function getAmount($sales) {
         </tr>
     </tbody>
 </table>
-    <table class="row">
+        @include('Inventory::partials.header')
+        <table class="row">
         <div class="col-md-6 col-lg-6">
         <h2 >RECIEPT</h2>
             <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>

@@ -1,3 +1,10 @@
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>RECEIPT</title>
+
 <?php
 /*
  * Collabmed Solutions Ltd
@@ -86,31 +93,10 @@ function getAmount($sales) {
 <div class="box box-info" style="text-align: center;">
         <div class="box-header with-border">
         <strong>{{config('practice.name')}}</strong>
-    <h5><img style="width:100; height:auto;" src="{{realpath(base_path('/public/reciept.jpg'))}}"/></h5>    
+    <h5><img style="width:150; height:auto;" src="{{realpath(base_path('/public/reciept.jpg'))}}"/></h5>    
     </div>
     <div class="box-body">
-<table>
-    <tbody>
-        <tr>
-        <td>
-            <p style="font-size: 90%;">
-            {{config('practice.building')?config('practice.building').',':''}}
-            {{config('practice.street')?config('practice.street').',':''}}
-            {{config('practice.town')}}<br>
-            {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}
-        </p>
-
-        </td>    
-
-
-      <!--   <td>
-            <img  src="{{realpath(base_path('/public/reciept.jpg'))}}" alt="Company Logo">
-        
-
-        </td> -->    
-        </tr>
-    </tbody>
-</table>
+    @include('Inventory::partials.t_header')
 
 
         
