@@ -1,3 +1,10 @@
+
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>RECEIPT</title>
+
 <?php
 /*
  * Collabmed Solutions Ltd
@@ -85,35 +92,7 @@ function getAmount($sales) {
 </style>
 <div class="box box-info">
     <div class="box-header with-border">
-        <h2 class="box-title" style="text-align: center">{{config('practice.name')}}</h2>
-        
-    </div>
-    <div class="box-body">
-<table>
-    <tbody>
-        <tr>
-        <td class="col-md-4">
-            <p style="font-size: 90%;">
-            {{config('practice.building')?config('practice.building').',':''}}
-            {{config('practice.street')?config('practice.street').',':''}}
-            {{config('practice.town')}}<br>
-            {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}
-        </p>
-
-        </td>    
-
-
-        <td class="col-md-4">
-           <img style="width:150; height:auto; float: left" src="{{realpath(base_path('/public/reciept.jpg'))}}"/>
-        </td>    
-        <td class="col-md-4">
-        </td>
-        </tr>
-    </tbody>
-</table>
-
-
-        
+    @include('Inventory::partials.header')
     <table class="row">
         <div class="col-md-6 col-lg-6">
         <h2 >RECIEPT</h2>
