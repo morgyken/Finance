@@ -36,7 +36,7 @@ function amount_after_discount($discount, $amount) {
         <strong>
             Total Amount:
             <span style="font-weight: bold" class="topay">
-                {{getAmount($sales)}}
+                {{$sales->amount}}
             </span>
         </strong>
     </td>
@@ -62,7 +62,7 @@ function show_sales($sales) {
         $n = 0;
         $total = 0;
         foreach ($sales->goodies as $g) {
-            $total += amount_after_discount($g->discount, $g->unit_cost * $g->quantity);
+            $total += $g->total;
             ?>
             <tr>
                 <td>{{$n+=1}}</td>
@@ -70,24 +70,25 @@ function show_sales($sales) {
                 <td>{{$g->quantity}}</td>
                 <td>{{$g->unit_cost}}</td>
                 <td>{{$g->discount}}</td>
-                <td> {{number_format(amount_after_discount($g->discount, $g->unit_cost*$g->quantity),2)}}</td>
+                <td> {{number_format(ceil($g->total),2)}}</td>
             </tr>
         <?php } ?>
         <tr style="font-weight: bold">
             <td></td>
             <td style="text-align: right" colspan="4">Total</td>
             <td>
-                {{number_format($total,2)}}<br>
+                {{number_format(ceil($total),2)}}<br>
+                <!--
                 <?php try { ?>
-                    @if($sales->removed_bills->isEmpty)
-                    <a href="#" onclick="remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i>remove</a>
-                    @else
-                    <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i>was removed</a>
-                    <a href="#" onclick="undo_remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-primary btn-xs"><i class="fa fa-undo"></i>Undo</a>
-                    @endif
+                        @if($sales->removed_bills->isEmpty)
+                        <a href="#" onclick="remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i>remove</a>
+                        @else
+                        <a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i>was removed</a>
+                        <a href="#" onclick="undo_remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-primary btn-xs"><i class="fa fa-undo"></i>Undo</a>
+                        @endif
                 <?php } catch (Exception $ex) { ?>
-                    <a href="#" onclick="remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i>remove</a>
-                <?php } ?>
+                        <a href="#" onclick="remove_bill('sale', <?php echo $sales->id; ?>, null)" class="btn btn-danger btn-xs pull-right"><i class="fa fa-trash"></i>remove</a>
+                <?php } ?> -->
             </td>
         </tr>
     </table>
