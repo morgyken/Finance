@@ -61,10 +61,11 @@ function getAmount($sales) {
                     </tr>
                 </thead>
                 <tbody>
+                    <?php $n = 0; ?>
                     @if(isset($payment->details))
                     @foreach($payment->details as $d)
                     <tr>
-                        <td>{{$loop->iteration}}</td>
+                        <td>{{$n+=1}}</td>
                         <td>{{$d->investigations->procedures->name}}
                             <i class="small">({{$d->investigations->type}})</i>
                             x {{$d->investigations->quantity>0?$d->investigations->quantity:1}}
@@ -82,7 +83,7 @@ function getAmount($sales) {
                             ?>
                             @foreach($__dispensing as $item)
                             <tr>
-                                <td>#</td>
+                                <td>{{$n+=1}}</td>
                                 <td>
                                     {{$item->drug->name}}
                                     <small>{{$item->price}} x {{$item->quantity}}</small>

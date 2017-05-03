@@ -44,16 +44,15 @@ class EvaluationController extends AdminBaseController {
         $this->data['disp'] = json_decode($payment->dispensing);
         $this->data['a4'] = 1;
         $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
-        $pdf->setPaper('a4', 'Landscape');
+        $pdf->setPaper('a4', 'Potrait');
         return $pdf->stream('Bill' . $request->id . '.pdf');
     }
 
     public function printNormalReceipt(Request $request) {
-
         //$this->data['sales'] = InventoryBatchProductSales::find($id);
         $this->data['payment'] = $payment = EvaluationPayments::find($request->payment);
         ///dd($this->data);
-        $min_height = 420;
+        $min_height = 700;
         /*
           foreach ($this->data['pa']->goodies as $n) {
           $min_height += 20;

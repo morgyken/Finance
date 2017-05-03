@@ -11,6 +11,7 @@
   $pays = paymentFor($payment); */
 extract($data);
 $t = 0;
+$thermal = null;
 
 function amount_after_discount($discount, $amount) {
     try {
@@ -33,6 +34,7 @@ function getAmount($sales) {
 <style>
     body{
         font-weight: bold;
+        font-family: Arial, Helvetica, sans-serif;
     }
     table{
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -84,19 +86,38 @@ function getAmount($sales) {
     }
 </style>
 <div class="box box-info">
+    <?php if (!isset($a4)) { ?>
+        <center>
+            <h1 class="box-title">{{config('practice.name')}}</h1>
+        </center>
+    <?php } else { ?>
+        <h1 class="box-title">{{config('practice.name')}}</h1>
+    <?php } ?>
+
+    @if(isset($a4))
     <img style="width:100; height:auto; float: right" src="{{realpath(base_path('/public/logo.jpg'))}}"/>
+    @else
+    <center>
+        <img style="width:100; height:auto;" src="{{realpath(base_path('/public/logo.jpg'))}}"/>
+    </center>
+    @endif
     <div class="box-header with-border">
-        <h2 class="box-title">{{config('practice.name')}}</h2>
-        <p style="font-size: 90%;">
-            {{config('practice.building')?config('practice.building').',':''}}
+        <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
+            {{config('practice.building')?config('practice.building').',':''}}<br>
             {{config('practice.street')?config('practice.street').',':''}}
             {{config('practice.town')}}<br>
             {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
         </p>
-
     </div>
     <div class="box-body">
         <div class="col-md-12">
+            <?php if (!isset($a4)) { ?>
+                <center>
+                    <h1>RECEIPT</h1>
+                </center>
+            <?php } else { ?>
+                <h1>RECEIPT</h1>
+            <?php } ?>
             <br>
             <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>
             <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
@@ -120,9 +141,11 @@ function getAmount($sales) {
                         @foreach($payment->details as $d)
                         <tr>
                             <td>{{$n+=1}}</td>
-                            <td>{{$d->investigations->procedures->name}}
-                                <i class="small">({{$d->investigations->type}})</i>
-                                x {{$d->investigations->quantity>0?$d->investigations->quantity:1}}
+                            <td>
+                                {{$d->investigations->procedures->name}}
+                                <i>
+                                    x {{$d->investigations->quantity>0?$d->investigations->quantity:1}}
+                                </i>
                             </td>
                             <td>{{$d->investigations->discount}}</td>
                             <td>{{$d->investigations->amount>0?$d->investigations->amount:$d->price}}</td>
@@ -139,7 +162,9 @@ function getAmount($sales) {
                                 <tr>
                                     <td>{{$n+=1}}</td>
                                     <td>{{$item->drug->name}}
-                                        <small>{{$item->price}} x {{$item->quantity}}</small>(drug)
+                                        <i>
+                                            --<small>{{$item->price}} x {{$item->quantity}}</small>(drug)
+                                        </i>
                                     </td>
                                     <td>{{$item->discount}}</td>
                                     <td>{{amount_after_discount($item->discount, $item->price*$item->quantity)}}</td>
@@ -175,9 +200,9 @@ function getAmount($sales) {
                         <tr>
                             <td>{{$item->products->name}}</td>
                             <td>{{$item->quantity}}</td>
-                            <td>{{$item->unit_cost}}</td>
+                            <td>{{ceil($item->unit_cost)}}</td>
                             <td>{{$item->discount}}</td>
-                            <td>{{number_format(amount_after_discount($item->discount, $item->unit_cost*$item->quantity),2)}}</td>
+                            <td>{{number_format(ceil($item->total),2)}}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -185,7 +210,7 @@ function getAmount($sales) {
                         <tr>
                             <th colspan="4">Total</th>
                             <th>
-                                {{number_format(getAmount($payment->sales),2)}}
+                                {{number_format(ceil($payment->sales->amount),2)}}
                             </th>
                         </tr>
                     </tfoot>
