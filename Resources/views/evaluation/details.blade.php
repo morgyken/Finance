@@ -126,9 +126,9 @@ function getAmount($sales) {
                     <tr>
                         <td>{{$item->products->name}}</td>
                         <td>{{$item->quantity}}</td>
-                        <td>{{$item->unit_cost}}</td>
+                        <td>{{ceil($item->unit_cost)}}</td>
                         <td>{{$item->discount}}</td>
-                        <td>{{number_format(amount_after_discount($item->discount, $item->unit_cost*$item->quantity),2)}}</td>
+                        <td>{{number_format(ceil($item->total),2)}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -139,7 +139,7 @@ function getAmount($sales) {
                         <th></th>
                         <th></th>
                         <th>
-                            {{number_format(getAmount($payment->sales),2)}}
+                            {{number_format(ceil($payment->sales->amount),2)}}
                         </th>
                     </tr>
                 </tfoot>
