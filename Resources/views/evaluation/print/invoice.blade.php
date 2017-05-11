@@ -54,6 +54,7 @@
             font-size: 90%;
         }
     </style>
+    <?php $bill_amount = 0; ?>
     <div class="box box-info">
         <h1 class="box-title">{{config('practice.name')}}</h1>
         <img style="width:100; height:auto; float: right" src="{{realpath(base_path('/public/logo.jpg'))}}"/>
@@ -96,6 +97,9 @@
                     <tbody>
                         <?php $n = 0; ?>
                         @foreach($bill->visits->investigations as $item)
+                        <?php
+                        $bill_amount+=$item->amount > 0 ? $item->amount : $item->price;
+                        ?>
                         <tr class="products">
                             <td>{{$n+=1}}</td>
                             <td style="text-align: left;">{{$item->procedures->name}}</td>
@@ -107,6 +111,9 @@
 
                         @foreach($bill->visits->dispensing as $item)
                         @foreach($item->details as $item)
+                        <?php
+                        $bill_amount+=$item->price;
+                        ?>
                         <tr>
                             <td>{{$n+=1}}</td>
                             <td>{{$item->drug->name}}</td>
@@ -118,7 +125,7 @@
                         @endforeach
                         <tr>
                             <td style="text-align: right;" colspan="4" class="grand total">TOTAL: </td>
-                            <td class="grand total">{{ number_format($bill->payment,2) }}</td>
+                            <td class="grand total">{{ number_format($bill_amount,2) }}</td>
                         </tr>
                     </tbody>
                 </table>
