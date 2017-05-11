@@ -77,47 +77,52 @@
     <tbody class="response" id="rows">
         <?php $t = $n = 0; ?>
         @foreach($billed as $inv)
-        <?php
-        $t+= $inv->visits->unpaid_amount;
-        $bal = $inv->payment - $inv->paid;
+        <?php try { ?>
+            $t+= $inv->visits->unpaid_amount;
+            $bal = $inv->payment - $inv->paid;
+            ?>
+            @if($inv->status !==3)
+            <tr>
+                <td>{{$n+=1}}</td>
+                <td>
+                    <input onclick="updateAmount({{$bal}}, {{$inv->id}})" id="pay_check{{$inv->id}}" type="checkbox" name="invoice[]" value="{{$inv->id}}">
+                    {{$inv->invoice_no}}
+                </td>
+                <td>{{$inv->visits->patients->full_name}}</td>
+                <td>{{(new Date($inv->visits->created_at))->format('dS M y')}}</td>
+                <td>{{$inv->visits->patient_scheme->schemes->companies->name}}:
+                    {{$inv->visits->patient_scheme->schemes->name}}</td>
+                <td>{{$inv->payment}}</td>
+                <td>{{$inv->paid}}</td>
+                <td>
+                    <input readonly="" type="text" size="5" name="amount{{$inv->id}}" id="pay_amount{{$inv->id}}" value="{{$bal}}">
+                    {!! Form::hidden('patient',$inv->visits->patients->id) !!}
+                </td>
+            </tr>
+            @endif
+            <?php
+        } catch (\Exception $e) {
+
+        }
         ?>
-        @if($inv->status !==3)
-        <tr>
-            <td>{{$n+=1}}</td>
-            <td>
-                <input onclick="updateAmount({{$bal}}, {{$inv->id}})" id="pay_check{{$inv->id}}" type="checkbox" name="invoice[]" value="{{$inv->id}}">
-                {{$inv->invoice_no}}
-            </td>
-            <td>{{$inv->visits->patients->full_name}}</td>
-            <td>{{(new Date($inv->visits->created_at))->format('dS M y')}}</td>
-            <td>{{$inv->visits->patient_scheme->schemes->companies->name}}:
-                {{$inv->visits->patient_scheme->schemes->name}}</td>
-            <td>{{$inv->payment}}</td>
-            <td>{{$inv->paid}}</td>
-            <td>
-                <input readonly="" type="text" size="5" name="amount{{$inv->id}}" id="pay_amount{{$inv->id}}" value="{{$bal}}">
-                {!! Form::hidden('patient',$inv->visits->patients->id) !!}
-            </td>
-        </tr>
-        @endif
         @endforeach
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="3">
-                <div id="action-scene"></div>
+            <td colspan = "3">
+                <div id = "action-scene"></div>
             </td>
-            <td colspan="2"><strong>Total:</strong> <input id="pay_dis_tot" disabled="disabled" size="7" value="0.00"></td>
-            <td style="text-align: right"><strong>Balance:</strong></td>
-            <td colspan="2">
-                <input id="pay_sum" type="hidden" disabled="disabled" size="10" value="{{number_format($t,2)}}">
-                <input id="pay_balance" type="text" disabled="disabled" size="10" value="0.00">
+            <td colspan = "2"><strong>Total:</strong> <input id = "pay_dis_tot" disabled = "disabled" size = "7" value = "0.00"></td>
+            <td style = "text-align: right"><strong>Balance:</strong></td>
+            <td colspan = "2">
+                <input id = "pay_sum" type = "hidden" disabled = "disabled" size = "10" value = "{{number_format($t,2)}}">
+                <input id = "pay_balance" type = "text" disabled = "disabled" size = "10" value = "0.00">
             </td>
         </tr>
     </tfoot>
 </table>
 </form>
-<script type="text/javascript">
+<script type = "text/javascript">
     var mode = 'payment';
 </script>
 @else

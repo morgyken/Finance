@@ -36,31 +36,38 @@ $AMOUNT = 0
                     </thead>
                     <tbody class="response">
                         @foreach($payments as $item)
-                        <?php $AMOUNT+=$item->amount; ?>
-                        @if($item->created_at >= $thirty)
-                        <?php $current+=$item->amount; ?>
-                        @elseif($item->created_at < $thirty && $item->created_at >= $sixty)
-                        <?php $thirty1_to_60+=$item->amount; ?>
-                        @elseif($item->created_at < $sixty && $item->created_at >= $ninety)
-                        <?php $six1_to_90 += $item->amount; ?>
-                        @else
-                        <?php $ninety_plus += $item->amount; ?>
-                        @endif
-                        <tr>
-                            <td>
-                                {{$loop->iteration}}
-                            </td>
-                            <td>
-                                {{$item->created_at}}
-                            </td>
-                            <td>{{$item->invoice->invoice_no}}</td>
-                            <td>{{$item->invoice->visits->patient_scheme->schemes->companies->name}}</td>
-                            <td>{{$item->invoice->visits->patient_scheme->schemes->name}}</td>
-                            <td>{{$item->invoice->visits->patients->full_name}}</td>
-                            <td style="text-align: center">{{$item->amount}}
-                                <i class="fa fa-sort-asc" style="color: green" aria-hidden="true"></i>
-                            </td>
-                        </tr>
+                        <?php try { ?>
+                            <?php $AMOUNT+=$item->amount; ?>
+                            @if($item->created_at >= $thirty)
+                            <?php $current+=$item->amount; ?>
+                            @elseif($item->created_at < $thirty && $item->created_at >= $sixty)
+                            <?php $thirty1_to_60+=$item->amount; ?>
+                            @elseif($item->created_at < $sixty && $item->created_at >= $ninety)
+                            <?php $six1_to_90 += $item->amount; ?>
+                            @else
+                            <?php $ninety_plus += $item->amount; ?>
+                            @endif
+                            <tr>
+                                <td>
+                                    {{$loop->iteration}}
+                                </td>
+                                <td>
+                                    {{$item->created_at}}
+                                </td>
+                                <td>{{$item->invoice->invoice_no}}</td>
+                                <td>{{$item->invoice->visits->patient_scheme->schemes->companies->name}}</td>
+                                <td>{{$item->invoice->visits->patient_scheme->schemes->name}}</td>
+                                <td>{{$item->invoice->visits->patients->full_name}}</td>
+                                <td style="text-align: center">{{$item->amount}}
+                                    <i class="fa fa-sort-asc" style="color: green" aria-hidden="true"></i>
+                                </td>
+                            </tr>
+
+                            <?php
+                        } catch (\Exception $e) {
+
+                        }
+                        ?>
                         @endforeach
                     </tbody>
                 </table>

@@ -16,15 +16,23 @@
     </thead>
     <tbody class="response">
         @foreach($canceled as $item)
-        <tr>
-            <td>{{$item->id}}</td>
-            <td>{{$item->visits->patients->full_name}}</td>
-            <td>{{(new Date($item->visits->created_at))->format('dS M y g:i a')}} - Clinic {{$item->visits->clinics->name}}</td>
-            <td>{{$item->visits->patient_scheme->schemes->companies->name}}</td>
-            <td>{{$item->visits->patient_scheme->schemes->name}}</td>
-            <td>{{$item->visits->unpaid_amount}}</td>
-            <td><a href="{{route('finance.evaluation.undo.cancel', $item->id)}}" class="btn btn-xs btn-primary"><i class="fa fa-undo"></i>Undo</a></td>
-        </tr>
+        <?php
+        try {
+            ?>
+            <tr>
+                <td>{{$item->id}}</td>
+                <td>{{$item->visits->patients->full_name}}</td>
+                <td>{{(new Date($item->visits->created_at))->format('dS M y g:i a')}} - Clinic {{$item->visits->clinics->name}}</td>
+                <td>{{$item->visits->patient_scheme->schemes->companies->name}}</td>
+                <td>{{$item->visits->patient_scheme->schemes->name}}</td>
+                <td>{{$item->visits->unpaid_amount}}</td>
+                <td><a href="{{route('finance.evaluation.undo.cancel', $item->id)}}" class="btn btn-xs btn-primary"><i class="fa fa-undo"></i>Undo</a></td>
+            </tr>
+            <?php
+        } catch (\Exception $e) {
+
+        }
+        ?>
         @endforeach
     </tbody>
 </table>

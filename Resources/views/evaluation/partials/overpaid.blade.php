@@ -23,20 +23,26 @@
                     </thead>
                     <tbody class="response">
                         @foreach($overpaid as $item)
-                        <tr>
-                            <td>{{$item->visits->id}}</td>
-                            <td>{{$item->visits->patients->full_name}}</td>
-                            <td>{{(new Date($item->created_at))->format('dS M y g:i a')}}</td>
-                            <td>{{$item->visits->patient_scheme->schemes->companies->name}}</td>
-                            <td>{{$item->visits->patient_scheme->schemes->name}}</td>
-                            <td>{{$item->visits->unpaid_amount}}</td>
-                            <td>
-                                <small>
-                                    <a href="{{route('finance.evaluation.ins.rcpt.print', $item->id)}}" class="btn btn-xs btn-primary">
-                                        <i class="fa fa-print"></i> Print Receipt</a>
-                                </small>
-                            </td>
-                        </tr>
+                        <?php try { ?>
+                            <tr>
+                                <td>{{$item->visits->id}}</td>
+                                <td>{{$item->visits->patients->full_name}}</td>
+                                <td>{{(new Date($item->created_at))->format('dS M y g:i a')}}</td>
+                                <td>{{$item->visits->patient_scheme->schemes->companies->name}}</td>
+                                <td>{{$item->visits->patient_scheme->schemes->name}}</td>
+                                <td>{{$item->visits->unpaid_amount}}</td>
+                                <td>
+                                    <small>
+                                        <a href="{{route('finance.evaluation.ins.rcpt.print', $item->id)}}" class="btn btn-xs btn-primary">
+                                            <i class="fa fa-print"></i> Print Receipt</a>
+                                    </small>
+                                </td>
+                            </tr>
+                            <?php
+                        } catch (\Exception $e) {
+
+                        }
+                        ?>
                         @endforeach
                     </tbody>
                 </table>
