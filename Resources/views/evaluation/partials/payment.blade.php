@@ -77,7 +77,8 @@
     <tbody class="response" id="rows">
         <?php $t = $n = 0; ?>
         @foreach($billed as $inv)
-        <?php try { ?>
+        <?php
+        try {
             $t+= $inv->visits->unpaid_amount;
             $bal = $inv->payment - $inv->paid;
             ?>
