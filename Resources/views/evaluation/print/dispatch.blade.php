@@ -116,6 +116,6 @@
             <strong>Signature:</strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
 
             <br/><br/>
-            Payment Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
+            Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
         </div>
 </html>

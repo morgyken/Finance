@@ -247,6 +247,14 @@ function getAmount($sales) {
         <strong>Signature:</strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
 
         <br/><br/>
-        Payment Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
+        Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
+        <br/><br/>
+        <table>
+            <tr>
+                <td style="text-align: right; font-weight: bold">
+                    ||||||||||||||||||||||||||||||
+                </td>
+            </tr>
+        </table>
     </div>
 </html>

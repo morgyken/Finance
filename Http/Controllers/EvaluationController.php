@@ -321,14 +321,14 @@ class EvaluationController extends AdminBaseController {
     public function printInvoice(Request $request) {
         $bill = InsuranceInvoice::find($request->id);
         $pdf = \PDF::loadView('finance::evaluation.print.invoice', ['bill' => $bill]);
-        $pdf->setPaper('a4', 'Landscape');
+        $pdf->setPaper('a4', 'potrait');
         return $pdf->stream('Bill' . $request->id . '.pdf');
     }
 
     public function printReceipt(Request $request) {
         $payment = FinanceEvaluationInsurancePayments::find($request->id);
         $pdf = \PDF::loadView('finance::evaluation.print.rcpt', ['payment' => $payment]);
-        $pdf->setPaper('a4', 'Landscape');
+        $pdf->setPaper('a4', 'potrait');
         return $pdf->stream('Bill' . $request->id . '.pdf');
     }
 
@@ -341,7 +341,6 @@ class EvaluationController extends AdminBaseController {
     }
 
     public function printDispatch(Request
-
     $request) {
         $dispatch = Dispatch::find($request->id);
         $pdf = \PDF::loadView('finance::evaluation.print.dispatch', ['dispatch' => $dispatch]);
