@@ -1,9 +1,10 @@
 <?php
 
 //old web routes
+use Ignite\Finance\Library\Mpesa\Mpesa;
 use Illuminate\Routing\Router;
-
 ///Billing finance.billing.dispatch
+/** @var Router $router */
 $router->match(['get', 'post'], 'billing', ['uses' => 'FinanceController@billing', 'as' => 'billing']);
 $router->match(['get', 'post'], 'billing/dispatch', ['uses' => 'GlController@dispatchbills', 'as' => 'billing.dispatch']);
 $router->get('bill/{id}/cancel', ['uses' => 'GlController@cancelBill', 'as' => 'bill.cancel']);
@@ -11,7 +12,7 @@ $router->get('bill/{id}/payment', ['uses' => 'GlController@payBill', 'as' => 'bi
 $router->post('bill/payment', ['uses' => 'GlController@savePaybill', 'as' => 'bill.pay.save']);
 $router->get('bill/print/{id}', ['uses' => 'GlController@print_bill', 'as' => 'bill.print']);
 // general ledger
-$router->group(['prefix' => 'gl', 'as' => 'gl.'], function(Router $router) {
+$router->group(['prefix' => 'gl', 'as' => 'gl.'], function (Router $router) {
     $router->match(['get', 'post'], 'account_groups/{id?}', ['uses' => 'GlController@account_groups', 'as' => 'account_groups']);
     $router->match(['get', 'post'], 'account_types/{id?}', ['uses' => 'GlController@account_types', 'as' => 'account_types']);
     $router->match(['get', 'post'], 'accounts/{id?}', ['uses' => 'GlController@accounts', 'as' => 'accounts']);
@@ -34,7 +35,6 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function(Router $router) {
 $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illuminate\Routing\Router $router) {
     $router->get('pay/{patient?}/{invoice?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
     $router->match(['get', 'post'], 'invoice/{patient?}', ['uses' => 'EvaluationController@patient_invoice', 'as' => 'invoice']);
-    $router->get('accounts', ['uses' => 'EvaluationController@accounts', 'as' => 'accounts']);
 
     $router->get('patient/invoices/{id?}', ['uses' => 'EvaluationController@manage_patient_invoices', 'as' => 'patient_invoices']);
     $router->get('patient/invoices/{id}/purge', ['uses' => 'EvaluationController@purge_patient_invoice', 'as' => 'purge_patient_invoice']);
@@ -85,10 +85,15 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('company/statements', ['as' => 'company.stmt', 'uses' => 'EvaluationController@companyStatements']);
 });
 
-$router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function(Router $router) {
+$router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function (Router $router) {
     $router->get('quickbooks/connect', ['as' => 'connect', 'uses' => 'QuickBooksController@index']);
     $router->get('quickbooks/oauth', ['as' => 'oauth', 'uses' => 'QuickBooksController@qboOauth']);
     $router->get('quickbooks/success', ['as' => 'success', 'uses' => 'QuickBooksController@qboSuccess']);
     $router->get('quickbooks/disconnect', ['as' => 'disconnect', 'uses' => 'QuickBooksController@qboDisconnect']);
     $router->get('quickbooks/create-user', ['as' => 'create_user', 'uses' => 'QuickBooksController@createCustomer']);
+});
+
+$router->get('test', function () {
+    $repsonse = Mpesa::request(100)->from(254722000000)->usingReferenceId(115445)->transact();
+    dd($repsonse);
 });

@@ -2,11 +2,13 @@
 
 namespace Ignite\Finance\Library\Mpesa;
 
+use Ignite\Finance\Library\Mpesa\Repository\MpesaRepository;
+
 /**
  * Class MpesaInitializer
  * @package Ignite\Finance\Library\Mpesa
  */
-class MpesaInitializer
+class MpesaInitializer implements MpesaRepository
 {
     /**
      * The M-Pesa API Endpoint.
@@ -37,13 +39,6 @@ class MpesaInitializer
     public $paybillNumber;
 
     /**
-     * The transaction number generator.
-     *
-     * @var Transactable
-     */
-    public $transactionGenerator;
-
-    /**
      * The SAG Passkey given on registration.
      *
      * @var string
@@ -57,42 +52,14 @@ class MpesaInitializer
      */
     public $demo;
 
-    /**
-     * The configuration store that holds the configuration values.
-     *
-     * @var ConfigurationStore
-     */
-    private $store;
-
-
-    /**
-     * Transactor constructor.
-     *
-     * @param ConfigurationStore $store
-     */
-    public function __construct(ConfigurationStore $store)
-    {
-        $this->store = $store;
-
-        $this->boot();
-    }
 
     /**
      * Boot up the instance.
      */
-    protected function boot()
-    {
-        $this->configure();
-    }
-
-    /**
-     * Configure the instance and pick configurations from the config file.
-     */
-    protected function configure()
+    public function __construct()
     {
         $this->setupBroker();
         $this->setupPaybill();
-        $this->setNumberGenerator();
     }
 
     /**
@@ -100,9 +67,9 @@ class MpesaInitializer
      */
     protected function setupBroker()
     {
-        $this->endpoint = $this->store->get('mpesa.endpoint');
-        $this->callbackUrl = $this->store->get('mpesa.callback_url');
-        $this->callbackMethod = $this->store->get('mpesa.callback_method');
+        $this->endpoint = mconfig('finance.mpesa.endpoint');
+        $this->callbackUrl = mconfig('finance.mpesa.callback_url');
+        $this->callbackMethod = mconfig('finance.mpesa.callback_method');
     }
 
     /**
@@ -110,16 +77,8 @@ class MpesaInitializer
      */
     protected function setupPaybill()
     {
-        $this->paybillNumber = $this->store->get('mpesa.paybill_number');
-        $this->passkey = $this->store->get('mpesa.passkey');
-        $this->demo = $this->store->get('mpesa.demo');
-    }
-
-    /**
-     * Set up the transaction number generator that implements TransactionGenerator Interface.
-     */
-    protected function setNumberGenerator()
-    {
-        $this->transactionGenerator = $this->store->get('mpesa.transaction_id_handler');
+        $this->paybillNumber = mconfig('finance.mpesa.paybill_number');
+        $this->passkey = mconfig('finance.mpesa.passkey');
+        $this->demo = mconfig('finance.mpesa.demo');
     }
 }
