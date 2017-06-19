@@ -46,7 +46,6 @@ class Cashier
     public function setPayBill($payBillNumber, $payBillPassKey)
     {
         $this->transactor->setPayBill($payBillNumber, $payBillPassKey);
-
         return $this;
     }
 
@@ -63,9 +62,7 @@ class Cashier
         if (!is_numeric($amount)) {
             throw new \InvalidArgumentException('The amount must be numeric');
         }
-
         $this->amount = $amount;
-
         return $this;
     }
 
@@ -82,9 +79,7 @@ class Cashier
         if (!starts_with($number, '2547')) {
             throw new \InvalidArgumentException('The subscriber number must start with 2547');
         }
-
         $this->number = $number;
-
         return $this;
     }
 
@@ -98,7 +93,6 @@ class Cashier
     public function usingReferenceId($referenceId)
     {
         $this->referenceId = $referenceId;
-
         return $this;
     }
 
