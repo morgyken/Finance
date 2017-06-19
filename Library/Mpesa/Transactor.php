@@ -4,6 +4,7 @@ namespace Ignite\Finance\Library\Mpesa;
 
 
 use Carbon\Carbon;
+use DOMDocument;
 use GuzzleHttp\Client;
 use Ignite\Finance\Library\Mpesa\Exceptions\TransactionException;
 use Ignite\Finance\Library\Mpesa\Repository\MpesaRepository;
@@ -224,7 +225,6 @@ class Transactor
         foreach ($this->keys as $key => $value) {
             $this->request = str_replace($key, $value, $this->request);
         }
-        dd($this->request);
     }
 
     /**
@@ -237,9 +237,7 @@ class Transactor
         $response = $this->client->request('POST', $this->repository->endpoint, [
             'body' => $this->request
         ]);
-
         $this->validateResponse($response);
-
         return $response;
     }
 
@@ -256,7 +254,6 @@ class Transactor
         $response->getBody()->rewind();
         $doc = new DOMDocument();
         $doc->loadXML($message);
-
         $responseCode = $doc->getElementsByTagName('RETURN_CODE')->item(0)->nodeValue;
         if ($responseCode != '00') {
             $responseDescription = $doc

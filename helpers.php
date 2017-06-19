@@ -20,7 +20,8 @@ if (!function_exists('get_account_types')) {
      * Get GL Account types
      * @return \Illuminate\Support\Collection
      */
-    function get_account_types() {
+    function get_account_types()
+    {
         return FinanceAccountType::all()->pluck('name', 'id');
     }
 
@@ -31,7 +32,8 @@ if (!function_exists('get_account_groups')) {
      * Get account groups
      * @return \Illuminate\Support\Collection
      */
-    function get_account_groups() {
+    function get_account_groups()
+    {
         return FinanceAccountGroup::all()->pluck('name', 'id');
     }
 
@@ -42,7 +44,8 @@ if (!function_exists('payment_modes')) {
      * @param EvaluationPayments $payment
      * @return string
      */
-    function payment_modes(EvaluationPayments $payment) {
+    function payment_modes(EvaluationPayments $payment)
+    {
         $modes = [];
         if (!empty($payment->cash)) {
             $modes[] = 'Cash';
@@ -107,10 +110,37 @@ if (!function_exists('get_patient_invoice_paid_amount')) {
 
 if (!function_exists('get_patient_invoice_pending_amount')) {
 
-    function get_patient_invoice_pending_amount($id) {
+    function get_patient_invoice_pending_amount($id)
+    {
         $invoice = \Ignite\Finance\Entities\PatientInvoice::find($id);
         $amount = $invoice->total;
         return $amount - get_patient_invoice_paid_amount($id);
     }
 
+    if (!function_exists('pesa')) {
+        /**
+         * @param int|null $amount
+         * @param int|null $subscriberNumber
+         * @param int|null $referenceId
+         * @return \Illuminate\Foundation\Application|mixed|pesa
+         */
+        function pesa($amount = null, $subscriberNumber = null, $referenceId = null)
+        {
+            $cashier = app('pesa');
+
+            if (func_num_args() == 0) {
+                return $cashier;
+            }
+
+            if (func_num_args() == 1) {
+                return $cashier->request($amount);
+            }
+
+            if (func_num_args() == 2) {
+                return $cashier->request($amount)->from($subscriberNumber);
+            }
+
+            return $cashier->request($amount)->from($subscriberNumber)->usingReferenceId($referenceId);
+        }
+    }
 }
