@@ -1,6 +1,6 @@
 <?php
 
-namespace Ignite\Finance\Library\Mpesa;
+namespace Ignite\Finance\Library\Mpesa\Repository;
 
 /**
  * Interface MpesaRepository

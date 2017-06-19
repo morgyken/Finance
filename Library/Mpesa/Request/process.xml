@@ -6,15 +6,15 @@
                   xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
     <soapenv:Header>
         <tns:CheckOutHeader>
-            <MERCHANT_ID>VA_PAYBILL</MERCHANT_ID>
-            <PASSWORD>VA_PASSWORD</PASSWORD>
-            <TIMESTAMP>VA_TIMESTAMP</TIMESTAMP>
+            <MERCHANT_ID>E_PAYBILL</MERCHANT_ID>
+            <PASSWORD>E_PASSWORD</PASSWORD>
+            <TIMESTAMP>E_TIMESTAMP</TIMESTAMP>
         </tns:CheckOutHeader>
     </soapenv:Header>
     <soapenv:Body>
         <tns:transactionConfirmRequest>
             <TRX_ID>?</TRX_ID>
-            <MERCHANT_TRANSACTION_ID>VA_TRANS_ID</MERCHANT_TRANSACTION_ID>
+            <MERCHANT_TRANSACTION_ID>E_TRANS_ID</MERCHANT_TRANSACTION_ID>
         </tns:transactionConfirmRequest>
     </soapenv:Body>
 </soapenv:Envelope>

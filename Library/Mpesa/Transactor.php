@@ -4,7 +4,9 @@ namespace Ignite\Finance\Library\Mpesa;
 
 
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Ignite\Finance\Library\Mpesa\Exceptions\TransactionException;
+use Ignite\Finance\Library\Mpesa\Repository\MpesaRepository;
 
 /**
  * Class Transactor
@@ -88,7 +90,6 @@ class Transactor
             'allow_redirects' => false,
             'expect' => false,
         ]);
-
         $this->repository = $repository;
     }
 
@@ -141,14 +142,7 @@ class Transactor
      */
     private function setTimestamp()
     {
-        if ($this->repository->demo) {
-            $this->timestamp = '20160510161908';
-
-            return $this->timestamp;
-        }
-
         $this->timestamp = Carbon::now()->format('YmdHis');
-
         return $this->timestamp;
     }
 
@@ -164,7 +158,6 @@ class Transactor
     {
         $this->repository->paybillNumber = $payBillNumber;
         $this->repository->passkey = $payBillPassKey;
-
         return $this;
     }
 
@@ -175,7 +168,6 @@ class Transactor
     {
         if ($this->repository->demo) {
             $this->password = 'ZmRmZDYwYzIzZDQxZDc5ODYwMTIzYjUxNzNkZDMwMDRjNGRkZTY2ZDQ3ZTI0YjVjODc4ZTExNTNjMDA1YTcwNw==';
-
             return $this->password;
         }
 
@@ -228,11 +220,11 @@ class Transactor
      */
     private function generateRequest($document)
     {
-        $this->request = file_get_contents(__DIR__ . '/soap/' . $document);
-
+        $this->request = file_get_contents(__DIR__ . '/Request/' . $document);
         foreach ($this->keys as $key => $value) {
             $this->request = str_replace($key, $value, $this->request);
         }
+        dd($this->request);
     }
 
     /**
