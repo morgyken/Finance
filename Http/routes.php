@@ -32,8 +32,13 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function(Router $router) {
 
 //financials
 $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illuminate\Routing\Router $router) {
-    $router->get('pay/{patient?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
+    $router->get('pay/{patient?}/{invoice?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
+    $router->match(['get', 'post'], 'invoice/{patient?}', ['uses' => 'EvaluationController@patient_invoice', 'as' => 'invoice']);
     $router->get('accounts', ['uses' => 'EvaluationController@accounts', 'as' => 'accounts']);
+
+    $router->get('patient/invoices/{id?}', ['uses' => 'EvaluationController@manage_patient_invoices', 'as' => 'patient_invoices']);
+    $router->get('patient/invoices/{id}/purge', ['uses' => 'EvaluationController@purge_patient_invoice', 'as' => 'purge_patient_invoice']);
+    $router->get('patient/invoices/{id}/print', ['uses' => 'EvaluationController@print_patient_invoice', 'as' => 'patient_invoice.print']);
 
     $router->get('sale/pay/{sale?}', ['as' => 'sale.pay', 'uses' => 'EvaluationController@sale_pay']);
     $router->get('sale/details/{sale}', ['uses' => 'EvaluationController@sale_details', 'as' => 'sale']);
@@ -43,7 +48,7 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
 
     $router->get('accounts/{patient}/show', ['uses' => 'EvaluationController@individual_account', 'as' => 'individual_account']);
     $router->post('payment', ['as' => 'pay.save', 'uses' => 'EvaluationController@pay_save']);
-    $router->get('payment_details/{id}', ['as' => 'payment_details', 'uses' => 'EvaluationController@payment_details']);
+    $router->get('payment_details/{id}/{invoice?}', ['as' => 'payment_details', 'uses' => 'EvaluationController@payment_details']);
     $router->get('summary', ['as' => 'summary', 'uses' => 'EvaluationController@summary']);
     $router->get('insurance', ['as' => 'insurance', 'uses' => 'EvaluationController@insurance']);
     $router->get('cash_bills', ['as' => 'cash_bills', 'uses' => 'EvaluationController@cash_bills']);
@@ -70,8 +75,9 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
 
     $router->get('print/insurance/invoice/{id}', ['as' => 'ins.inv.print', 'uses' => 'EvaluationController@printInvoice']);
     $router->get('print/insurance/receipt/{id}', ['as' => 'ins.rcpt.print', 'uses' => 'EvaluationController@printReceipt']);
+
     $router->post('print/receipt/thermal', ['as' => 'normal.rcpt.print', 'uses' => 'EvaluationController@printNormalReceipt']);
-    $router->post('print/receipt/a4', ['as' => 'a4.rcpt.print', 'uses' => 'EvaluationController@printA4Receipt']);
+    $router->post('print/receipt/a4/', ['as' => 'a4.rcpt.print', 'uses' => 'EvaluationController@printA4Receipt']);
 
     $router->get('print/dispatch/{id}', ['as' => 'print_dispatch', 'uses' => 'EvaluationController@printDispatch']);
     $router->get('purge/dispatch/{id}', ['as' => 'purge_dispatch', 'uses' => 'EvaluationController@purgeDispatch']);

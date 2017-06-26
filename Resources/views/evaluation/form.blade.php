@@ -141,7 +141,7 @@
             <span id="balance"></span>
         </div>
         <div class="pull-right">
-            <button class="btn btn-success" type="submit" id="saver"><i class="fa fa-save"></i> Save</button>
+            <button class="btn btn-success" type="submit" @if(!$invoice_mode) id="saver" @endif><i class="fa fa-save"></i> Save</button>
         </div>
     </div>
 </div>

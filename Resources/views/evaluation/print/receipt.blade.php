@@ -126,98 +126,10 @@ function getAmount($sales) {
                 <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
             </div>
             <div class="col-md-6">
-                @if(isset($payment))
-                <?php if (!$payment->sale > 0) { ?>
-                    <table class="table table-striped" id="items">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Procedures/Drug</th>
-                                <th>Discount(%)</th>
-                                <th>Amount (Ksh.)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $n = 0; ?>
-                            @if(isset($payment->details))
-                            @foreach($payment->details as $d)
-                            <tr>
-                                <td>{{$n+=1}}</td>
-                                <td>
-                                    {{$d->investigations->procedures->name}}
-                                    <i>
-                                        x {{$d->investigations->quantity>0?$d->investigations->quantity:1}}
-                                    </i>
-                                </td>
-                                <td>{{$d->investigations->discount}}</td>
-                                <td>{{$d->investigations->amount>0?$d->investigations->amount:$d->price}}</td>
-                            </tr>
-                            @endforeach
-                            @endif
-
-                            <?php
-                            if (isset($disp)) {
-                                foreach ($disp as $key => $value) {
-                                    $__dispensing = \Ignite\Evaluation\Entities\DispensingDetails::whereId($value)->get();
-                                    ?>
-                                    @foreach($__dispensing as $item)
-                                    <tr>
-                                        <td>{{$n+=1}}</td>
-                                        <td>{{$item->drug->name}}
-                                            <i>
-                                                <small>{{$item->price}} x {{$item->quantity}}</small>(drug)
-                                            </i>
-                                        </td>
-                                        <td>{{$item->discount}}</td>
-                                        <td>{{amount_after_discount($item->discount, $item->price*$item->quantity)}}</td>
-                                    </tr>
-                                    @endforeach
-                                    <?php
-                                }
-                            }
-                            ?>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th style="text-align:right" colspan='3'>Amount Paid</th>
-                                <th>{{$payment->total}}</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                <?php } else { ?>
-
-
-                    <table class="table table-striped" id="items">
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Discount(%)</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($payment->sales->goodies as $item)
-                            <tr>
-                                <td>{{$item->products->name}}</td>
-                                <td>{{$item->quantity}}</td>
-                                <td>{{ceil($item->unit_cost)}}</td>
-                                <td>{{$item->discount}}</td>
-                                <td>{{number_format(ceil($item->total),2)}}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="4">Total</th>
-                                <th>
-                                    {{number_format(ceil($payment->sales->amount),2)}}
-                                </th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                <?php } ?>
+                @if(!$invoice_mode)
+                @include('finance::evaluation.payment.details.main_mode')
+                @else
+                @include('finance::evaluation.payment.details.invoice_mode')
                 @endif
             </div>
             <div class="col-md-6">

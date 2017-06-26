@@ -34,7 +34,8 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                 $item->weight(4);
                 $item->icon('fa fa-money');
                 $item->authorize($this->auth->hasAccess('finance.*'));
-                $item->item('Receive Payments', function (Item $item) {
+
+                $item->item('Receive Payment', function (Item $item) {
                     $item->icon('fa fa-euro');
                     $item->route('finance.evaluation.pay');
                 });
@@ -42,6 +43,11 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                 $item->item('Patient Accounts', function (Item $item) {
                     $item->icon('fa fa-list');
                     $item->route('finance.evaluation.accounts');
+                });
+
+                $item->item('Patient Invoices', function (Item $item) {
+                    $item->icon('fa fa-folder-open');
+                    $item->route('finance.evaluation.patient_invoices');
                 });
 
                 $item->item('Payment Summary', function (Item $item) {
@@ -71,14 +77,13 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                   });
                  */
 
-
                 $item->item('Insurance Workbench', function (Item $item) {
                     $item->icon('fa fa-coffee');
                     $item->route('finance.evaluation.insurance');
                 });
 
                 $item->item('Cash Bills', function (Item $item) {
-                    $item->icon('fa fa-coffee');
+                    $item->icon('fa fa-folder-open');
                     $item->route('finance.evaluation.cash_bills');
                 });
 

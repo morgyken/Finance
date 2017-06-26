@@ -36,6 +36,10 @@ class EvaluationPaymentsDetails extends Model {
         return $this->belongsTo(Investigations::class, 'investigation', 'id');
     }
 
+    public function patient_invoices() {
+        return $this->belongsTo(PatientInvoice::class, 'patient_invoice', 'id');
+    }
+
     public function batch() {
         return $this->belongsTo(EvaluationPayments::class, 'payment');
     }

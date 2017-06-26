@@ -31,6 +31,8 @@ use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Evaluation\Entities\Dispensing;
 use Ignite\Evaluation\Entities\DispensingDetails;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
+use Ignite\Finance\Entities\PatientInvoice;
+use Ignite\Finance\Entities\PatientInvoiceDetails;
 
 /**
  * Description of EvaluationFinanceFunctions
@@ -118,21 +120,98 @@ class EvaluationLibrary implements EvaluationRepository {
         return $this->pay_id;
     }
 
-    private function payment_details(Request $request, $payment) {
-        $__investigations = $this->__get_selected_stack();
-        foreach ($__investigations as $item) {
-            $visit = 'visits' . $item;
+    public function create_patient_invoice() {
+        DB::transaction(function () {
+            $inv = new PatientInvoice;
+            $inv->patient_id = $this->request->patient;
+            $inv->user_id = $this->user;
+            $inv->save();
 
-            $investigation = Investigations::find($item);
-            if (isset($investigation)) {
-                $detail = new EvaluationPaymentsDetails;
-                $detail->price = $investigation->price;
-                $detail->investigation = $item;
-                $detail->visit = $request->$visit;
-                $detail->payment = $payment->id;
-                $detail->cost = $investigation->procedures->price;
-                $detail->save();
+            $__items = $this->__get_selected_stack();
+            foreach ($__items as $item) {
+                $id = 'item' . $item;
+                $name = 'inv_name' . $item;
+                $type = 'inv_type' . $item;
+                $amount = 'inv_amount' . $item;
+                $date = 'service_date' . $item;
+                $investigation = 'investigation' . $item;
+                $dispensing = 'dispensing' . $item;
+
+                $details = new PatientInvoiceDetails;
+                $details->invoice_id = $inv->id;
+                $details->item_id = $this->request->$id;
+                $details->investigation_id = $this->request->$investigation;
+                $details->dispensing_id = $this->request->$dispensing;
+                $details->item_name = $this->request->$name;
+                $details->item_type = $this->request->$type;
+                $details->amount = $this->request->$amount;
+                $details->service_date = $this->request->$date;
+                $details->save();
+                try {
+                    $investigation = Investigations::find($this->request->$investigation);
+                    $investigation->invoiced = true;
+                    $investigation->save();
+                } catch (\Exception $e) {
+
+                }
+
+                try {
+                    //Now flag them as invoiced
+                    $dispensing = DispensingDetails::whereBatch($this->request->$dispensing)
+                            ->whereProduct($this->request->$id)
+                            ->get()
+                            ->first();
+                    $dispensing->invoiced = true;
+                    $dispensing->save();
+                } catch (\Exception $e) {
+                    //pepe the frog died
+                }
             }
+
+            $this->invoice_id = $inv->id;
+        });
+        return $this->invoice_id;
+    }
+
+    private function payment_details(Request $request, $payment) {
+        $items = $this->__get_selected_stack();
+        foreach ($items as $item) {
+            $invoice = 'invoice' . $item;
+            if (isset($request->$invoice)) {
+                $this->invoice_payment_details($item, $payment);
+            } else {
+                $this->investigation_payment_details($request, $item, $payment);
+            }
+        }
+    }
+
+    private function investigation_payment_details(Request $request, $item, $payment) {
+        $visit = 'visits' . $item;
+        $investigation = Investigations::find($item);
+        if (isset($investigation)) {
+            $detail = new EvaluationPaymentsDetails;
+            $detail->price = $investigation->price;
+            $detail->investigation = $item;
+            $detail->visit = $request->$visit;
+            $detail->payment = $payment->id;
+            $detail->cost = $investigation->procedures->price;
+            $detail->save();
+        }
+    }
+
+    private function invoice_payment_details($item, $payment) {
+        $invoice = PatientInvoice::find($item);
+        if (isset($invoice)) {
+            $balance = get_payment_balance($payment, $invoice->id);
+            $detail = new EvaluationPaymentsDetails;
+            $detail->patient_invoice = $invoice->id;
+            $detail->payment = $payment->id;
+            $detail->patient_invoice_amount = $balance;
+            $detail->description = 'Payment for invoice 0' . $invoice->id . ' of ' . $invoice->created_at;
+            $detail->save();
+
+            $invoice->status = get_patient_invoice_payment_status($invoice, $balance);
+            $invoice->save();
         }
     }
 

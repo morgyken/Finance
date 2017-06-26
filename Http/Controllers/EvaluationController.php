@@ -3,6 +3,8 @@
 namespace Ignite\Finance\Http\Controllers;
 
 use Ignite\Core\Http\Controllers\AdminBaseController;
+use Ignite\Evaluation\Entities\Dispensing;
+use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
@@ -16,6 +18,7 @@ use Ignite\Finance\Entities\DispatchDetails;
 use Ignite\Finance\Entities\Dispatch;
 use Illuminate\Http\Request;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
+use Ignite\Finance\Entities\PatientInvoice;
 use Carbon\Carbon;
 
 class EvaluationController extends AdminBaseController {
@@ -40,6 +43,7 @@ class EvaluationController extends AdminBaseController {
     }
 
     public function printA4Receipt(Request $request) {
+        $this->data['invoice_mode'] = $request->invoice;
         $this->data['payment'] = $payment = EvaluationPayments::find($request->payment);
         $this->data['disp'] = json_decode($payment->dispensing);
         $this->data['a4'] = 1;
@@ -49,10 +53,11 @@ class EvaluationController extends AdminBaseController {
     }
 
     public function printNormalReceipt(Request $request) {
+        $this->data['invoice_mode'] = $request->invoice;
         //$this->data['sales'] = InventoryBatchProductSales::find($id);
         $this->data['payment'] = $payment = EvaluationPayments::find($request->payment);
         ///dd($this->data);
-        $min_height = 700;
+        $min_height = 900;
         /*
           foreach ($this->data['pa']->goodies as $n) {
           $min_height += 20;
@@ -96,20 +101,26 @@ class EvaluationController extends AdminBaseController {
 
     public function pay_save(PaymentsRequest $request) {
         $id = $this->evaluationRepository->record_payment();
-        return redirect()->route('finance.evaluation.payment_details', $id);
+        if ($request->invoice_mode) {
+            return redirect()->route('finance.evaluation.payment_details', ['id' => $id, 'invoice' => true]);
+        } else {
+            return redirect()->route('finance.evaluation.payment_details', ['id' => $id]);
+        }
     }
 
-    public function pay($patient = null) {
+    public function pay($patient = null, $invoice = false) {
         if (!empty($patient)) {
+            $this->data['invoice_mode'] = $invoice;
             $this->data['patient'] = Patients::find($patient);
+            $this->data['patient_invoices'] = PatientInvoice::wherePatient_id($patient)->get();
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
+        $this->billable_patients();
+        return view('finance::evaluation.payment_list', ['data' => $this->data]);
+    }
 
+    public function billable_patients() {
         $this->data['patients'] = get_patients_with_bills();
-
-        $this->data['from_pos'] = Patients::whereHas('drug_purchases', function ($query) {
-                    $query->wherePaid(0);
-                })->get();
 
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
                 ->doesntHave('removed_bills')
@@ -117,10 +128,73 @@ class EvaluationController extends AdminBaseController {
                 ->orderBy('created_at', 'desc')
                 ->get();
 
+        $this->data['invoiced'] = Patients::whereHas('invoices', function($query) {
+                    $query->whereStatus('unpaid')
+                            ->orWhere('status', '=', 'part_paid');
+                })->get();
+
+        return $this->data;
+    }
+
+//Patient Invoicing
+    public function patient_invoice(Request $request, $patient = null) {
+        if ($request->isMethod('post')) {
+            $this->create_patient_invoice($request);
+        }
+        if (!empty($patient)) {
+            $this->data['patient'] = Patients::find($patient);
+            return view('finance::evaluation.invoice', ['data' => $this->data]);
+        }
+        $this->billable_patients();
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 
-    public function payment_details($id) {
+    public function create_patient_invoice(Request $request) {
+        $id = $this->evaluationRepository->create_patient_invoice();
+        //return redirect()->route('finance.evaluation.payment_details', $id);
+    }
+
+    public function manage_patient_invoices($id = null){
+        if(!empty($id)){
+            $this->data['invoice'] = PatientInvoice::find($id);
+            return view('finance::evaluation.view_patient_invoice', ['data' => $this->data]);
+        }
+        $this->data['invoices'] = PatientInvoice::all();
+        return view('finance::evaluation.manage_invoices', ['data' => $this->data]);
+    }
+
+    public function purge_patient_invoice($id = null){
+        if(!empty($id)){
+            $invoice = PatientInvoice::find($id);
+            foreach ($invoice->details as $item){
+                if(!empty($item->investigation_id)){
+                    $i = Investigations::find($item->investigation_id);
+                    $i->invoiced = false;
+                    $i->save();
+                }
+                if(!empty($item->dispensing_id)){
+                    $d = Dispensing::find($item->dispensing_id);
+                    $d->invoiced = false;
+                    $d->save();
+                }
+            }
+            $invoice->delete();
+        }
+        return redirect()->route('finance.evaluation.patient_invoices');
+    }
+
+    public function print_patient_invoice($id = null){
+        if(!empty($id)){
+            $invoice = PatientInvoice::find($id);
+            $pdf = \PDF::loadView('finance::prints.patient_invoice', ['invoice' => $invoice]);
+            $pdf->setPaper('a4', 'potrait');
+            return $pdf->stream('Invoice_' . $id . '.pdf');
+        }
+    }
+
+//End of patient invoicing
+    public function payment_details($id, $invoice = null) {
+        $this->data['invoice_mode'] = $invoice;
         $this->data['payment'] = $payment = EvaluationPayments::find($id);
         $this->data['disp'] = json_decode($payment->dispensing);
         $this->data['patient'] = Patients::find($payment->patient);
