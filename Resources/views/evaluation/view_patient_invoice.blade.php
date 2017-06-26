@@ -80,7 +80,7 @@ extract($data);
                 <a disabled="" href="#" title="Invoice has payments" class="btn btn-danger btn-xs">
                     <i class="fa fa-trash"></i> Delete</a>
             @else
-                <a href="{{route('finance.evaluation.purge_patient_invoice', $item->id)}}" class="btn btn-danger btn-xs">
+                <a href="{{route('finance.evaluation.purge_patient_invoice', $invoice->id)}}" class="btn btn-danger btn-xs">
                     <i class="fa fa-trash"></i> Delete</a>
             @endif
         </div>
