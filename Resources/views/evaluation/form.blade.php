@@ -132,6 +132,33 @@
             </div>
         </div>
     </div>
+
+
+
+    <h4>Patient Account</h4>
+    <div>
+        <div class="form-group">
+            <p>
+                <label class="col-md-5 control-label">Account Balance:</label>
+            @if(\Ignite\Evaluation\Entities\PatientAccount::where('Patient_id',$patient->id)->count())
+                <?php $bal = \Ignite\Evaluation\Entities\PatientAccount::where('Patient_id',$patient->id)->first()->balance; ?>
+            @else
+                <?php $bal=0;?>
+            @endif
+            <div class="col-md-7">
+                {!! Form::number('CashAmount',$bal,['class'=>'form-control','placeholder'=>'Account Balance']) !!}
+            </div>
+            </p><br><br>
+            <p>
+                <label class="col-md-5 control-label">Amount Paid:</label>
+            <div class="col-md-7">
+                {!! Form::number('CashAmount',old('CashAmount'),['class'=>'form-control disabled','placeholder'=>'Amount Paid']) !!}
+            </div>
+            </p>
+        </div>
+    </div>
+
+
 </div>
 <div class="row">
     <div class="col-md-12">
