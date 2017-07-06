@@ -56,22 +56,17 @@
     </style>
     <?php $bill_amount = 0; ?>
     <div class="box box-info">
-        <h1 class="box-title">{{config('practice.name')}}</h1>
-        <img style="width:100; height:auto; float: right" src="{{realpath(base_path('/public/logo.jpg'))}}"/>
+        <h1 class="box-title">{{config('practice.name')}}, {{get_clinic()->name}}</h1>
+        <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
 
         <div class="box-header with-border">
-            <p style="font-size: 90%;">
-                <?php try { ?>
-                    {{config('practice.address')?"P.O Box". config('practice.address'):''}}, {{config('practice.town')}}.<br/>
-                    Visit us: {{config('practice.building')?config('practice.building').',':''}}<br>
-                    {{config('practice.street')?config('practice.street').',':''}}<br><br>
-                    Email: {{config('practice.email')}}<br>
-                    {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
-                    <?php
-                } catch (\Exception $e) {
-
-                }
-                ?>
+            <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
+                P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
+                Visit us: {{$clinic->location}}<br>
+                {{$clinic->street}}<br>
+                Email: {{$clinic->email}}<br>
+                Call Us: {{$clinic->mobile}}
+                <br/> {{$clinic->telephone?$clinic->telephone:''}}<br>
             </p>
         </div>
         <div class="box-body">

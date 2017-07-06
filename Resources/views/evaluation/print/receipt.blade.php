@@ -10,6 +10,7 @@
   $patient = Ignite\Reception\Entities\Patients::find($payment->patient);
   $pays = paymentFor($payment); */
 extract($data);
+$clinic =get_clinic();
 $t = 0;
 $thermal = null;
 
@@ -89,26 +90,27 @@ function getAmount($sales) {
     <div class="box box-info">
         <?php if (!isset($a4)) { ?>
             <center>
-                <h1 class="box-title">{{config('practice.name')}}</h1>
+                <h1 class="box-title">{{config('practice.name')}}, {{get_clinic()->name}}</h1>
             </center>
         <?php } else { ?>
-            <h1 class="box-title">{{config('practice.name')}}</h1>
+            <h1 class="box-title">{{config('practice.name')}}, {{get_clinic()->name}}</h1>
         <?php } ?>
 
         @if(isset($a4))
-        <img style="width:100; height:auto; float: right" src="{{realpath(base_path('/public/logo.jpg'))}}"/>
+        <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
         @else
         <center>
-            <img style="width:100; height:auto;" src="{{realpath(base_path('/public/logo.jpg'))}}"/>
+            <img style="width:100; height:auto;" src="{{realpath(base_path(get_logo()))}}"/>
         </center>
         @endif
         <div class="box-header with-border">
             <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
-                P.O Box {{config('practice.address')}}, {{config('practice.town')}}.<br/>
-                Visit us: {{config('practice.building')?config('practice.building').',':''}}<br>
-                {{config('practice.street')?config('practice.street').',':''}}<br><br>
-                Email: {{config('practice.email')}}<br>
-                {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
+                P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
+                Visit us: {{$clinic->location}}<br>
+                {{$clinic->street}}<br>
+                Email: {{$clinic->email}}<br>
+                Call Us: {{$clinic->mobile}}
+                <br/> {{$clinic->telephone?"Or: ".$clinic->telephone:''}}<br>
             </p>
         </div>
         <div class="box-body">

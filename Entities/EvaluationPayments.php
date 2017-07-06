@@ -56,7 +56,7 @@ class EvaluationPayments extends Model {
         if (!empty($this->cheque)) {
             $total += $this->cheque->amount;
         }
-        return number_format($total, 2);
+        return $total;
     }
 
     public function getModesAttribute() {
