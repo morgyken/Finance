@@ -7,26 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Ignite\Finance\Entities\Banking
  *
- * @property integer $id
- * @property integer $bank
- * @property integer $account
- * @property integer $user
+ * @property int $id
+ * @property int $bank
+ * @property int $account
+ * @property int $user
  * @property float $amount
  * @property string $type
  * @property string $mode
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property-read \Ignite\Finance\Entities\Bank $banks
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Finance\Entities\BankAccount $accounts
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereBank($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereAccount($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereUser($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereType($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereMode($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Banking whereUpdatedAt($value)
+ * @property-read \Ignite\Finance\Entities\Bank $banks
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereAccount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereBank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Banking whereUser($value)
  * @mixin \Eloquent
  */
 class Banking extends Model {

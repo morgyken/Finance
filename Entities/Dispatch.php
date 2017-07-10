@@ -7,17 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Ignite\Finance\Entities\Dispatch
  *
- * @property integer $id
- * @property integer $user
- * @property integer $firm
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property int $id
+ * @property int $user
+ * @property int|null $firm
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Ignite\Settings\Entities\Insurance|null $company
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\DispatchDetails[] $details
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Dispatch whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Dispatch whereUser($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Dispatch whereFirm($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Dispatch whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\Dispatch whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Dispatch whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Dispatch whereFirm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Dispatch whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Dispatch whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Dispatch whereUser($value)
  * @mixin \Eloquent
  */
 class Dispatch extends Model {

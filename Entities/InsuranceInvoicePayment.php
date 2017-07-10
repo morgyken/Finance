@@ -7,23 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Ignite\Finance\Entities\InsuranceInvoicePayment
  *
- * @property integer $id
- * @property integer $insurance_invoice
- * @property integer $user
+ * @property int $id
+ * @property int $insurance_invoice
+ * @property int $user
  * @property float $amount
- * @property integer $batch
- * @property string $mode
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property int|null $batch
+ * @property string|null $mode
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Finance\Entities\InsuranceInvoice $invoice
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereInsuranceInvoice($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereUser($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereBatch($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereMode($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereUpdatedAt($value)
+ * @property-read \Ignite\Users\Entities\User $users
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereBatch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereInsuranceInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereMode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoicePayment whereUser($value)
  * @mixin \Eloquent
  */
 class InsuranceInvoicePayment extends Model {
