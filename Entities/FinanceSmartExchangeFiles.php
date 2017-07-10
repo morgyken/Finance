@@ -45,6 +45,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class FinanceSmartExchangeFiles extends Model
 {
-    protected $fillable = [];
+    protected $guarded = [];
     protected $table = 'finance_smart_exchange_files';
 }

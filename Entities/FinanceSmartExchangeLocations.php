@@ -11,6 +11,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class FinanceSmartExchangeLocations extends Model
 {
-    protected $fillable = [];
+    protected $guarded = [];
     protected $table = 'finance_smart_exchange_locations';
 }
