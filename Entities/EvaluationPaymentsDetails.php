@@ -8,23 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Ignite\Finance\Entities\EvaluationPaymentsDetails
  *
- * @property integer $id
- * @property integer $payment
- * @property integer $investigation
- * @property float $cost
+ * @property int $id
+ * @property int $payment
+ * @property int $investigation
+ * @property int|null $visit
+ * @property float|null $cost
  * @property float $price
- * @property string $description
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property string|null $description
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Ignite\Finance\Entities\EvaluationPayments $batch
  * @property-read \Ignite\Evaluation\Entities\Investigations $investigations
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails wherePayment($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereInvestigation($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereCost($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails wherePrice($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereUpdatedAt($value)
+ * @property-read \Ignite\Evaluation\Entities\Visit|null $visits
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereInvestigation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails wherePayment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereVisit($value)
  * @mixin \Eloquent
  */
 class EvaluationPaymentsDetails extends Model {

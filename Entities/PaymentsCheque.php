@@ -7,29 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Ignite\Finance\Entities\PaymentsCheque
  *
- * @property integer $id
- * @property integer $payment
- * @property integer $insurance_payment
- * @property string $name
- * @property string $number
- * @property string $date
- * @property string $bank
- * @property string $bank_branch
+ * @property int $id
+ * @property int|null $payment
+ * @property int|null $insurance_payment
+ * @property string|null $name
+ * @property string|null $number
+ * @property string|null $date
+ * @property string|null $bank
+ * @property string|null $bank_branch
  * @property float $amount
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property-read \Ignite\Finance\Entities\FinanceEvaluationInsurancePayments $insurance_payments
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque wherePayment($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereInsurancePayment($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereNumber($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereBank($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereBankBranch($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Ignite\Finance\Entities\PaymentsCheque whereUpdatedAt($value)
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Ignite\Finance\Entities\FinanceEvaluationInsurancePayments|null $insurance_payments
+ * @property-read \Ignite\Finance\Entities\EvaluationPayments|null $payments
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereBank($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereBankBranch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereInsurancePayment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque wherePayment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentsCheque whereUpdatedAt($value)
  * @mixin \Eloquent
  */
 class PaymentsCheque extends Model {
