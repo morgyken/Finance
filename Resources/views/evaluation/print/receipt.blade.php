@@ -90,17 +90,27 @@ function getAmount($sales) {
     <div class="box box-info">
         <?php if (!isset($a4)) { ?>
             <center>
-                <h1 class="box-title">{{config('practice.name')}}, {{get_clinic()->name}}</h1>
+                <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
             </center>
         <?php } else { ?>
-            <h1 class="box-title">{{config('practice.name')}}, {{get_clinic()->name}}</h1>
+            <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
         <?php } ?>
 
         @if(isset($a4))
-        <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+                <?php try{ ?>
+                <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+                <?php
+                }catch(\Exception $e){
+                }
+                ?>
         @else
         <center>
-            <img style="width:100; height:auto;" src="{{realpath(base_path(get_logo()))}}"/>
+            <?php try{ ?>
+            <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+            <?php
+            }catch(\Exception $e){
+            }
+            ?>
         </center>
         @endif
         <div class="box-header with-border">

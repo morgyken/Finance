@@ -34,8 +34,8 @@ if (!function_exists('get_account_groups')) {
     function get_account_groups() {
         return FinanceAccountGroup::all()->pluck('name', 'id');
     }
-
 }
+
 if (!function_exists('payment_modes')) {
 
     /**

@@ -56,9 +56,13 @@
     </style>
     <?php $bill_amount = 0; ?>
     <div class="box box-info">
-        <h1 class="box-title">{{config('practice.name')}}, {{get_clinic()->name}}</h1>
+        <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
+        <?php try{ ?>
         <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
-
+        <?php
+        }catch(\Exception $e){
+        }
+        ?>
         <div class="box-header with-border">
             <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
                 P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
