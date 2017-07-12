@@ -143,4 +143,35 @@ if (!function_exists('get_patient_invoice_pending_amount')) {
             return $cashier->request($amount)->from($subscriberNumber)->usingReferenceId($referenceId);
         }
     }
+
+
+    if (!function_exists('get_logo')) {
+        function get_logo() {
+            try{
+                $logo = null;
+                $this_clinic =\Session::get('clinic');
+                $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
+                $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
+                if(!empty($clinic->logo)){
+                    $logo = $clinic->logo;
+                }else{
+                    $logo = $practice->logo;
+                }
+                return $logo;
+            }catch (\Exception $e){
+
+            }
+        }
+
+    }
+
+    if (!function_exists('get_clinic')) {
+
+        function get_clinic() {
+            $this_clinic =\Session::get('clinic');
+            $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
+            return $clinic;
+        }
+}
+
 }
