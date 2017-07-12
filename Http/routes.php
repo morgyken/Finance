@@ -40,6 +40,8 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->get('patient/invoices/{id}/purge', ['uses' => 'EvaluationController@purge_patient_invoice', 'as' => 'purge_patient_invoice']);
     $router->get('patient/invoices/{id}/print', ['uses' => 'EvaluationController@print_patient_invoice', 'as' => 'patient_invoice.print']);
 
+    $router->get('accounts', ['uses' => 'EvaluationController@accounts', 'as' => 'accounts']);
+
     $router->get('sale/pay/{sale?}', ['as' => 'sale.pay', 'uses' => 'EvaluationController@sale_pay']);
     $router->get('sale/details/{sale}', ['uses' => 'EvaluationController@sale_details', 'as' => 'sale']);
     //Remove Bill

@@ -82,16 +82,7 @@
             <br/><br/>
         </div>
         <div class="col-md-6">
-            <h2 class="box-title">INVOICE</h2>
-                <div>DATE: {{smart_date($bill->created_at)}}</div>
-                <div>Patient: {{$bill->visits->patients->full_name}}</div>
-                <div>Invoice No: {{ $bill->id }}</div>
-                <div>Insurance Company: {{$bill->company}}</div>
-                <div>Scheme: {{$bill->payments}}</div>
-            </div>
-        </header>
-        <main>
-            <br><br>
+
             <table>
                 <thead>
                 <tr>
