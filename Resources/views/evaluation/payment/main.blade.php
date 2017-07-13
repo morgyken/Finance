@@ -30,21 +30,12 @@
         <i class="small">({{ucwords($item->type)}})</i> - Ksh <span class="topay">{{$item->amount>0?$item->amount:$item->price}}</span>
         <?php try { ?>
             @if($item->removed_bills->isEmpty)
-            <a href="#" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
-                <i class="fa fa-trash"></i>remove</a>
+            <button  type="button" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-box-tool pull-right" data-widget="remove"><i class="fa fa-times"></i></button>
             @else
-            <a href="#" onclick="#" class="btn btn-danger btn-xs">
-                <i class="fa fa-trash"></i>bill has been removed</a>
-
-            <a href="#" onclick="undo_remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-primary btn-xs">
-                <i class="fa fa-trash"></i>Undo</a>
-
+            <button type="button" onclick="undo_remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-box-tool" data-widget="undo"><i class="fa fa-refresh"></i></button>
             @endif
         <?php } catch (Exception $ex) { ?>
-            <!--
-            <a href="#" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-danger btn-xs pull-right">
-                <i class="fa fa-trash"></i>remove</a>
-            -->
+                <button type="button" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
         <?php } ?>
     </td>
     @endif
