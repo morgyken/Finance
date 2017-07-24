@@ -109,7 +109,6 @@ class Transactor
         $this->number = $number;
         $this->referenceId = $referenceId;
         $this->initialize();
-
         return $this->handle();
     }
 
@@ -261,7 +260,7 @@ class Transactor
                 ->item(0)
                 ->nodeValue;
 
-            throw new TransactionException('Failure - ' . $responseDescription);
+            throw new TransactionException('Failure - ' . $responseCode . ' : ' . $responseDescription);
         }
     }
 
