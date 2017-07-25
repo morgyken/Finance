@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="tns:ns" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="tns:ns" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
     <soapenv:Header>
         <tns:CheckOutHeader>
             <MERCHANT_ID>E_PAYBILL</MERCHANT_ID>
             <PASSWORD>E_PASSWORD</PASSWORD>
             <TIMESTAMP>E_TIMESTAMP</TIMESTAMP>
+            <REFERENCE_ID>E_REF_ID</REFERENCE_ID>
         </tns:CheckOutHeader>
     </soapenv:Header>
     <soapenv:Body>

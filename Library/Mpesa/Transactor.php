@@ -166,11 +166,6 @@ class Transactor
      */
     private function generatePassword()
     {
-        if ($this->repository->demo) {
-            $this->password = 'ZmRmZDYwYzIzZDQxZDc5ODYwMTIzYjUxNzNkZDMwMDRjNGRkZTY2ZDQ3ZTI0YjVjODc4ZTExNTNjMDA1YTcwNw==';
-            return $this->password;
-        }
-
         $passwordSource = $this->repository->paybillNumber . $this->repository->passkey . $this->timestamp;
         $this->password = base64_encode(hash("sha256", $passwordSource));
 
@@ -269,11 +264,12 @@ class Transactor
      */
     private function generateTransactionNumber()
     {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = '0123456789';
         $charactersLength = strlen($characters);
         $randomString = '';
-        for ($i = 0; $i < 17; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        for ($i = 0; $i < 10; $i++) {
+            $randomString .= $characters[mt_rand(0, $charactersLength - 1)];
         }
         return $randomString;
     }
