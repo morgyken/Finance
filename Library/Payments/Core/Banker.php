@@ -7,6 +7,8 @@ use Ignite\Finance\Entities\Transactions;
 use Ignite\Finance\Library\Payments\Core\Exceptions\ApiException;
 use Ignite\Finance\Library\Payments\Core\Exceptions\TransactionException;
 use Ignite\Finance\Library\Payments\Mpesa\Cashier;
+use Ignite\Finance\Repositories\FinanceRepository;
+use Ignite\Sms\Repositories\MessageRepository;
 use Illuminate\Http\Request;
 
 /**
@@ -72,10 +74,13 @@ class Banker
         try {
             $worker = resolve(Cashier::class);
             $status = $worker->paymentStatus($ref);
-            $_status = resolve(SystemRepository::class)->processCallback($status, $gateway);
+            /** @var FinanceRepository $_finance */
+            $_finance = resolve(FinanceRepository::class);
+            $_status = $_finance->processCallback($status);
             if (!$_status) {
-                throw  new TransactionException("Transaction Status is -> " . $status->trx_status);
+                throw  new TransactionException('Transaction Status is -> ' . $status->trx_status);
             }
+            resolve(MessageRepository::class)->addUnits($_status);
             return ['success' => true, 'message' => 'Payment was successful', 'ref' => $ref, 'extra' => json_encode($status)];
         } catch (ApiException $e) {
             return ['success' => false, 'message' => $e->getMessage()];

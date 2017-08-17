@@ -15,6 +15,7 @@ namespace Ignite\Finance\Library;
 use Ignite\Finance\Entities\FinanceAccountGroup;
 use Ignite\Finance\Entities\FinanceAccountType;
 use Ignite\Finance\Entities\FinanceGlAccounts;
+use Ignite\Finance\Entities\MpesaCallback;
 use Ignite\Finance\Entities\PettyCash;
 use Ignite\Finance\Entities\PettyCashUpdates;
 use Ignite\Finance\Entities\Bank;
@@ -36,28 +37,32 @@ use Illuminate\Support\Facades\DB;
  *
  * @author Samuel Dervis <samueldervis@gmail.com>
  */
-class FinanceLibrary implements FinanceRepository {
+class FinanceLibrary implements FinanceRepository
+{
 
     /**
      * @param Request $request
      * @param int|null $id
      * @return bool
      */
-    public static function add_gl_group(Request $request, $id = null) {
+    public static function add_gl_group(Request $request, $id = null)
+    {
         $group = FinanceAccountGroup::findOrNew($id);
         $group->name = $request->group;
         $group->type = $request->type;
         return $group->save();
     }
 
-    public static function add_gl_account_types(Request $request, $id = null) {
+    public static function add_gl_account_types(Request $request, $id = null)
+    {
         $group = FinanceAccountType::findOrNew($id);
         $group->name = $request->name;
         $group->description = $request->description;
         return $group->save();
     }
 
-    public static function add_gl_accounts(Request $request, $id = null) {
+    public static function add_gl_accounts(Request $request, $id = null)
+    {
         $group = FinanceGlAccounts::findOrNew($id);
         $group->name = $request->name;
         $group->group = $request->group;
@@ -65,7 +70,8 @@ class FinanceLibrary implements FinanceRepository {
     }
 
 ///
-    public static function update_petty_cash(Request $request) {
+    public static function update_petty_cash(Request $request)
+    {
         $p = PettyCash::firstOrCreate(['id' => 1]);
         $type = $request->type;
         if ($type == 'new') {
@@ -83,7 +89,8 @@ class FinanceLibrary implements FinanceRepository {
         }
     }
 
-    public static function update_bank(Request $request) {
+    public static function update_bank(Request $request)
+    {
         if (isset($request->id)) {
             $b = Bank::find($request->id);
         } else {
@@ -93,7 +100,8 @@ class FinanceLibrary implements FinanceRepository {
         $b->save();
     }
 
-    public static function update_banking(Request $request) {
+    public static function update_banking(Request $request)
+    {
         $b = new Banking();
         $b->bank = $request->bank;
         $b->account = $request->account;
@@ -109,7 +117,8 @@ class FinanceLibrary implements FinanceRepository {
         }
     }
 
-    public static function saveCheque($banking, $request) {
+    public static function saveCheque($banking, $request)
+    {
         $cheq = new BankingCheque();
         $cheq->holder_name = $request->ChequeName;
         $cheq->banking = $banking;
@@ -120,19 +129,21 @@ class FinanceLibrary implements FinanceRepository {
         $cheq->save();
     }
 
-    public static function updateBalance($accnt, $type, $amnt) {
+    public static function updateBalance($accnt, $type, $amnt)
+    {
         $account = BankAccount::find($accnt);
         $bal = $account->balance;
         if ($type == 'deposit') {
-            $new_bal = $bal+=$amnt;
+            $new_bal = $bal += $amnt;
         } elseif ($type == 'widthrawal') {
-            $new_bal = $bal-=$amnt;
+            $new_bal = $bal -= $amnt;
         }
         $account->balance = $new_bal;
         $account->save();
     }
 
-    public static function updatePettyBalance($type, $amnt) {
+    public static function updatePettyBalance($type, $amnt)
+    {
         if (!$account = PettyCash::first()) {
             $petty = new PettyCash();
             $petty->amount = 0.00;
@@ -144,15 +155,16 @@ class FinanceLibrary implements FinanceRepository {
         }
 
         if ($type == 'deposit') {
-            $new_bal = $bal+=$amnt;
+            $new_bal = $bal += $amnt;
         } elseif ($type == 'widthrawal') {
-            $new_bal = $bal-=$amnt;
+            $new_bal = $bal -= $amnt;
         }
         $account->amount = $new_bal;
         $account->save();
     }
 
-    public static function recordPettyUpdates(Request $request, $type) {
+    public static function recordPettyUpdates(Request $request, $type)
+    {
         $p_update = new PettyCashUpdates();
         $p_update->user = \Auth::user()->id;
         $p_update->amount = $request->amount;
@@ -161,7 +173,8 @@ class FinanceLibrary implements FinanceRepository {
         return $p_update->save();
     }
 
-    public static function update_bank_account(Request $request) {
+    public static function update_bank_account(Request $request)
+    {
         $acnt = new BankAccount();
         $acnt->name = $request->name;
         $acnt->number = $request->number;
@@ -170,7 +183,8 @@ class FinanceLibrary implements FinanceRepository {
         $acnt->save();
     }
 
-    public static function edit_baccount(Request $request, $id) {
+    public static function edit_baccount(Request $request, $id)
+    {
         $acnt = BankAccount::find($id);
         $acnt->name = $request->name;
         $acnt->number = $request->number;
@@ -179,7 +193,8 @@ class FinanceLibrary implements FinanceRepository {
         $acnt->update();
     }
 
-    public static function save_payment(Request $request) {
+    public static function save_payment(Request $request)
+    {
         $pay = new FinanceInvoicePayment;
         $pay->user = \Auth::user()->id;
         if ($request->account != '') {
@@ -209,13 +224,15 @@ class FinanceLibrary implements FinanceRepository {
         return 1;
     }
 
-    public static function update_grn_payment_status($id) {
+    public static function update_grn_payment_status($id)
+    {
         $delivery = InventoryBatch::find($id);
         $delivery->payment_status = 1;
         return $delivery->update();
     }
 
-    public static function update_invoice_payment_status($request) {
+    public static function update_invoice_payment_status($request)
+    {
         //update grn payment status
         $delivery = InventoryBatch::find($request->inv_grn);
         $paid = $request->paid_amount + $request->amount;
@@ -235,7 +252,8 @@ class FinanceLibrary implements FinanceRepository {
         return $invoice->update();
     }
 
-    public static function dispatchBills(Request $request) {
+    public static function dispatchBills(Request $request)
+    {
         DB::beginTransaction();
         // try {
         $dispatch = new Dispatch();
@@ -262,4 +280,17 @@ class FinanceLibrary implements FinanceRepository {
         //}//Catch
     }
 
+    /**
+     * Process transaction check
+     * @param object $data
+     * @return bool|\Illuminate\Database\Eloquent\Model
+     */
+    public function processCallback($data)
+    {
+        if (empty($data->mpesa_trx_date)) {
+            return false;
+        }
+        return MpesaCallback::updateOrCreate(['merchant_transaction_id' => $data->merchant_transaction_id],
+            get_object_vars($data));;
+    }
 }

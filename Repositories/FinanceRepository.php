@@ -17,6 +17,12 @@ namespace Ignite\Finance\Repositories;
  *
  * @author samuel
  */
-interface FinanceRepository {
-
+interface FinanceRepository
+{
+    /**
+     * Process transaction check
+     * @param object $data
+     * @return bool|\Illuminate\Database\Eloquent\Model
+     */
+    public function processCallback($data);
 }
