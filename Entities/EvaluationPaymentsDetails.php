@@ -10,21 +10,26 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $payment
- * @property int $investigation
+ * @property int|null $investigation
  * @property int|null $visit
+ * @property int|null $patient_invoice
+ * @property float|null $patient_invoice_amount
  * @property float|null $cost
- * @property float $price
+ * @property float|null $price
  * @property string|null $description
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Finance\Entities\EvaluationPayments $batch
- * @property-read \Ignite\Evaluation\Entities\Investigations $investigations
+ * @property-read \Ignite\Evaluation\Entities\Investigations|null $investigations
+ * @property-read \Ignite\Finance\Entities\PatientInvoice|null $patient_invoices
  * @property-read \Ignite\Evaluation\Entities\Visit|null $visits
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereCost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereInvestigation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails wherePatientInvoice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails wherePatientInvoiceAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails wherePayment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails wherePrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPaymentsDetails whereUpdatedAt($value)

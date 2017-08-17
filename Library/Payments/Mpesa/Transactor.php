@@ -1,36 +1,45 @@
 <?php
 
-namespace Ignite\Finance\Library\Mpesa;
 
+namespace Ignite\Finance\Library\Payments\Mpesa;
 
 use Carbon\Carbon;
 use DOMDocument;
 use GuzzleHttp\Client;
-use Ignite\Finance\Library\Mpesa\Exceptions\TransactionException;
-use Ignite\Finance\Library\Mpesa\Repository\MpesaRepository;
+use GuzzleHttp\Psr7\Response;
+use Ignite\Finance\Entities\Transactions;
+use Ignite\Finance\Library\Payments\Core\Exceptions\TransactionException;
 
 /**
  * Class Transactor
- * @package Ignite\Finance\Library\Mpesa
+ * @package Dervis\Library\Payments\Mpesa
  */
 class Transactor
 {
     /**
+     * The hashed password.
+     *
      * @var string
      */
     protected $password;
 
     /**
+     * The transaction timestamp.
+     *
      * @var int
      */
     protected $timestamp;
 
     /**
+     * The transaction reference id
+     *
      * @var int
      */
     protected $referenceId;
 
     /**
+     * The amount to be deducted
+     *
      * @var int
      */
     protected $amount;
@@ -58,7 +67,7 @@ class Transactor
     protected $request;
 
     /**
-     * The generated transaction number by the TransactionGenerator implementer.
+     * The generated transaction number by the Transactable implementer.
      *
      * @var string
      */
@@ -77,6 +86,10 @@ class Transactor
      * @var MpesaRepository
      */
     private $repository;
+    /**
+     * @var string
+     */
+    private $trans_id;
 
     /**
      * Transactor constructor.
@@ -91,6 +104,7 @@ class Transactor
             'allow_redirects' => false,
             'expect' => false,
         ]);
+
         $this->repository = $repository;
     }
 
@@ -108,8 +122,49 @@ class Transactor
         $this->amount = $amount;
         $this->number = $number;
         $this->referenceId = $referenceId;
+        $this->trans_id = $this->getTransactionNumber();
         $this->initialize();
+        $this->logTransaction();
         return $this->handle();
+    }
+
+    /**
+     * @return mixed|\Psr\Http\Message\ResponseInterface
+     */
+    public function getStatus($ref)
+    {
+        $transaction = Transactions::whereReference($ref)->first();
+        $passwordSource = $this->repository->paybillNumber . $this->repository->passkey . $transaction->timestamp;
+        $this->password = base64_encode(hash('sha256', $passwordSource));
+        $this->keys = [
+            'VA_PAYBILL' => $this->repository->paybillNumber,
+            'VA_PASSWORD' => $this->password,
+            'VA_TIMESTAMP' => $transaction->timestamp,
+            'VA_TRANS_ID' => $transaction->transaction,
+        ];
+        $this->generateRequest('status.xml');
+        $response = $this->send();
+        return $this->getDomDocument($response);
+    }
+
+    /**
+     * @param Response $response
+     * @return object
+     */
+    private function getDomDocument($response)
+    {
+        $message = $response->getBody()->getContents();
+        $response->getBody()->rewind();
+        $doc = new DOMDocument();
+        $doc->loadXML($message);
+//        return xml_to_array($doc);
+        $payload = ['MSISDN', 'AMOUNT', 'MPESA_TRX_DATE', 'MPESA_TRX_ID'
+            , 'TRX_STATUS', 'RETURN_CODE', 'DESCRIPTION', 'MERCHANT_TRANSACTION_ID'];
+        $details = [];
+        foreach ($payload as $_item) {
+            $details[strtolower($_item)] = $doc->getElementsByTagName($_item)->item(0)->nodeValue;
+        }
+        return (object)$details;
     }
 
     /**
@@ -133,7 +188,6 @@ class Transactor
         $this->generateRequest('request.xml');
         $this->send();
         $this->generateRequest('process.xml');
-
         return $this->send();
     }
 
@@ -158,6 +212,7 @@ class Transactor
     {
         $this->repository->paybillNumber = $payBillNumber;
         $this->repository->passkey = $payBillPassKey;
+
         return $this;
     }
 
@@ -168,7 +223,6 @@ class Transactor
     {
         $passwordSource = $this->repository->paybillNumber . $this->repository->passkey . $this->timestamp;
         $this->password = base64_encode(hash("sha256", $passwordSource));
-
         return $this->password;
     }
 
@@ -178,27 +232,36 @@ class Transactor
     protected function setupKeys()
     {
         $this->keys = [
-            'E_PAYBILL' => $this->repository->paybillNumber,
-            'E_PASSWORD' => $this->password,
-            'E_TIMESTAMP' => $this->timestamp,
-            'E_TRANS_ID' => $this->getTransactionNumber(),
-            'E_REF_ID' => $this->referenceId,
-            'E_AMOUNT' => $this->amount,
-            'E_NUMBER' => $this->number,
-            'E_CALL_URL' => $this->repository->callbackUrl,
-            'E_CALL_METHOD' => $this->repository->callbackMethod,
+            'VA_PAYBILL' => $this->repository->paybillNumber,
+            'VA_PASSWORD' => $this->password,
+            'VA_TIMESTAMP' => $this->timestamp,
+            'VA_TRANS_ID' => $this->trans_id,
+            'VA_REF_ID' => $this->referenceId,
+            'VA_AMOUNT' => $this->amount,
+            'VA_NUMBER' => $this->number,
+            'VA_CALL_URL' => $this->repository->callbackUrl,
+            'VA_CALL_METHOD' => $this->repository->callbackMethod,
         ];
     }
 
     /**
-     * Get the transaction number      *
+     * Get the transaction number from the Transactible implementer.
+     *
      * @return string
      */
-    private function getTransactionNumber()
+    private function getTransactionNumber(): string
     {
-        $this->transactionNumber = $this->generateTransactionNumber();
+//        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < 15; $i++) {
+            $randomString .= $characters[random_int(0, $charactersLength - 1)];
+        }
+        $this->transactionNumber = $randomString;
         return $this->transactionNumber;
     }
+
 
     /**
      * Validate the required fields.
@@ -215,7 +278,8 @@ class Transactor
      */
     private function generateRequest($document)
     {
-        $this->request = file_get_contents(__DIR__ . '/Request/' . $document);
+        $this->request = file_get_contents(__DIR__ . '/soap/' . $document);
+
         foreach ($this->keys as $key => $value) {
             $this->request = str_replace($key, $value, $this->request);
         }
@@ -225,13 +289,16 @@ class Transactor
      * Execute the request.
      *
      * @return mixed|\Psr\Http\Message\ResponseInterface
+     * @throws \Dervis\Library\Payments\Core\Exceptions\TransactionException
      */
     private function send()
     {
         $response = $this->client->request('POST', $this->repository->endpoint, [
             'body' => $this->request
         ]);
+
         $this->validateResponse($response);
+
         return $response;
     }
 
@@ -248,6 +315,7 @@ class Transactor
         $response->getBody()->rewind();
         $doc = new DOMDocument();
         $doc->loadXML($message);
+
         $responseCode = $doc->getElementsByTagName('RETURN_CODE')->item(0)->nodeValue;
         if ($responseCode != '00') {
             $responseDescription = $doc
@@ -255,22 +323,22 @@ class Transactor
                 ->item(0)
                 ->nodeValue;
 
-            throw new TransactionException('Failure - ' . $responseCode . ' : ' . $responseDescription);
+            throw new TransactionException('Failure - ' . $responseDescription);
         }
     }
 
-    /**
-     * @return string
-     */
-    private function generateTransactionNumber()
+    private function logTransaction()
     {
-//        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $characters = '0123456789';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < 10; $i++) {
-            $randomString .= $characters[mt_rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
+        $data = [
+            'gateway' => 'mpesa',
+            'account' => $this->number,
+            'amount' => $this->amount,
+            'reference' => $this->referenceId,
+            'timestamp' => $this->timestamp,
+            'transaction' => $this->trans_id,
+            'status' => 0,
+            'user' => request()->user()->id
+        ];
+        return Transactions::create($data);
     }
 }

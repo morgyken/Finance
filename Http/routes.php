@@ -93,7 +93,3 @@ $router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function (Rout
     $router->get('quickbooks/disconnect', ['as' => 'disconnect', 'uses' => 'QuickBooksController@qboDisconnect']);
     $router->get('quickbooks/create-user', ['as' => 'create_user', 'uses' => 'QuickBooksController@createCustomer']);
 });
-$router->get('test', function () {
-    $repsonse = Mpesa::request(100)->from(254722000000)->usingReferenceId(115445)->transact();
-    dd($repsonse);
-});

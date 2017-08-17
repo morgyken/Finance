@@ -15,7 +15,7 @@ class FinanceDatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(GLTableSeeder::class);
-        $this->call(SmartInterfaceTableSeeder::class);
+//        $this->call(SmartInterfaceTableSeeder::class);
         // $this->call("OthersTableSeeder");
     }
 

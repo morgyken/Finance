@@ -13,7 +13,34 @@
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\FinanceAccountGroup;
 use Ignite\Finance\Entities\FinanceAccountType;
-
+/**
+ * Format phone number
+ * @param string $number
+ * @param bool $strip_plus
+ * @return string
+ */
+function formatPhoneNumber($number, $strip_plus = false)
+{
+    $number = preg_replace('/\s+/', '', $number);
+    /**
+     * Replace with nice phone number
+     * @param $needle
+     * @param $replacement
+     */
+    $replace = function ($needle, $replacement) use (&$number) {
+        if (starts_with($number, $needle)) {
+            $pos = strpos($number, $needle);
+            $length = strlen($needle);
+            $number = substr_replace($number, $replacement, $pos, $length);
+        }
+    };
+    $replace('2547', '+2547');
+    $replace('07', '+2547');
+    if ($strip_plus) {
+        $replace('+254', '254');
+    }
+    return $number;
+}
 if (!function_exists('get_account_types')) {
 
     /**

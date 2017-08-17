@@ -1,14 +1,14 @@
 <?php
 
-namespace Ignite\Finance\Library\Mpesa;
 
-use Ignite\Finance\Library\Mpesa\Repository\MpesaRepository;
+namespace Ignite\Finance\Library\Payments\Mpesa;
+
 
 /**
- * Class MpesaInitializer
- * @package Ignite\Finance\Library\Mpesa
+ * Class MpesaRepository
+ * @package Dervis\Library\Payments\Mpesa
  */
-class MpesaInitializer implements MpesaRepository
+class MpesaRepository
 {
     /**
      * The M-Pesa API Endpoint.
@@ -39,6 +39,13 @@ class MpesaInitializer implements MpesaRepository
     public $paybillNumber;
 
     /**
+     * The transaction number generator.
+     *
+     * @var Transactable
+     */
+    public $transactionGenerator;
+
+    /**
      * The SAG Passkey given on registration.
      *
      * @var string
@@ -54,9 +61,26 @@ class MpesaInitializer implements MpesaRepository
 
 
     /**
-     * Boot up the instance.
+     * Transactor constructor.
+     *
      */
     public function __construct()
+    {
+        $this->boot();
+    }
+
+    /**
+     * Boot up the instance.
+     */
+    protected function boot()
+    {
+        $this->configure();
+    }
+
+    /**
+     * Configure the instance and pick configurations from the config file.
+     */
+    protected function configure()
     {
         $this->setupBroker();
         $this->setupPaybill();
