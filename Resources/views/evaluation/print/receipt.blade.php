@@ -101,6 +101,9 @@ function getAmount($sales) {
                 <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
                 <?php
                 }catch(\Exception $e){
+                    ?>
+                    <img style="width:100; height:auto; float: right" src=""/>
+                <?php
                 }
                 ?>
         @else
@@ -109,11 +112,15 @@ function getAmount($sales) {
             <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
             <?php
             }catch(\Exception $e){
+                ?>
+                <img style="width:100; height:auto; float: right" src=""/>
+                <?php
             }
             ?>
         </center>
         @endif
         <div class="box-header with-border">
+            @if(!empty($clinic))
             <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
                 P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
                 Visit us: {{$clinic->location}}<br>
@@ -122,6 +129,15 @@ function getAmount($sales) {
                 Call Us: {{$clinic->mobile}}
                 <br/> {{$clinic->telephone?"Or: ".$clinic->telephone:''}}<br>
             </p>
+            @else
+            <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
+                P.O Box {{config('practice.address')}}, {{config('practice.town')}}.<br/>
+                Visit us: {{config('practice.building')?config('practice.building').',':''}}<br>
+                {{config('practice.street')?config('practice.street').',':''}}<br><br>
+                Email: {{config('practice.email')}}<br>
+                {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
+            </p>
+            @endif
         </div>
         <div class="box-body">
             <div class="col-md-12">
@@ -176,7 +192,6 @@ function getAmount($sales) {
         <table>
             <tr>
                 <td style="text-align: right; font-weight: bold">
-                    ||||||||||||||||||||||||||||||
                 </td>
             </tr>
         </table>
