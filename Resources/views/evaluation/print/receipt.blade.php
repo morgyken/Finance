@@ -121,7 +121,7 @@ function getAmount($sales) {
         @endif
         <div class="box-header with-border">
             <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
-                @if($clinic->address !==''||$clinic->town!=='')
+                @if(!empty($clinic->address))
                 P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
                 Visit us: {{$clinic->location}}<br>
                 {{$clinic->street}}<br>
