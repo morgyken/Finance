@@ -131,7 +131,7 @@ function getAmount($sales) {
                 @else
                 P.O Box {{config('practice.address')}}, {{config('practice.town')}}.<br/>
                 Visit us: {{config('practice.building')?config('practice.building').',':''}}<br>
-                {{config('practice.street')?config('practice.street').',':''}}<br><br>
+                {{config('practice.street')?config('practice.street').',':''}}<br>
                 Email: {{config('practice.email')}}<br>
                 {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
                 @endif
