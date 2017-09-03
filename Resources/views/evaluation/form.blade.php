@@ -28,8 +28,7 @@
     <?php $___p = $sales->patient ?>
 <input type="hidden" name="patient" value="{{$sales->patient}}">
 @endif
-
-
+<!--
 @if(get_patient_balance($___p)>0)
     <?php $prepaid = get_patient_balance($___p) ?>
     <h3>
@@ -38,7 +37,7 @@
         in their account.
     </h3>
 @endif
-
+-->
 <div class="accordion form-horizontal" id="someForm">
     <h4>Cash</h4>
     <div>

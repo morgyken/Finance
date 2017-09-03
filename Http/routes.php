@@ -32,8 +32,9 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function(Router $router) {
 
 //financials
 $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illuminate\Routing\Router $router) {
-    $router->get('pay/{patient?}/{invoice?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
+    $router->get('pay/{patient?}/{invoice?}/{deposit?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
     $router->match(['get', 'post'], 'invoice/{patient?}', ['uses' => 'EvaluationController@patient_invoice', 'as' => 'invoice']);
+
     $router->get('accounts', ['uses' => 'EvaluationController@accounts', 'as' => 'accounts']);
 
     $router->get('patient/invoices/{id?}', ['uses' => 'EvaluationController@manage_patient_invoices', 'as' => 'patient_invoices']);
@@ -47,6 +48,7 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illum
     $router->post('bill/remove/', ['uses' => 'EvaluationController@RemoveBill', 'as' => 'remove.bill']);
 
     $router->get('accounts/{patient}/show', ['uses' => 'EvaluationController@individual_account', 'as' => 'individual_account']);
+
     $router->post('payment', ['as' => 'pay.save', 'uses' => 'EvaluationController@pay_save']);
     $router->get('payment_details/{id}/{invoice?}', ['as' => 'payment_details', 'uses' => 'EvaluationController@payment_details']);
     $router->get('summary', ['as' => 'summary', 'uses' => 'EvaluationController@summary']);

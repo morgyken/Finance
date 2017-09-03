@@ -13,7 +13,6 @@ extract($data);
 $clinic =get_clinic();
 $t = 0;
 $thermal = null;
-
 function amount_after_discount($discount, $amount) {
     try {
         $discounted = $amount - (($discount / 100) * $amount);
@@ -58,7 +57,7 @@ function getAmount($sales) {
         table th{
             padding-top: 1px;
             padding-bottom: 1px;
-            background-color: /*#4CAF50*/ #BBBBBB;
+            background-color: #eee;
             color: black;
             font-size: 90%;
         }
@@ -97,15 +96,11 @@ function getAmount($sales) {
         <?php } ?>
 
         @if(isset($a4))
-                <?php try{ ?>
-                <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
-                <?php
-                }catch(\Exception $e){
-                    ?>
-                    <img style="width:100; height:auto; float: right" src=""/>
-                <?php
-                }
-                ?>
+            @if(get_logo())
+             <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+            @else
+             <img style="width:100; height:auto; float: right" src=""/>
+            @endif
         @else
         <center>
             <?php try{ ?>
@@ -139,6 +134,7 @@ function getAmount($sales) {
         </div>
         <div class="box-body">
             <div class="col-md-12">
+                @if(!$payment->deposit)
                 <?php if (!isset($a4)) { ?>
                     <center>
                         <h1>RECEIPT</h1>
@@ -146,16 +142,26 @@ function getAmount($sales) {
                 <?php } else { ?>
                     <h1>RECEIPT</h1>
                 <?php } ?>
+                @else
+                    <?php if (!isset($a4)) { ?>
+                    <center>
+                        <h1>Deposit Slip</h1>
+                    </center>
+                    <?php } else { ?>
+                    <h1>Deposit Slip</h1>
+                    <?php } ?>
+                @endif
                 <br>
                 <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>
                 <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
-                <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
+                <br/>
+                 <strong><?php echo $payment->deposit?'Slip No: ':'Receipt No: '; ?></strong><span>{{$payment->receipt}}</span><br/><br/>
             </div>
             <div class="col-md-6">
                 @if(!$invoice_mode)
-                @include('finance::evaluation.payment.details.main_mode')
+                    @include('finance::evaluation.payment.details.main_mode')
                 @else
-                @include('finance::evaluation.payment.details.invoice_mode')
+                    @include('finance::evaluation.payment.details.invoice_mode')
                 @endif
             </div>
             <div class="col-md-6">

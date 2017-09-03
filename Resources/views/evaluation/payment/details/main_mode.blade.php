@@ -1,10 +1,11 @@
 
 @if(!$payment->sale >0)
 <table class="table table-striped">
+    @if(!$payment->deposit)
     <thead>
         <tr>
             <th>#</th>
-            <th>Procedures/Drug</th>
+            <th>Item</th>
             <th>Discount(%)</th>
             <th>Amount (Ksh.)</th>
         </tr>
@@ -50,11 +51,8 @@
             }
         }
         ?>
-
     </tbody>
-
     <tfoot>
-
     <tr>
         <th></th>
         <th></th>
@@ -63,7 +61,7 @@
             {{$bill}}
         </th>
     </tr>
-
+    @endif
         <tr>
             <th></th>
             <th></th>
@@ -72,7 +70,7 @@
                 {{$payment->total}}
             </th>
         </tr>
-
+        @if(!$payment->deposit)
         <tr>
             <th></th>
             <th></th>
@@ -81,6 +79,16 @@
                 {{$payment->total-$bill}}
             </th>
         </tr>
+        @else
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Total Account Balance</th>
+                <th>
+                    {{get_patient_balance($payment->patients->id)}}
+                </th>
+            </tr>
+       @endif
     </tfoot>
 
 </table>
@@ -128,8 +136,6 @@
                 {{number_format(ceil($payment->total),2)}}
             </th>
         </tr>
-
-
         <tr>
             <th></th>
             <th></th>

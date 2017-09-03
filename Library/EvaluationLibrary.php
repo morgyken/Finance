@@ -15,6 +15,8 @@ namespace Ignite\Finance\Library;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
+use Ignite\Finance\Entities\PatientAccount;
+use Ignite\Finance\Entities\PatientTransaction;
 use Ignite\Finance\Entities\PaymentsCard;
 use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
@@ -75,7 +77,6 @@ class EvaluationLibrary implements EvaluationRepository {
      */
     public function record_payment() {
         DB::transaction(function () {
-            //dd($this->request);
             if (isset($this->request->batch)) {
                 foreach ($this->request->batch as $bitch) {
                     $sale = InventoryBatchProductSales::find($bitch);
@@ -113,11 +114,49 @@ class EvaluationLibrary implements EvaluationRepository {
             $payment->user = $this->user;
             $payment->save();
             $payment->amount = $this->payment_methods($payment);
+            if(isset($this->request->deposit)){
+                $payment->deposit = true;
+            }
             $payment->save();
             $this->payment_details($this->request, $payment);
             $this->pay_id = $payment->id;
+
+            if(isset($this->request->deposit)){
+                $this->patient_transaction($payment,'deposit');
+            }
         });
         return $this->pay_id;
+    }
+
+    /**
+     * Deposit Funds
+     * return bool
+     */
+    public function patient_transaction($payment=null,$type) {
+        $patient = $this->request->patient;
+        $tr = new PatientTransaction();
+        $tr->type = $type;
+        $tr->patient_id = $patient;
+        $tr->amount = $payment->amount;
+        $tr->payment_id = $payment->id;
+        $tr->save();
+        $this->update_patient_balance($tr);
+        return true;
+    }
+
+    /**
+     * Update Patient account balance
+     * return bool
+     */
+    public function update_patient_balance($transaction) {
+        $account = PatientAccount::findOrNew($transaction->patient_id);
+        if($transaction->type == 'deposit'){
+            $account->balance = $account->balance+=$transaction->amount;
+        }else{
+            $account->balance = $account->balance-=$transaction->amount;
+        }
+        $account->patient = $transaction->patient_id;
+        return $account->save();
     }
 
     public function create_patient_invoice() {

@@ -24,9 +24,9 @@
                     <td>{{$patient->id_no}}</td>
                     <td>{{$patient->mobile}}</td>
                     <td>
-                        <a class="btn btn-primary btn-xs" href="{{route('finance.receive_payments',$patient->patient_id)}}">
-                            <i class="fa fa-hand-lizard-o"></i> Receive Payments</a>
-                        <a class="btn btn-success btn-xs" href="{{route('finance.individual_account',$patient->patient_id)}}">
+                        <a class="btn btn-primary btn-xs" href="{{route('finance.evaluation.pay',['patient'=>$patient->id])}}?deposit=true">
+                            <i class="fa fa-hand-lizard-o"></i> Deposit Funds</a>
+                        <a class="btn btn-success btn-xs" href="{{route('finance.evaluation.individual_account',$patient->id)}}">
                             <i class="fa fa-eye-slash"></i> View Account</a>
                     </td>
                 </tr>

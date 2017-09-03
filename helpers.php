@@ -165,19 +165,19 @@ if (!function_exists('get_patient_balance')) {
 
 
 if (!function_exists('get_patient_invoice_pending_amount')) {
-
     function get_patient_invoice_pending_amount($id) {
         $invoice = \Ignite\Finance\Entities\PatientInvoice::find($id);
         $amount = $invoice->total;
-        return $amount - get_patient_invoice_paid_amount($id);
+        $paid = get_patient_invoice_paid_amount($id);
+        $bal = $amount - $paid;
+        return $bal;
     }
-
 }
 
 if (!function_exists('get_logo')) {
 
     function get_logo() {
-        $logo = null;
+        $logo = false;
         $this_clinic =\Session::get('clinic');
         $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
         $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
@@ -197,6 +197,19 @@ if (!function_exists('get_clinic')) {
         $this_clinic =\Session::get('clinic');
         $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
         return $clinic;
+    }
+
+}
+
+if (!function_exists('get_patient_balance')) {
+
+    function get_patient_balance($patient_id) {
+        $account = \Ignite\Finance\Entities\PatientAccount::findOrNew($patient_id);
+        if(!empty($account)){
+            return $account->balance;
+        }else{
+            return 0;
+        }
     }
 
 }

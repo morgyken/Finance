@@ -82,7 +82,6 @@
                 <br/><br/>
             </div>
             <div class="col-md-6">
-
                 <table>
                     <thead>
                         <tr>
@@ -133,7 +132,6 @@
             </div>
             <hr/>
             <strong>Signature:</strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
-
             <br/><br/>
             Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
         </div>

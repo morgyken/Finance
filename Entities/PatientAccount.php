@@ -29,8 +29,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PatientAccount extends Model {
 
-    public $table = 'finance_patient_accounts';
-
+    protected $table = 'finance_patient_accounts';
+    protected  $guarded = [];
     public function patients() {
         return $this->belongsTo(Patients::class, 'patient', 'patient_id');
     }

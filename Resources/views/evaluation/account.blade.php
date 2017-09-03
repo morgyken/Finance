@@ -89,7 +89,6 @@ extract($data);
                     <th></th>
                     <th colspan="2" style="text-align: right">Balance:</th>
                     <th>
-
                         @if(get_patient_balance($patient->id)<0)
                             <span style="color: red">
                                 {{number_format(get_patient_balance($patient->id),2)}}
@@ -97,8 +96,6 @@ extract($data);
                         @else
                             {{number_format(get_patient_balance($patient->id),2)}}
                         @endif
-
-
                     </th>
                     <th></th>
                     <th></th>
