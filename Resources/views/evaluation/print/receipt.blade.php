@@ -94,7 +94,6 @@ function getAmount($sales) {
         <?php } else { ?>
             <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
         <?php } ?>
-
         @if(isset($a4))
             @if(get_logo())
              <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
@@ -189,14 +188,12 @@ function getAmount($sales) {
         </div>
         <hr/>
         <strong>Signature:</strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
-
         <br/><br/>
         Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
         <br/><br/>
         <table>
             <tr>
-                <td style="text-align: right; font-weight: bold">
-                </td>
+                <td style="text-align: right; font-weight: bold"></td>
             </tr>
         </table>
     </div>
