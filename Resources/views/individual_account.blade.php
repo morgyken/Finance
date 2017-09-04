@@ -4,6 +4,7 @@
  * Project: iClinic
  *  Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
+extract($data);
 $patient = $data['patient'];
 ?>
 @extends('layouts.app')
@@ -18,20 +19,31 @@ $patient = $data['patient'];
                 <p>Individual Account for <strong>{{$patient->full_name}}</strong></p>
             </div>
             @if(!$data['payments']->isEmpty())
-            <table class="table">
+            <table class="table table-striped">
                 <tbody>
-
+                    @foreach($transactions as $t)
+                    <tr>
+                        <td>{{$t->id}}</td>
+                        <td>{{$t->created_at}}</td>
+                        <td>{{$t->type}}</td>
+                        <td>{{$t->amount}}</td>
+                    </tr>
+                    @endforeach
                 </tbody>
                 <thead>
                     <tr>
-                        <th>REF</th>
-                        <th>Type</th>
-                        <th>Service</th>
+                        <th>#</th>
                         <th>Date</th>
+                        <th>Type</th>
                         <th>Amount</th>
-                        <th>Mode</th>
                     </tr>
                 </thead>
+                <tfoot>
+                <tr>
+                    <th colspan="3" style="text-align: right">Balance</th>
+                    <th>{{number_format(get_patient_balance($patient->id),2)}}</th>
+                </tr>
+                </tfoot>
             </table>
             @else
             <div class="alert alert-info">

@@ -54,20 +54,17 @@
         font-size: 90%;
     }
 </style>
-<?php
-$clinic =get_clinic();
-$bill_amount = 0; ?>
+<?php $bill_amount = 0; ?>
 <div class="box box-info">
     <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
-    <?php
-    if(file_get_contents(realpath(base_path(get_logo())))){
-    ?>
+    <?php try{ ?>
     <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
     <?php
-        }
+    }catch(\Exception $e){
+    }
     ?>
     <div class="box-header with-border">
-        <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: left<?php } ?>">
+        <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
             P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
             Visit us: {{$clinic->location}}<br>
             {{$clinic->street}}<br>
@@ -85,7 +82,6 @@ $bill_amount = 0; ?>
             <br/><br/>
         </div>
         <div class="col-md-6">
-
             <table>
                 <thead>
                 <tr>
@@ -136,7 +132,6 @@ $bill_amount = 0; ?>
         </div>
         <hr/>
         <strong>Signature:</strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
-
         <br/><br/>
         Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
     </div>

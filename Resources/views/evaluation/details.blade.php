@@ -91,7 +91,7 @@ function getAmount($sales) {
             {!! Form::hidden('invoice',true) !!}
             @endif
             <button class="btn btn-primary btn-sm" type="submit">
-                <i class="fa fa-file-pdf-o"></i> Print Receipt (Thermal Printer)</button>
+                <i class="fa fa-print"></i> Print Receipt (Thermal Printer)</button>
             {{Form::close()}}
         </div>
 
@@ -102,7 +102,7 @@ function getAmount($sales) {
             {!! Form::hidden('invoice',true) !!}
             @endif
             <button class="btn btn-primary btn-sm" type="submit">
-                <i class="fa fa-file-pdf-o"></i> Print Receipt (A4)</button>
+                <i class="fa fa-print"></i> Print Receipt (A4)</button>
             {{Form::close()}}
         </div>
     </div>

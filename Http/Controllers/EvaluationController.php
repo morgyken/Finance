@@ -7,6 +7,8 @@ use Ignite\Evaluation\Entities\Dispensing;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Finance\Entities\EvaluationPayments;
+use Ignite\Finance\Entities\PatientAccount;
+use Ignite\Finance\Entities\PatientTransaction;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Reception\Entities\Patients;
@@ -108,9 +110,13 @@ class EvaluationController extends AdminBaseController {
         }
     }
 
-    public function pay($patient = null, $invoice = false) {
+    public function pay(Request $request) {
+        //dd($request);
+        $patient = $request->patient;
+        $invoice = $request->invoice;
         if (!empty($patient)) {
             $this->data['invoice_mode'] = $invoice;
+            $this->data['deposit'] = $request->deposit;
             $this->data['patient'] = Patients::find($patient);
             $this->data['patient_invoices'] = PatientInvoice::wherePatient_id($patient)->get();
             return view('finance::evaluation.pay', ['data' => $this->data]);
@@ -212,7 +218,6 @@ class EvaluationController extends AdminBaseController {
       } */
 
     public function sale_pay($sale = null) {
-
         if (!empty($sale)) {
             $this->data['sales'] = InventoryBatchProductSales::find($sale);
             return view('finance::evaluation.sale_pay', ['data' => $this->data]);
@@ -224,16 +229,20 @@ class EvaluationController extends AdminBaseController {
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 
+
     public function accounts() {
         $this->data['patients'] = Patients::all();
-        return view('finance::evaluation.patient_list', ['data' => $this->data]);
+        return view('finance::patient_accounts', ['data' => $this->data]);
     }
 
     public function individual_account($patient) {
         $this->data['payments'] = EvaluationPayments::wherePatient($patient)->get();
+        $this->data['transactions'] = PatientTransaction::wherePatient_id($patient)->get();
         $this->data['patient'] = Patients::find($patient);
-        return view('finance::evaluation.account', ['data' => $this->data]);
+        return view('finance::individual_account', ['data' => $this->data]);
     }
+
+
 
     public function insurance() {
         $this->data['bill_mode'] = 1;

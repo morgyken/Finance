@@ -63,8 +63,8 @@ if (!function_exists('get_account_groups')) {
     {
         return FinanceAccountGroup::all()->pluck('name', 'id');
     }
-
 }
+
 if (!function_exists('payment_modes')) {
 
     /**
@@ -109,7 +109,6 @@ if (!function_exists('get_patient_invoice_payment_status')) {
 }
 
 if (!function_exists('get_payment_balance')) {
-
     function get_payment_balance($payment, $invoice = null) {
         $balance = $payment->amount;
         $consumed = 0;
@@ -135,13 +134,113 @@ if (!function_exists('get_patient_invoice_paid_amount')) {
 
 }
 
-if (!function_exists('get_patient_invoice_pending_amount')) {
 
-    function get_patient_invoice_pending_amount($id)
-    {
+
+if (!function_exists('total_patient_payments')) {
+
+    function total_patient_payments($patient) {
+        $sum = 0;
+        $payments = EvaluationPayments::wherePatient($patient)->get();
+        foreach ($payments as $payment){
+            $sum+=$payment->total;
+        }
+        return $sum;
+    }
+
+}
+
+
+if (!function_exists('overall_patient_service_cost')) {
+
+    function overall_patient_service_cost($patient) {
+        $amount = 0;
+
+        $visits = \Ignite\Evaluation\Entities\Visit::wherePatient($patient)
+            ->wherePayment_mode('cash')
+            ->get();
+
+        foreach ($visits as $visit){
+            $amount+=$visit->total_bill;
+        }
+        return $amount;
+    }
+
+}
+
+
+if (!function_exists('get_patient_unpaid')) {
+
+    function get_patient_unpaid($patient) {
+        $amount = 0;
+        $visits = \Ignite\Evaluation\Entities\Visit::wherePatient($patient, function($query){
+            $query->wherePayment_mode('cash');
+        })->get();
+        foreach ($visits as $visit){
+            $amount+=$visit->unpaid_amount;
+        }
+        return $amount;
+    }
+
+}
+
+if (!function_exists('get_patient_balance')) {
+
+    function get_patient_balance($patient) {
+        $paid = total_patient_payments($patient);
+        $cost = overall_patient_service_cost($patient);
+        $balance = $paid-$cost;
+        return $balance;
+    }
+
+}
+
+
+if (!function_exists('get_patient_invoice_pending_amount')) {
+    function get_patient_invoice_pending_amount($id) {
         $invoice = \Ignite\Finance\Entities\PatientInvoice::find($id);
         $amount = $invoice->total;
-        return $amount - get_patient_invoice_paid_amount($id);
+        $paid = get_patient_invoice_paid_amount($id);
+        $bal = $amount - $paid;
+        return $bal;
+    }
+}
+
+if (!function_exists('get_logo')) {
+
+    function get_logo() {
+        $logo = false;
+        $this_clinic =\Session::get('clinic');
+        $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
+        $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
+        if(!empty($clinic->logo)){
+            $logo = $clinic->logo;
+        }else{
+            $logo = $practice->logo;
+        }
+        return $logo;
+    }
+
+}
+
+if (!function_exists('get_clinic')) {
+
+    function get_clinic() {
+        $this_clinic =\Session::get('clinic');
+        $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
+        return $clinic;
+    }
+
+}
+
+if (!function_exists('get_patient_balance')) {
+
+    function get_patient_balance($patient_id) {
+        $account = \Ignite\Finance\Entities\PatientAccount::findOrNew($patient_id);
+        if(!empty($account)){
+            return $account->balance;
+        }else{
+            return 0;
+        }
     }
 
     if (!function_exists('pesa')) {

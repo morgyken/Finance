@@ -13,7 +13,6 @@ extract($data);
 $clinic =get_clinic();
 $t = 0;
 $thermal = null;
-
 function amount_after_discount($discount, $amount) {
     try {
         $discounted = $amount - (($discount / 100) * $amount);
@@ -58,7 +57,7 @@ function getAmount($sales) {
     table th{
         padding-top: 1px;
         padding-bottom: 1px;
-        background-color: /*#4CAF50*/ #BBBBBB;
+        background-color: #eee;
         color: black;
         font-size: 90%;
     }
@@ -95,47 +94,67 @@ function getAmount($sales) {
     <?php } else { ?>
     <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
     <?php } ?>
-
     @if(isset($a4))
-        <?php try{ ?>
-        <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
-        <?php
-        }catch(\Exception $e){
-        }
-        ?>
+        @if(get_logo())
+            <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+        @else
+            <img style="width:100; height:auto; float: right" src=""/>
+        @endif
     @else
         <center>
             <?php try{ ?>
             <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
             <?php
             }catch(\Exception $e){
+            ?>
+            <img style="width:100; height:auto; float: right" src=""/>
+            <?php
             }
             ?>
         </center>
     @endif
     <div class="box-header with-border">
         <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
-            P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
-            Visit us: {{$clinic->location}}<br>
-            {{$clinic->street}}<br>
-            Email: {{$clinic->email}}<br>
-            Call Us: {{$clinic->mobile}}
-            <br/> {{$clinic->telephone?"Or: ".$clinic->telephone:''}}<br>
+            @if(!empty($clinic->address))
+                P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
+                Visit us: {{$clinic->location}}<br>
+                {{$clinic->street}}<br>
+                Email: {{$clinic->email}}<br>
+                Call Us: {{$clinic->mobile}}
+                <br/> {{$clinic->telephone?"Or: ".$clinic->telephone:''}}<br>
+            @else
+                P.O Box {{config('practice.address')}}, {{config('practice.town')}}.<br/>
+                Visit us: {{config('practice.building')?config('practice.building').'.':''}}<br>
+                {{config('practice.street')?config('practice.street').'.':''}}<br>
+                Email: {{config('practice.email')}}<br>
+                {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
+            @endif
         </p>
     </div>
     <div class="box-body">
         <div class="col-md-12">
-            <?php if (!isset($a4)) { ?>
-            <center>
+            @if(!$payment->deposit)
+                <?php if (!isset($a4)) { ?>
+                <center>
+                    <h1>RECEIPT</h1>
+                </center>
+                <?php } else { ?>
                 <h1>RECEIPT</h1>
-            </center>
-            <?php } else { ?>
-            <h1>RECEIPT</h1>
-            <?php } ?>
+                <?php } ?>
+            @else
+                <?php if (!isset($a4)) { ?>
+                <center>
+                    <h1>Deposit Slip</h1>
+                </center>
+                <?php } else { ?>
+                <h1>Deposit Slip</h1>
+                <?php } ?>
+            @endif
             <br>
             <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>
             <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
-            <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
+            <br/>
+            <strong><?php echo $payment->deposit?'Slip No: ':'Receipt No: '; ?></strong><span>{{$payment->receipt}}</span><br/><br/>
         </div>
         <div class="col-md-6">
             @if(!$invoice_mode)
@@ -169,15 +188,12 @@ function getAmount($sales) {
     </div>
     <hr/>
     <strong>Signature:</strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
-
     <br/><br/>
     Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
     <br/><br/>
     <table>
         <tr>
-            <td style="text-align: right; font-weight: bold">
-                ||||||||||||||||||||||||||||||
-            </td>
+            <td style="text-align: right; font-weight: bold"></td>
         </tr>
     </table>
 </div>

@@ -9,7 +9,6 @@
     </td>
 </tr>
 @endforeach
-
 <tr>
     <td style='text-align: right; font-weight: bold'>Amount</td>
     <td style='text-align: right; font-weight: bold'>{{$_invoice->total}}.00</td>
@@ -32,8 +31,8 @@
     <th>
         <input type="checkbox" value="{{$_invoice->id}}" name="item{{$_invoice->id}}" />
     </th>
-    <th style='text-align: right'>Balance:
-        <i class="small"></i><span class="topay">{{get_patient_invoice_pending_amount($_invoice->id)}}.00</span>
+    <th style='text-align: right'>Balance
+        <i class="small"></i><span class="topay">{{get_patient_invoice_pending_amount($_invoice->id)}}</span>
     </th>
     @endif
 </tr>
