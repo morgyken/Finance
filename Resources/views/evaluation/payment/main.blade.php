@@ -28,24 +28,7 @@
     <td>
         {{$item->procedures->name}}
         <i class="small">({{ucwords($item->type)}})</i> - Ksh <span class="topay">{{$item->amount>0?$item->amount:$item->price}}</span>
-        <?php 
-
-            
-         ?>
-        @if(user_is_doctor())
-        
-        <?php try { ?>
-            @if($item->removed_bills->isEmpty)
-            <button  type="button" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-box-tool pull-right" data-widget="remove"><i class="fa fa-times"></i></button>
-            @else
-            <button type="button" onclick="undo_remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-box-tool" data-widget="undo"><i class="fa fa-refresh"></i></button>
-            @endif
-        <?php } catch (Exception $ex) { ?>
-                <button type="button" onclick="remove_bill('investigation', <?php echo $item->id; ?>, <?php echo $visit->id; ?>)" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-        <?php } ?>
-        @endif
         @endif
     </td>
-    
 </tr>
 @endforeach
