@@ -155,8 +155,11 @@
             <div id="project">
                 <div><span>DATE:</span>
                     {{smart_date($bill->created_at)}}</div>
-                <div><span>Client:</span>
-                    {{$bill->sales->patients->full_name}}
+                <div>
+                    <span>Client:</span>
+                    {{$bill->sales->patients->full_name}}<br/>
+                    <span>ID:</span>
+                    {{m_setting('reception.patient_id_abr')}}{{$bill->sales->patients->id}}
                 </div>
                 <div>
                     <span>Scheme:</span>

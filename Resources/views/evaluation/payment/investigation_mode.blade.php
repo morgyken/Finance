@@ -9,7 +9,6 @@
                 @include('finance::evaluation.payment.main')
             </tbody>
         </table>
-
         <table class="table table-condensed" id="paymentsTable">
             <tbody>
                 @include('finance::evaluation.payment.pharm')

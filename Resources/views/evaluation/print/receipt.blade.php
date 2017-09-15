@@ -44,13 +44,13 @@ function getAmount($sales) {
     }
 
     table th{
-        border: 1px solid #ddd;
+        border: 1px solid #eee;
         text-align: left;
         padding: 1px;
         font-size: 90%;
     }
 
-    table tr:nth-child(even){background-color: #f2f2f2}
+    /*table tr:nth-child(even){background-color: #f2f2f2}*/
 
     table tr:hover {background-color: #ddd;}
 
@@ -151,8 +151,21 @@ function getAmount($sales) {
                 <?php } ?>
             @endif
             <br>
-            <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>
-            <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
+            <strong>Name:</strong>
+                <span class="content">
+                    {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}
+                </span>
+                <br/>
+                <strong>No:</strong>
+                <span class="content">
+                    {{$payment->patients?m_setting('reception.patient_id_abr').$payment->patients->id:'Walkin Patient'}}
+                </span>
+                <br/>
+            <strong>Date:</strong>
+                <span class="content">
+                    {{(new Date($payment->created_at))->format('j/m/Y H:i')}}
+                </span>
+                <br/>
             <br/>
             <strong><?php echo $payment->deposit?'Slip No: ':'Receipt No: '; ?></strong><span>{{$payment->receipt}}</span><br/><br/>
         </div>

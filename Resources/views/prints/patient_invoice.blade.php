@@ -79,6 +79,7 @@
             <div><span>INVOICE NO:</span> 0{{$invoice->id}}</div><br>
             <div><span>DATE:</span> {{smart_date($invoice->created_at)}}</div>
             <div><span>PATIENT:</span> {{$invoice->patient->full_name}}</div>
+            <div><span>PATIENT NO:</span> {{m_setting('reception.patient_id_abr')}}{{$invoice->patient->id}}</div>
             <br/><br/>
         </div>
         <div class="col-md-6">

@@ -54,14 +54,14 @@ function getAmount($sales) {
         font-size: 90%;
     }
 
-    table tr:nth-child(even){background-color: #f2f2f2}
+    /*table tr:nth-child(even){background-color: #f2f2f2}*/
 
-    table tr:hover {background-color: #ddd;}
+    table tr:hover {background-color: #eee;}
 
     table th{
         padding-top: 1px;
         padding-bottom: 1px;
-        background-color: /*#4CAF50*/ #BBBBBB;
+        background-color: /*#4CAF50*/ #eee;
         color: black;
         font-size: 90%;
     }
@@ -104,7 +104,15 @@ function getAmount($sales) {
         <div class="col-md-6 col-lg-6">
         <h2 class="box-title">RECIEPT</h2>
             <br>
-            <strong>Name:</strong><span class="content"> {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}</span><br/>
+            <strong>Name:</strong><span class="content">
+                {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}
+            </span>
+            <br/>
+            <strong>Patient No:</strong><span class="content">
+                {{$payment->patients?m_setting('reception.patient_id_abr').$payment->patients->id:'Walkin Patient'}}
+            </span>
+            <br/>
+            <br/>
             <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
             <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
         </div>
@@ -160,8 +168,8 @@ function getAmount($sales) {
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th style="text-align:right" colspan='2'>Amount Paid</th>
-                            <th>{{$payment->total}}</th>
+                            <td style="text-align:right" colspan='2'>Amount Paid</td>
+                            <td>{{$payment->total}}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -191,10 +199,13 @@ function getAmount($sales) {
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="4">Total</th>
-                            <th>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total</td>
+                            <td>
                                 {{number_format(getAmount($payment->sales),2)}}
-                            </th>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>

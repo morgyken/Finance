@@ -54,39 +54,39 @@
     </tbody>
     <tfoot>
     <tr>
-        <th></th>
-        <th></th>
-        <th>Total</th>
-        <th>
+        <td></td>
+        <td></td>
+        <td>Total</td>
+        <td>
             {{$bill}}
-        </th>
+        </td>
     </tr>
     @endif
         <tr>
-            <th></th>
-            <th></th>
-            <th>Amount Paid</th>
-            <th>
+            <td></td>
+            <td></td>
+            <td>Amount Paid</td>
+            <td>
                 {{$payment->total}}
-            </th>
+            </td>
         </tr>
         @if(!$payment->deposit)
         <tr>
-            <th></th>
-            <th></th>
-            <th>Change</th>
-            <th>
+            <td></td>
+            <td></td>
+            <td>Change</td>
+            <td>
                 {{$payment->total-$bill}}
-            </th>
+            </td>
         </tr>
         @else
             <tr>
-                <th></th>
-                <th></th>
-                <th>Total Account Balance</th>
-                <th>
+                <td></td>
+                <td></td>
+                <td>Total Account Balance</td>
+                <td>
                     {{get_patient_balance($payment->patients->id)}}
-                </th>
+                </td>
             </tr>
        @endif
     </tfoot>
@@ -118,9 +118,9 @@
     </tbody>
     <tfoot>
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
+            <td></td>
+            <td></td>
+            <td></td>
             <th>Total:</th>
             <th>
                 {{number_format(ceil($topay),2)}}
@@ -128,18 +128,18 @@
         </tr>
 
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
+            <td></td>
+            <td></td>
+            <td></td>
             <th>Payment:</th>
             <th>
                 {{number_format(ceil($payment->total),2)}}
             </th>
         </tr>
         <tr>
-            <th></th>
-            <th></th>
-            <th></th>
+            <td></td>
+            <td></td>
+            <td></td>
             <th>Change:</th>
             <th>
                 {{number_format(ceil($payment->total-$topay),2)}}

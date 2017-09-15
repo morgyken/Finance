@@ -79,6 +79,7 @@
             <br>
             <div><span>DATE:</span> {{smart_date($bill->created_at)}}</div>
             <div><span>Patient:</span> {{$bill->visits->patients->full_name}}</div>
+            <div><span>Patient No:</span> {{m_setting('reception.patient_id_abr')}}{{$bill->visits->patients->id}}</div>
             <br/><br/>
         </div>
         <div class="col-md-6">
