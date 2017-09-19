@@ -14,6 +14,11 @@
                 @include('finance::evaluation.payment.pharm')
             </tbody>
         </table>
+        <table class="table table-condensed" id="paymentsTable">
+             <tbody>
+                @include('finance::evaluation.payment.inpatient')
+            </tbody>
+        </table>
     </div>
     @endforeach
 </div>

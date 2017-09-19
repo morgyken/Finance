@@ -121,7 +121,8 @@ class EvaluationController extends AdminBaseController {
             $this->data['patient_invoices'] = PatientInvoice::wherePatient_id($patient)->get();
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
-        $this->billable_patients();
+        $this->billable_patients(); 
+
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 

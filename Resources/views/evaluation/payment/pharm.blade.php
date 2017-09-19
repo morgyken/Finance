@@ -25,12 +25,12 @@
 
         <?php try { ?>
             @if($disp->removed_bills->isEmpty)
-            <input type="checkbox" value="{{$item->id}}"name="dispense[]" />
+                <input type="checkbox" value="{{$item->id}}" name="dispense[]" />
             @else
-            <input type="checkbox" disabled="" />
+                <input type="checkbox" disabled="" />
             @endif
         <?php } catch (Exception $ex) { ?>
-            <input type="checkbox" value="{{$item->id}}"name="dispense[]" />
+            <input type="checkbox" value="{{$item->id}}" name="dispense[]" />
         <?php } ?>
 
     </td>

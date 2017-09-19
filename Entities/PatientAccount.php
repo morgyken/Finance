@@ -35,4 +35,12 @@ class PatientAccount extends Model {
         return $this->belongsTo(Patients::class, 'patient', 'patient_id');
     }
 
+    public function getLatestBalance($id){
+    	return PatientAccount::where("patient", $id)->latest()->first()->balance;
+    }
+
+    public static function latestBalance($id){
+    	return PatientAccount::where("patient", $id)->latest()->first();
+    }
+
 }
