@@ -1,7 +1,6 @@
 <?php
 
 //old web routes
-use Ignite\Finance\Library\Mpesa\Mpesa;
 use Illuminate\Routing\Router;
 ///Billing finance.billing.dispatch
 /** @var Router $router */
@@ -32,7 +31,7 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function (Router $router) {
 });
 
 //financials
-$router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Illuminate\Routing\Router $router) {
+$router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Router $router) {
     $router->get('pay/{patient?}/{invoice?}/{deposit?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
     $router->match(['get', 'post'], 'invoice/{patient?}', ['uses' => 'EvaluationController@patient_invoice', 'as' => 'invoice']);
 

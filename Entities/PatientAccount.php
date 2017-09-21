@@ -9,14 +9,16 @@ use Illuminate\Database\Eloquent\Model;
  * Ignite\Finance\Entities\PatientAccount
  *
  * @property int $id
- * @property string $reference
- * @property string $details
+ * @property string|null $reference
+ * @property string|null $details
  * @property float $credit
  * @property float $debit
+ * @property float $balance
  * @property int $patient
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Reception\Entities\Patients $patients
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientAccount whereBalance($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientAccount whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientAccount whereCredit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientAccount whereDebit($value)

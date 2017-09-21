@@ -7,9 +7,6 @@ use Ignite\Finance\Entities\InsuranceInvoice;
 
 class FinanceController extends AdminBaseController {
 
-    public function __construct() {
-        parent::__construct();
-    }
 
     public function billing() {
         $this->data['insurance_invoices'] = InsuranceInvoice::all();

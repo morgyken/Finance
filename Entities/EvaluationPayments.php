@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $visit
  * @property int|null $sale
  * @property \Illuminate\Database\Eloquent\Collection|\Ignite\Evaluation\Entities\Dispensing[] $dispensing
+ * @property int $deposit
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Finance\Entities\PaymentsCard $card
@@ -33,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Ignite\Evaluation\Entities\Visit|null $visits
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPayments whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPayments whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPayments whereDeposit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPayments whereDispensing($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPayments whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPayments wherePatient($value)

@@ -4,11 +4,12 @@ namespace Ignite\Finance\Http\Controllers;
 
 use Ignite\Finance\Entities\PettyCash;
 use Ignite\Finance\Entities\BankAccount;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
 use Ignite\Finance\Entities\RemovedBills;
 use Illuminate\Http\Request;
 
-class APIController extends \Illuminate\Routing\Controller {
+class APIController extends Controller {
 
     protected $request;
 
