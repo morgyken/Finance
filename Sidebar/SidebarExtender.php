@@ -20,15 +20,18 @@ use Maatwebsite\Sidebar\Item;
  *
  * @author Samuel Dervis <samueldervis@gmail.com>
  */
-class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
+class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
+{
 
     protected $auth;
 
-    public function __construct(\Ignite\Core\Contracts\Authentication $auth) {
+    public function __construct(\Ignite\Core\Contracts\Authentication $auth)
+    {
         $this->auth = $auth;
     }
 
-    public function extendWith(\Maatwebsite\Sidebar\Menu $menu) {
+    public function extendWith(\Maatwebsite\Sidebar\Menu $menu)
+    {
         $menu->group('Dashboard', function (Group $group) {
             $group->item('Finance', function (Item $item) {
                 $item->weight(4);
@@ -38,6 +41,10 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                 $item->item('Receive Payment', function (Item $item) {
                     $item->icon('fa fa-euro');
                     $item->route('finance.evaluation.pay');
+                });
+                $item->item('Pharmacy Payment', function (Item $item) {
+                    $item->icon('fa fa-btc');
+                    $item->route('finance.evaluation.pay.pharmacy');
                 });
 
                 $item->item('Patient Accounts', function (Item $item) {
@@ -95,7 +102,6 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender {
                   $item->authorize($this->auth->hasAccess('finance.Payments Overview'));
                   });
                  */
-
 
 
                 /*

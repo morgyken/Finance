@@ -2,6 +2,7 @@
 
 //old web routes
 use Illuminate\Routing\Router;
+
 ///Billing finance.billing.dispatch
 /** @var Router $router */
 $router->match(['get', 'post'], 'billing', ['uses' => 'FinanceController@billing', 'as' => 'billing']);
@@ -31,8 +32,9 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function (Router $router) {
 });
 
 //financials
-$router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Router $router) {
+$router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Router $router) {
     $router->get('pay/{patient?}/{invoice?}/{deposit?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
+    $router->get('pharmacy/{visit?}', ['as' => 'pay.pharmacy', 'uses' => 'EvaluationController@payPharmacy']);
     $router->match(['get', 'post'], 'invoice/{patient?}', ['uses' => 'EvaluationController@patient_invoice', 'as' => 'invoice']);
 
     $router->get('patient/invoices/{id?}', ['uses' => 'EvaluationController@manage_patient_invoices', 'as' => 'patient_invoices']);
@@ -86,7 +88,7 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function(Route
 
     $router->get('company/statements', ['as' => 'company.stmt', 'uses' => 'EvaluationController@companyStatements']);
 });
-
+//$router->get('pharmacy/')
 $router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function (Router $router) {
     $router->get('quickbooks/connect', ['as' => 'connect', 'uses' => 'QuickBooksController@index']);
     $router->get('quickbooks/oauth', ['as' => 'oauth', 'uses' => 'QuickBooksController@qboOauth']);

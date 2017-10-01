@@ -17,16 +17,20 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $amount
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property int|null $recurrent
+ * @property int|null $ward
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereDispensing($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereInvestigation($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereRecurrent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereSale($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereUser($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereVisit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\RemovedBills whereWard($value)
  * @mixin \Eloquent
  */
 class RemovedBills extends Model {
