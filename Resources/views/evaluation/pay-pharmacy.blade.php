@@ -13,6 +13,7 @@ extract($data);
             @if(!$drugs->isEmpty())
                 {!! Form::open(['route'=>'evaluation.pharmacy.dispense']) !!}
                 <table class="table">
+                    <thead>
                     <tr>
                         <th></th>
                         <th>Drug</th>
@@ -21,8 +22,9 @@ extract($data);
                         <th>Discount</th>
                         <th>Quantity</th>
                         <th>Total</th>
-                        <th>Action</th>
                     </tr>
+                    </thead>
+                    <tbody>
                     @foreach($drugs as $item)
                         <?php
                         $price = 0;
@@ -36,7 +38,6 @@ extract($data);
                             <td>
                                 <input type="hidden" name="presc{{$item->id}}" value="{{$item->id}}">
                                 <input type="hidden" name="drug{{$item->id}}" value="{{$item->drugs->id}}">
-                            <!-- <input type="checkbox" id="check{{$item->id}}" onclick="bill(<?php echo $item->id; ?>)" name="item{{$item->id}}"> -->
                                 @if($item->status===1)
                                     <input type="checkbox" id="check{{$item->id}}" name="item{{$item->id}}" disabled="">
                                 @else
@@ -82,20 +83,18 @@ extract($data);
                             </td>
                             <td>
                                 <input name="qty{{$item->id}}" id="quantity{{$item->id}}"
-                                       onkeyup="getTotal(<?php echo $item->id; ?>)" class="qty{{$item->id}}" value="0"
+                                       onkeyup="getTotal(<?php echo $item->id; ?>)" class="qty{{$item->id}}"
+                                       value="{{$item->payment->quantity}}"
                                        size="4"
                                        type="text" autocomplete="off"></td>
                             <td>
                                 <input class="txt" size="10" readonly="" id="total{{$item->id}}" type="text"
                                        name="txt"/>
                             </td>
-                            <td>
-                                <a href="{{route('evaluation.print.prescription', $visit->id)}}" target="_blank"
-                                   class="btn btn-primary btn-xs">Print</a>
-                            <!--<a href="#" onclick="cancelPrescription(<?php echo $item->id; ?>)" class="btn btn-danger btn-xs">Cancel</a> -->
-                            </td>
                         </tr>
                     @endforeach
+                    </tbody>
+                    <tfoot>
                     <tr id="summation">
                         <td colspan="6" align="right">
                             Sum :
@@ -112,43 +111,59 @@ extract($data);
                             </button>
                         </td>
                     </tr>
+                    </tfoot>
                 </table>
 
                 <script>
                     $(document).ready(function () {
                         //this calculates values automatically
-                        calculateSum();
+//                        calculateSum();
                         $(".txt").on("keydown keyup", function () {
-                            calculateSum();
+                            doMaths();
                         });
+                        doMaths();
                     });
 
-                    function calculateSum() {
+                    function doMaths() {
                         var sum = 0;
-                        //iterate through each textboxes and add the values
-                        $(".txt").each(function () {
-                            //add only if the value is number
-                            if (!isNaN(this.value) && this.value.length != 0) {
-                                sum += parseFloat(this.value);
-                                $(this).css("background-color", "#FEFFB0");
-                            } else if (this.value.length != 0) {
-                                $(this).val(0);//css("background-color", "red");
-                            }
+                        $('tbody').find('tr').each(function () {
+                            var price = parseFloat($(this).find("[id^='prc']").val());
+                            var quantity = parseFloat($(this).find("[id^='quantity']").val());
+                            var discount = parseFloat($(this).find("[id^='discount']").val());
+                            var total = (price * quantity) - ((discount / 100) * (price * quantity));
+                            $(this).find("[id^='total']").val(total);
+                            sum += parseFloat(total);
                         });
-
                         $("input#sum1").val(sum.toFixed(2));
                     }
 
-                    function getTotal(i) {
-                        var price = parseFloat($("#prc" + i).val());
-                        var quantity = parseFloat($("#quantity" + i).val());
-                        var discount = parseFloat($("#discount" + i).val());
-                        var total = (price * quantity) - ((discount / 100) * (price * quantity));
-                        $("#total" + i).val(total)
-                        //alert(total);
-                        calculateSum();
-                    }
+                    /*
+                                        function calculateSum() {
+                                            var sum = 0;
+                                            //iterate through each textboxes and add the values
+                                            $(".txt").each(function () {
+                                                //add only if the value is number
+                                                if (!isNaN(this.value) && this.value.length != 0) {
+                                                    sum += parseFloat(this.value);
+                                                    $(this).css("background-color", "#FEFFB0");
+                                                } else if (this.value.length != 0) {
+                                                    $(this).val(0);//css("background-color", "red");
+                                                }
+                                            });
 
+                                            $("input#sum1").val(sum.toFixed(2));
+                                        }
+
+                                        function getTotal(i) {
+                                            var price = parseFloat($("#prc" + i).val());
+                                            var quantity = parseFloat($("#quantity" + i).val());
+                                            var discount = parseFloat($("#discount" + i).val());
+                                            var total = (price * quantity) - ((discount / 100) * (price * quantity));
+                                            $("#total" + i).val(total);
+                                            //alert(total);
+                                            calculateSum();
+                                        }
+                    */
                     var prescURL = "{{route('evaluation.pharmacy.prescription.cancel')}}";
                 </script>
                 {!! Form::close()!!}
