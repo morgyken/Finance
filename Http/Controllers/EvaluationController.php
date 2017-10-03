@@ -144,6 +144,9 @@ class EvaluationController extends AdminBaseController
             $prescription = Prescriptions::find($index);
             $prescription->payment()->update($update);
         }
+        if ($request->has('to_redirect')) {
+            return redirect()->route('finance.evaluation.insurance');
+        }
         return redirect()->route('finance.evaluation.pay', $request->patient);
     }
 

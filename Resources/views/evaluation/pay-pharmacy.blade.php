@@ -13,6 +13,9 @@ extract($data);
                 <div id="feedback-box"><p>NOTE: Ensure the corresponding check-boxes are checked to proceed</p></div>
                 @if(!$drugs->isEmpty())
                     {!! Form::open(['route'=>'finance.evaluation.pharmacy.dispense','id'=>'presForm']) !!}
+                    @if(request('insurance'))
+                        {{Form::hidden('to_redirect',true)}}
+                    @endif
                     {{Form::hidden('patient',$patient->id)}}
                     <table class="table table-condensed" width="100%">
                         <thead>

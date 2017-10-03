@@ -12,6 +12,7 @@ $router->get('bill/{id}/payment', ['uses' => 'GlController@payBill', 'as' => 'bi
 $router->post('bill/payment', ['uses' => 'GlController@savePaybill', 'as' => 'bill.pay.save']);
 $router->get('bill/print/{id}', ['uses' => 'GlController@print_bill', 'as' => 'bill.print']);
 // general ledger
+// general ledger
 $router->group(['prefix' => 'gl', 'as' => 'gl.'], function (Router $router) {
     $router->match(['get', 'post'], 'account_groups/{id?}', ['uses' => 'GlController@account_groups', 'as' => 'account_groups']);
     $router->match(['get', 'post'], 'account_types/{id?}', ['uses' => 'GlController@account_types', 'as' => 'account_types']);

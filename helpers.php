@@ -318,10 +318,13 @@ if (!function_exists('get_clinic')) {
 if (!function_exists('patient_has_pharmacy_bill')) {
     function patient_has_pharmacy_bill(Patients $patient)
     {
-        $list = Patients::whereHas('visits.prescriptions.payment', function (Builder $query) {
-            $query->whereComplete(false);
-        })->orWhereHas('visits.prescriptions', function (Builder $builder) {
-            $builder->whereDoesntHave('payment');
+        $list = Patients::where(function (Builder $query) {
+            $query->whereHas('visits.prescriptions.payment', function (Builder $query) {
+                $query->whereComplete(false);
+            });
+            $query->orWhereHas('visits.prescriptions', function (Builder $builder) {
+                $builder->whereDoesntHave('payment');
+            });
         })->get()->pluck('id')->toArray();
         return in_array($patient->id, $list);
     }
