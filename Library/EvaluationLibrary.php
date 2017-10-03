@@ -13,6 +13,7 @@
 namespace Ignite\Finance\Library;
 
 use Ignite\Evaluation\Entities\Investigations;
+use Ignite\Evaluation\Entities\Prescriptions;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
 use Ignite\Finance\Entities\PatientAccount;
@@ -41,7 +42,8 @@ use Ignite\Finance\Entities\PatientInvoiceDetails;
  *
  * @author samuel
  */
-class EvaluationLibrary implements EvaluationRepository {
+class EvaluationLibrary implements EvaluationRepository
+{
 
     /**
      * @var Request
@@ -62,7 +64,8 @@ class EvaluationLibrary implements EvaluationRepository {
      * EvaluationFinanceFunctions constructor.
      * @param Request $request
      */
-    public function __construct(Request $request) {
+    public function __construct(Request $request)
+    {
         $this->request = $request;
         $this->input = $this->request->all();
         if (Auth::check()) {
@@ -72,11 +75,41 @@ class EvaluationLibrary implements EvaluationRepository {
     }
 
     /**
+     * Build an index of items dynamically
+     * @return array
+     */
+    private function _get_selected_stack()
+    {
+        $stack = [];
+        $input = \request()->all();
+        foreach ($input as $key => $one) {
+            if (starts_with($key, 'item')) {
+                $stack[] = substr($key, 4);
+            }
+        }
+        return $stack;
+    }
+
+    private function updatePrescriptions($item)
+    {
+        if ($this->request->has('type' . $item)) {
+            $p = Prescriptions::find(\request('item' . $item));
+            $p->payment()->update(['paid' => true]);
+        }
+        return true;
+    }
+
+    /**
      * Record payment
      * @return bool
      */
-    public function record_payment() {
+    public function record_payment()
+    {
         DB::transaction(function () {
+            $stock = $this->_get_selected_stack();
+            foreach ($stock as $item) {
+                $this->updatePrescriptions($item);
+            }
             if (isset($this->request->batch)) {
                 foreach ($this->request->batch as $bitch) {
                     $sale = InventoryBatchProductSales::find($bitch);
@@ -114,15 +147,15 @@ class EvaluationLibrary implements EvaluationRepository {
             $payment->user = $this->user;
             $payment->save();
             $payment->amount = $this->payment_methods($payment);
-            if(isset($this->request->deposit)){
+            if (isset($this->request->deposit)) {
                 $payment->deposit = true;
             }
             $payment->save();
             $this->payment_details($this->request, $payment);
             $this->pay_id = $payment->id;
 
-            if(isset($this->request->deposit)){
-                $this->patient_transaction($payment,'deposit');
+            if (isset($this->request->deposit)) {
+                $this->patient_transaction($payment, 'deposit');
             }
         });
         return $this->pay_id;
@@ -132,7 +165,8 @@ class EvaluationLibrary implements EvaluationRepository {
      * Deposit Funds
      * return bool
      */
-    public function patient_transaction($payment=null,$type) {
+    public function patient_transaction($payment = null, $type)
+    {
         $patient = $this->request->patient;
         $tr = new PatientTransaction();
         $tr->type = $type;
@@ -148,18 +182,20 @@ class EvaluationLibrary implements EvaluationRepository {
      * Update Patient account balance
      * return bool
      */
-    public function update_patient_balance($transaction) {
+    public function update_patient_balance($transaction)
+    {
         $account = PatientAccount::findOrNew($transaction->patient_id);
-        if($transaction->type == 'deposit'){
-            $account->balance = $account->balance+=$transaction->amount;
-        }else{
-            $account->balance = $account->balance-=$transaction->amount;
+        if ($transaction->type == 'deposit') {
+            $account->balance = $account->balance += $transaction->amount;
+        } else {
+            $account->balance = $account->balance -= $transaction->amount;
         }
         $account->patient = $transaction->patient_id;
         return $account->save();
     }
 
-    public function create_patient_invoice() {
+    public function create_patient_invoice()
+    {
         DB::transaction(function () {
             $inv = new PatientInvoice;
             $inv->patient_id = $this->request->patient;
@@ -197,9 +233,9 @@ class EvaluationLibrary implements EvaluationRepository {
                 try {
                     //Now flag them as invoiced
                     $dispensing = DispensingDetails::whereBatch($this->request->$dispensing)
-                            ->whereProduct($this->request->$id)
-                            ->get()
-                            ->first();
+                        ->whereProduct($this->request->$id)
+                        ->get()
+                        ->first();
                     $dispensing->invoiced = true;
                     $dispensing->save();
                 } catch (\Exception $e) {
@@ -212,7 +248,8 @@ class EvaluationLibrary implements EvaluationRepository {
         return $this->invoice_id;
     }
 
-    private function payment_details(Request $request, $payment) {
+    private function payment_details(Request $request, $payment)
+    {
         $items = $this->__get_selected_stack();
         foreach ($items as $item) {
             $invoice = 'invoice' . $item;
@@ -224,7 +261,8 @@ class EvaluationLibrary implements EvaluationRepository {
         }
     }
 
-    private function investigation_payment_details(Request $request, $item, $payment) {
+    private function investigation_payment_details(Request $request, $item, $payment)
+    {
         $visit = 'visits' . $item;
         $investigation = Investigations::find($item);
         if (isset($investigation)) {
@@ -238,7 +276,8 @@ class EvaluationLibrary implements EvaluationRepository {
         }
     }
 
-    private function invoice_payment_details($item, $payment) {
+    private function invoice_payment_details($item, $payment)
+    {
         $invoice = PatientInvoice::find($item);
         if (isset($invoice)) {
             $balance = get_payment_balance($payment, $invoice->id);
@@ -258,7 +297,8 @@ class EvaluationLibrary implements EvaluationRepository {
      * Record Insurance Payment
      * return bool
      */
-    public function record_insurance_payment() {
+    public function record_insurance_payment()
+    {
         $batch = new FinanceEvaluationInsurancePayments;
         $batch->company = $this->request->company;
         $batch->user = \Auth::user()->id;
@@ -285,7 +325,8 @@ class EvaluationLibrary implements EvaluationRepository {
      * @param type invoice_id, amount
      * @return bool
      */
-    public function updateInvoiceStatus($invoice, $amount) {
+    public function updateInvoiceStatus($invoice, $amount)
+    {
         $paid = $this->getPriorInvoicePaidAmount($invoice);
         $settled = $amount + $paid;
         $inv = InsuranceInvoice::find($invoice);
@@ -300,12 +341,13 @@ class EvaluationLibrary implements EvaluationRepository {
         $inv->save();
     }
 
-    public function getPriorInvoicePaidAmount($invoice) {
+    public function getPriorInvoicePaidAmount($invoice)
+    {
         $payment = InsuranceInvoicePayment::where('insurance_invoice', '=', $invoice)->get(); //find(['insurance_invoice' => $invoice]);
         if (!$payment->isEmpty()) {
             $paid = 0;
             foreach ($payment as $p) {
-                $paid+=$p->amount;
+                $paid += $p->amount;
             }
             return $paid;
         } else {
@@ -313,17 +355,18 @@ class EvaluationLibrary implements EvaluationRepository {
         }
     }
 
-    private function payment_methods(EvaluationPayments $payment) {
+    private function payment_methods(EvaluationPayments $payment)
+    {
         $paid_amount = 0;
         if ($this->request->has('CashAmount')) {
-            $paid_amount+=$this->input['CashAmount'];
+            $paid_amount += $this->input['CashAmount'];
             PaymentsCash::create([
                 'amount' => $this->input['CashAmount'],
                 'payment' => $payment->id
             ]);
         }
         if ($this->request->has('MpesaAmount')) {
-            $paid_amount+=$this->input['MpesaAmount'];
+            $paid_amount += $this->input['MpesaAmount'];
             $code = null;
             if (isset($this->input['MpesaCode'])) {
                 $code = $this->input['MpesaCode'];
@@ -335,7 +378,7 @@ class EvaluationLibrary implements EvaluationRepository {
             ]);
         }
         if ($this->request->has('CardAmount')) {
-            $paid_amount+=$this->input['CardAmount'];
+            $paid_amount += $this->input['CardAmount'];
 
             $type = null;
             $name = null;
@@ -363,7 +406,7 @@ class EvaluationLibrary implements EvaluationRepository {
             ]);
         }
         if ($this->request->has('ChequeAmount')) {
-            $paid_amount+=$this->input['ChequeAmount'];
+            $paid_amount += $this->input['ChequeAmount'];
 
             $ChequeName = null;
             $ChequeDate = null;
@@ -406,7 +449,8 @@ class EvaluationLibrary implements EvaluationRepository {
      *
      */
 
-    public function saveCheque($payment) {
+    public function saveCheque($payment)
+    {
         $cheque = new PaymentsCheque;
         $cheque->name = $this->input['ChequeName'] ? strtoupper($this->input['ChequeName']) : '';
         $cheque->date = $this->input['ChequeDate'] ? new \Date($this->input['ChequeDate']) : '';
@@ -418,7 +462,8 @@ class EvaluationLibrary implements EvaluationRepository {
         $cheque->save();
     }
 
-    public static function update_visit_payment_status($id, $amount) {
+    public static function update_visit_payment_status($id, $amount)
+    {
         $visit = Visit::find($id);
 
         $bill = $visit->unpaid_amount;
@@ -427,7 +472,7 @@ class EvaluationLibrary implements EvaluationRepository {
         $pre_paid = 0;
 
         foreach ($payment as $item) {
-            $pre_paid+=$item->amount;
+            $pre_paid += $item->amount;
         }
         $total_paid = $pre_paid + $amount;
         if ($bill <= $total_paid) {
@@ -438,7 +483,8 @@ class EvaluationLibrary implements EvaluationRepository {
         return $visit->update();
     }
 
-    private function prepareInput(&$input) {
+    private function prepareInput(&$input)
+    {
         unset($input['_token']);
         foreach ($input as $key => $value) {
             if (empty($value)) {
@@ -455,7 +501,8 @@ class EvaluationLibrary implements EvaluationRepository {
      * Build an index of items dynamically
      * @return array
      */
-    private function __get_selected_stack() {
+    private function __get_selected_stack()
+    {
         $stack = [];
         foreach ($this->input as $key => $one) {
             if (starts_with($key, 'item')) {
@@ -465,7 +512,8 @@ class EvaluationLibrary implements EvaluationRepository {
         return $stack;
     }
 
-    public function bill_visit(Request $request) {
+    public function bill_visit(Request $request)
+    {
         $this->updateVisitStatus($request->id, 'billed');
         $visit = Visit::find($request->id);
         $visit->status = 'billed';
@@ -474,7 +522,8 @@ class EvaluationLibrary implements EvaluationRepository {
         return 'billed';
     }
 
-    public function bill_visit_many(Request $request) {
+    public function bill_visit_many(Request $request)
+    {
         foreach ($request->visit as $i => $visit) {
             $this->updateVisitStatus($request->visit[$i], 'billed');
             $visit = Visit::find($request->visit[$i]);
@@ -483,30 +532,35 @@ class EvaluationLibrary implements EvaluationRepository {
         return TRUE;
     }
 
-    public function cancel_visit_bill(Request $request) {
+    public function cancel_visit_bill(Request $request)
+    {
         $inv = InsuranceInvoice::find($request->id);
         $inv->status = 5;
         return $inv->update();
     }
 
-    public function undoBillCancel(Request $request) {
+    public function undoBillCancel(Request $request)
+    {
         $inv = InsuranceInvoice::find($request->id);
         $inv->status = 0;
         return $inv->update();
     }
 
-    public static function dispatchBills(Request $request) {
+    public static function dispatchBills(Request $request)
+    {
         FinanceLibrary::dispatchBills($request);
         return TRUE;
     }
 
-    public function updateVisitStatus($visit_id, $new_status) {
+    public function updateVisitStatus($visit_id, $new_status)
+    {
         $visit = Visit::find($visit_id);
         $visit->status = $new_status;
         return $visit->save();
     }
 
-    public function createInsuranceInvoice($visit, $amount) {
+    public function createInsuranceInvoice($visit, $amount)
+    {
         $inv = new InsuranceInvoice;
         $inv->invoice_no = 'INV-' . $visit . '-' . date('dmyHis');
         $inv->visit = $visit;

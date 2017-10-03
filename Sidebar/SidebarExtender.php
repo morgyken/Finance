@@ -12,8 +12,10 @@
 
 namespace Ignite\Finance\Sidebar;
 
+use Ignite\Core\Contracts\Authentication;
 use Maatwebsite\Sidebar\Group;
 use Maatwebsite\Sidebar\Item;
+use Maatwebsite\Sidebar\Menu;
 
 /**
  * Description of SidebarExtender
@@ -25,12 +27,12 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
 
     protected $auth;
 
-    public function __construct(\Ignite\Core\Contracts\Authentication $auth)
+    public function __construct(Authentication $auth)
     {
         $this->auth = $auth;
     }
 
-    public function extendWith(\Maatwebsite\Sidebar\Menu $menu)
+    public function extendWith(Menu $menu)
     {
         $menu->group('Dashboard', function (Group $group) {
             $group->item('Finance', function (Item $item) {
@@ -42,10 +44,10 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
                     $item->icon('fa fa-euro');
                     $item->route('finance.evaluation.pay');
                 });
-                $item->item('Pharmacy Payment', function (Item $item) {
-                    $item->icon('fa fa-btc');
-                    $item->route('finance.evaluation.pay.pharmacy');
-                });
+//                $item->item('Pharmacy Payment', function (Item $item) {
+//                    $item->icon('fa fa-btc');
+//                    $item->route('finance.evaluation.pay.pharmacy');
+//                });
 
                 $item->item('Patient Accounts', function (Item $item) {
                     $item->icon('fa fa-list');

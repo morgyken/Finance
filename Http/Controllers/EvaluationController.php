@@ -133,28 +133,69 @@ class EvaluationController extends AdminBaseController
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 
-    public function payPharmacy($patient = null)
+    public function pharmacy_dispense(Request $request)
     {
-        if ($patient) {
-            $this->data['patient'] = Patients::find($patient);
-            $this->data['drugs'] = Prescriptions::whereHas('visits', function (Builder $query) use ($patient) {
-                $query->wherePatient($patient);
-            })->get();
-            return view('finance::evaluation.pay-pharmacy', ['data' => $this->data]);
+        $stack = $this->_get_selected_stack();
+        foreach ($stack as $index) {
+            $update = [
+                'complete' => true,
+                'quantity' => \request('qty' . $index)
+            ];
+            $prescription = Prescriptions::find($index);
+            $prescription->payment()->update($update);
         }
-        $this->data['patients'] = Patients::whereHas('visits.prescriptions.payment', function (Builder $query) {
-            $query->wherePaid(false);
-        })->orWhereHas('visits.prescriptions', function (Builder $builder) {
-            $builder->whereDoesntHave('payment');
-        })->get();
+        return redirect()->route('finance.evaluation.pay', $request->patient);
+    }
 
-        return view('finance::evaluation.pharmacy_list', ['data' => $this->data]);
+    /**
+     * Build an index of items dynamically
+     * @return array
+     */
+    private function _get_selected_stack()
+    {
+        $stack = [];
+        $input = \request()->all();
+        foreach ($input as $key => $one) {
+            if (starts_with($key, 'item')) {
+                $stack[] = substr($key, 4);
+            }
+        }
+        return $stack;
+    }
+
+
+    public function payPharmacy($patient)
+    {
+        $this->data['patient'] = Patients::find($patient);
+        $this->data['drugs'] = Prescriptions::whereHas('visits', function (Builder $query) use ($patient) {
+            $query->wherePatient($patient);
+        })->get();
+        return view('finance::evaluation.pay-pharmacy', ['data' => $this->data]);
     }
 
     private function billable_patients()
     {
-        $this->data['patients'] = get_patients_with_bills();
-
+        $this->data['patients'] = Patients::whereHas('visits', function ($query) {
+            $query->wherePaymentMode('cash');
+            $query->whereHas('investigations', function ($q3) {
+                $q3->doesntHave('payments');
+                $q3->doesntHave('removed_bills');
+            });
+            $query->orWhereHas('dispensing', function ($q) {
+                $q->doesntHave('removed_bills');
+                $q->whereHas('details', function ($qd) {
+                    $qd->whereStatus(0);
+                });
+            });
+            $query->orWhere(function (Builder $query) {
+                $query->whereHas('prescriptions.payment', function (Builder $query) {
+                    $query->wherePaid(false);
+                })->orWhereHas('prescriptions', function (Builder $builder) {
+                    $builder->whereDoesntHave('payment');
+                });
+            });
+        })->orderBy('created_at', 'desc')
+            ->get();
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
             ->doesntHave('removed_bills')
             ->whereNull('insurance')

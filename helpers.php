@@ -13,6 +13,9 @@
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\FinanceAccountGroup;
 use Ignite\Finance\Entities\FinanceAccountType;
+use Ignite\Reception\Entities\Patients;
+use Illuminate\Database\Eloquent\Builder;
+
 /**
  * Format phone number
  * @param string $number
@@ -41,6 +44,7 @@ function formatPhoneNumber($number, $strip_plus = false)
     }
     return $number;
 }
+
 if (!function_exists('get_account_types')) {
 
     /**
@@ -93,7 +97,8 @@ if (!function_exists('payment_modes')) {
 
 if (!function_exists('get_patient_invoice_payment_status')) {
 
-    function get_patient_invoice_payment_status($invoice, $current_amount) {
+    function get_patient_invoice_payment_status($invoice, $current_amount)
+    {
         $amount_paid = get_patient_invoice_paid_amount($invoice->id);
         $whole_amount = $amount_paid + $current_amount;
         if ($current_amount < 0 && $amount_paid < 0) {
@@ -109,13 +114,14 @@ if (!function_exists('get_patient_invoice_payment_status')) {
 }
 
 if (!function_exists('get_payment_balance')) {
-    function get_payment_balance($payment, $invoice = null) {
+    function get_payment_balance($payment, $invoice = null)
+    {
         $balance = $payment->amount;
         $consumed = 0;
         foreach ($payment->details as $item) {
             if ($item->patient_invoice !== $invoice) {
-                $consumed+=$item->patient_invoices->total;
-                $balance-=$consumed;
+                $consumed += $item->patient_invoices->total;
+                $balance -= $consumed;
             }
         }
         return $balance;
@@ -125,24 +131,25 @@ if (!function_exists('get_payment_balance')) {
 
 if (!function_exists('get_patient_invoice_paid_amount')) {
 
-    function get_patient_invoice_paid_amount($id) {
-        return Ignite\Finance\Entities\EvaluationPayments::whereHas('details', function($query)use($id) {
-                            $query->wherePatient_invoice($id);
-                        })
-                        ->sum('amount');
+    function get_patient_invoice_paid_amount($id)
+    {
+        return Ignite\Finance\Entities\EvaluationPayments::whereHas('details', function ($query) use ($id) {
+            $query->wherePatient_invoice($id);
+        })
+            ->sum('amount');
     }
 
 }
 
 
-
 if (!function_exists('total_patient_payments')) {
 
-    function total_patient_payments($patient) {
+    function total_patient_payments($patient)
+    {
         $sum = 0;
         $payments = EvaluationPayments::wherePatient($patient)->get();
-        foreach ($payments as $payment){
-            $sum+=$payment->total;
+        foreach ($payments as $payment) {
+            $sum += $payment->total;
         }
         return $sum;
     }
@@ -152,15 +159,16 @@ if (!function_exists('total_patient_payments')) {
 
 if (!function_exists('overall_patient_service_cost')) {
 
-    function overall_patient_service_cost($patient) {
+    function overall_patient_service_cost($patient)
+    {
         $amount = 0;
 
         $visits = \Ignite\Evaluation\Entities\Visit::wherePatient($patient)
             ->wherePayment_mode('cash')
             ->get();
 
-        foreach ($visits as $visit){
-            $amount+=$visit->total_bill;
+        foreach ($visits as $visit) {
+            $amount += $visit->total_bill;
         }
         return $amount;
     }
@@ -170,13 +178,14 @@ if (!function_exists('overall_patient_service_cost')) {
 
 if (!function_exists('get_patient_unpaid')) {
 
-    function get_patient_unpaid($patient) {
+    function get_patient_unpaid($patient)
+    {
         $amount = 0;
-        $visits = \Ignite\Evaluation\Entities\Visit::wherePatient($patient, function($query){
+        $visits = \Ignite\Evaluation\Entities\Visit::wherePatient($patient, function ($query) {
             $query->wherePayment_mode('cash');
         })->get();
-        foreach ($visits as $visit){
-            $amount+=$visit->unpaid_amount;
+        foreach ($visits as $visit) {
+            $amount += $visit->unpaid_amount;
         }
         return $amount;
     }
@@ -185,10 +194,11 @@ if (!function_exists('get_patient_unpaid')) {
 
 if (!function_exists('get_patient_balance')) {
 
-    function get_patient_balance($patient) {
+    function get_patient_balance($patient)
+    {
         $paid = total_patient_payments($patient);
         $cost = overall_patient_service_cost($patient);
-        $balance = $paid-$cost;
+        $balance = $paid - $cost;
         return $balance;
     }
 
@@ -196,7 +206,8 @@ if (!function_exists('get_patient_balance')) {
 
 
 if (!function_exists('get_patient_invoice_pending_amount')) {
-    function get_patient_invoice_pending_amount($id) {
+    function get_patient_invoice_pending_amount($id)
+    {
         $invoice = \Ignite\Finance\Entities\PatientInvoice::find($id);
         $amount = $invoice->total;
         $paid = get_patient_invoice_paid_amount($id);
@@ -207,14 +218,15 @@ if (!function_exists('get_patient_invoice_pending_amount')) {
 
 if (!function_exists('get_logo')) {
 
-    function get_logo() {
+    function get_logo()
+    {
         $logo = false;
-        $this_clinic =\Session::get('clinic');
+        $this_clinic = \Session::get('clinic');
         $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
         $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
-        if(!empty($clinic->logo)){
+        if (!empty($clinic->logo)) {
             $logo = $clinic->logo;
-        }else{
+        } else {
             $logo = $practice->logo;
         }
         return $logo;
@@ -224,8 +236,9 @@ if (!function_exists('get_logo')) {
 
 if (!function_exists('get_clinic')) {
 
-    function get_clinic() {
-        $this_clinic =\Session::get('clinic');
+    function get_clinic()
+    {
+        $this_clinic = \Session::get('clinic');
         $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
         return $clinic;
     }
@@ -234,70 +247,82 @@ if (!function_exists('get_clinic')) {
 
 if (!function_exists('get_patient_balance')) {
 
-    function get_patient_balance($patient_id) {
+    function get_patient_balance($patient_id)
+    {
         $account = \Ignite\Finance\Entities\PatientAccount::findOrNew($patient_id);
-        if(!empty($account)){
+        if (!empty($account)) {
             return $account->balance;
-        }else{
+        } else {
             return 0;
         }
     }
+}
+if (!function_exists('pesa')) {
+    /**
+     * @param int|null $amount
+     * @param int|null $subscriberNumber
+     * @param int|null $referenceId
+     * @return \Illuminate\Foundation\Application|mixed|pesa
+     */
+    function pesa($amount = null, $subscriberNumber = null, $referenceId = null)
+    {
+        $cashier = app('pesa');
 
-    if (!function_exists('pesa')) {
-        /**
-         * @param int|null $amount
-         * @param int|null $subscriberNumber
-         * @param int|null $referenceId
-         * @return \Illuminate\Foundation\Application|mixed|pesa
-         */
-        function pesa($amount = null, $subscriberNumber = null, $referenceId = null)
-        {
-            $cashier = app('pesa');
-
-            if (func_num_args() == 0) {
-                return $cashier;
-            }
-
-            if (func_num_args() == 1) {
-                return $cashier->request($amount);
-            }
-
-            if (func_num_args() == 2) {
-                return $cashier->request($amount)->from($subscriberNumber);
-            }
-
-            return $cashier->request($amount)->from($subscriberNumber)->usingReferenceId($referenceId);
+        if (func_num_args() == 0) {
+            return $cashier;
         }
+
+        if (func_num_args() == 1) {
+            return $cashier->request($amount);
+        }
+
+        if (func_num_args() == 2) {
+            return $cashier->request($amount)->from($subscriberNumber);
+        }
+
+        return $cashier->request($amount)->from($subscriberNumber)->usingReferenceId($referenceId);
     }
-
-
-    if (!function_exists('get_logo')) {
-        function get_logo() {
-            try{
-                $logo = null;
-                $this_clinic =\Session::get('clinic');
-                $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
-                $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
-                if(!empty($clinic->logo)){
-                    $logo = $clinic->logo;
-                }else{
-                    $logo = $practice->logo;
-                }
-                return $logo;
-            }catch (\Exception $e){
-
-            }
-        }
-
-    }
-
-    if (!function_exists('get_clinic')) {
-
-        function get_clinic() {
-            $this_clinic =\Session::get('clinic');
-            $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
-            return $clinic;
-        }
 }
 
+
+if (!function_exists('get_logo')) {
+    function get_logo()
+    {
+        try {
+            $logo = null;
+            $this_clinic = \Session::get('clinic');
+            $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
+            $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
+            if (!empty($clinic->logo)) {
+                $logo = $clinic->logo;
+            } else {
+                $logo = $practice->logo;
+            }
+            return $logo;
+        } catch (\Exception $e) {
+
+        }
+    }
+
+}
+
+if (!function_exists('get_clinic')) {
+
+    function get_clinic()
+    {
+        $this_clinic = \Session::get('clinic');
+        $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
+        return $clinic;
+    }
+}
+if (!function_exists('patient_has_pharmacy_bill')) {
+    function patient_has_pharmacy_bill(Patients $patient)
+    {
+        $list = Patients::whereHas('visits.prescriptions.payment', function (Builder $query) {
+            $query->whereComplete(false);
+        })->orWhereHas('visits.prescriptions', function (Builder $builder) {
+            $builder->whereDoesntHave('payment');
+        })->get()->pluck('id')->toArray();
+        return in_array($patient->id, $list);
+    }
 }

@@ -11,7 +11,7 @@
         </table>
         <table class="table table-condensed" id="paymentsTable">
             <tbody>
-                @include('finance::evaluation.payment.pharm')
+                @include('finance::evaluation.payment.pharmacy')
             </tbody>
         </table>
         <table class="table table-condensed" id="paymentsTable">

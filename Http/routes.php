@@ -33,6 +33,7 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function (Router $router) {
 
 //financials
 $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Router $router) {
+    $router->post('pharmacy/dispense', ['uses' => 'EvaluationController@pharmacy_dispense', 'as' => 'pharmacy.dispense']);
     $router->get('pay/{patient?}/{invoice?}/{deposit?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
     $router->get('pharmacy/{visit?}', ['as' => 'pay.pharmacy', 'uses' => 'EvaluationController@payPharmacy']);
     $router->match(['get', 'post'], 'invoice/{patient?}', ['uses' => 'EvaluationController@patient_invoice', 'as' => 'invoice']);
