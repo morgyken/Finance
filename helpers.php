@@ -220,7 +220,6 @@ if (!function_exists('get_logo')) {
 
     function get_logo()
     {
-        $logo = false;
         $this_clinic = \Session::get('clinic');
         $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
         $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
@@ -233,6 +232,7 @@ if (!function_exists('get_logo')) {
     }
 
 }
+
 
 if (!function_exists('get_clinic')) {
 
@@ -284,27 +284,6 @@ if (!function_exists('pesa')) {
     }
 }
 
-
-if (!function_exists('get_logo')) {
-    function get_logo()
-    {
-        try {
-            $logo = null;
-            $this_clinic = \Session::get('clinic');
-            $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
-            $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
-            if (!empty($clinic->logo)) {
-                $logo = $clinic->logo;
-            } else {
-                $logo = $practice->logo;
-            }
-            return $logo;
-        } catch (\Exception $e) {
-
-        }
-    }
-
-}
 
 if (!function_exists('get_clinic')) {
 

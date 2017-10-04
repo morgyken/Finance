@@ -1,68 +1,81 @@
 <html>
 <title>INVOICE</title>
 <style>
-    body{
+    body {
         font-weight: bold;
         font-family: Arial, Helvetica, sans-serif;
     }
-    table{
+
+    table {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
     }
 
-    table th{
+    table th {
         border: 1px solid #ddd;
         text-align: left;
         padding: 1px;
         font-size: 90%;
     }
 
-    table tr:nth-child(even){background-color: #f2f2f2}
+    table tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
 
-    table tr:hover {background-color: #ddd;}
+    table tr:hover {
+        background-color: #ddd;
+    }
 
-    table th{
+    table th {
         padding-top: 1px;
         padding-bottom: 1px;
         background-color: /*#4CAF50*/ #BBBBBB;
         color: black;
         font-size: 90%;
     }
-    .left{
+
+    .left {
         width: 60%;
         float: left;
     }
-    .right{
+
+    .right {
         float: left;
         width: 40%;
     }
-    .clear{
+
+    .clear {
         clear: both;
     }
-    img{
-        width:100%;
+
+    img {
+        width: 100%;
         height: auto;
     }
-    td{
+
+    td {
         font-size: 90%;
     }
-    div #footer{
+
+    div #footer {
         font-size: 90%;
     }
-    th{
+
+    th {
         font-size: 90%;
     }
 </style>
-<?php $bill_amount = 0; ?>
+<?php $bill_amount = 0;
+$clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
 <div class="box box-info">
-    <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
-    <?php try{ ?>
-    <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+    <h1 class="box-title">{{$clinic->name}}</h1>
     <?php
-    }catch(\Exception $e){
-    }
+    $logo = get_logo();
     ?>
+    @if($logo)
+        <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+    @endif
     <div class="box-header with-border">
         <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
             P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
@@ -96,23 +109,18 @@
                 <tbody>
                 <?php $n = 0; ?>
                 @foreach($bill->visits->investigations as $item)
-                    <?php
-                    $bill_amount+=$item->amount > 0 ? $item->amount : $item->price;
-                    ?>
                     <tr class="products">
                         <td>{{$n+=1}}</td>
                         <td style="text-align: left;">{{$item->procedures->name}}</td>
                         <td style="text-align:center">{{$item->quantity}}</td>
                         <td style="text-align:center">{{$item->discount}}</td>
-                        <td>{{$item->amount>0?$item->amount:$item->price}}</td>
+                        <td>{{$item->amount}}</td>
                     </tr>
+
                 @endforeach
 
                 @foreach($bill->visits->dispensing as $item)
                     @foreach($item->details as $item)
-                        <?php
-                        $bill_amount+=$item->price;
-                        ?>
                         <tr>
                             <td>{{$n+=1}}</td>
                             <td>{{$item->drug->name}}</td>
@@ -122,9 +130,12 @@
                         </tr>
                     @endforeach
                 @endforeach
+                <?php
+                $total = $bill->visits->investigations->sum('amount');
+                ?>
                 <tr>
-                    <td style="text-align: right;" colspan="4" class="grand total">TOTAL: </td>
-                    <td class="grand total">{{ number_format($bill_amount,2) }}</td>
+                    <td style="text-align: right;" colspan="4" class="grand total">TOTAL:</td>
+                    <td class="grand total">{{ $total }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -136,4 +147,5 @@
         <br/><br/>
         Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
     </div>
+</div>
 </html>

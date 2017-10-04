@@ -503,7 +503,7 @@ class EvaluationController extends AdminBaseController
         $bill = InsuranceInvoice::find($request->id);
         $pdf = \PDF::loadView('finance::evaluation.print.invoice', ['bill' => $bill]);
         $pdf->setPaper('a4', 'potrait');
-        return $pdf->stream('Bill' . $request->id . '.pdf');
+        return @$pdf->stream('Bill' . $request->id . '.pdf');
     }
 
     public function printReceipt(Request $request)
