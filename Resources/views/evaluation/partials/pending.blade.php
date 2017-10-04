@@ -23,7 +23,7 @@
                 <?php $n = 0; ?>
                 @foreach($pending as $visit)
                     <?php try { ?>
-                    @if($visit->unpaid_amount>0)
+                    @if($visit->unpaid_amount>0 )
                         <tr>
                             <td>{{$n+=1}}</td>
                             <td>

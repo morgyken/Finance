@@ -26,7 +26,7 @@ $prescriptions = $visit->prescriptions;
                         <tr>
                             <td>{{$item->drugs->name}}</td>
                             <td>Drug</td>
-                            <td>{{$item->drugs->insurance_p??$item->drugs->selling_p}}</td>
+                            <td>{{$item->payment->total}}</td>
                             <td><a href="#" class="btn btn-danger btn-xs">Cancel</a></td>
                         </tr>
                     @endforeach

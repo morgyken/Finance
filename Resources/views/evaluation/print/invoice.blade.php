@@ -101,13 +101,13 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                 <tr>
                     <th>#</th>
                     <th>Item</th>
-                    <th style="text-align:center">Number Performed</th>
+                    <th style="text-align:center">Units</th>
                     <th style="text-align:center">Discount(%)</th>
                     <th>Cost (Ksh.)</th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php $n = 0; ?>
+                <?php $n = 0;  $TOTAL = 0; ?>
                 @foreach($bill->visits->investigations as $item)
                     <tr class="products">
                         <td>{{$n+=1}}</td>
@@ -116,7 +116,9 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                         <td style="text-align:center">{{$item->discount}}</td>
                         <td>{{$item->amount}}</td>
                     </tr>
-
+                    @php
+                        $TOTAL+=$item->amount;
+                    @endphp
                 @endforeach
                 @foreach($bill->visits->prescriptions as $item)
                     <tr>
@@ -126,13 +128,13 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                         <td style="text-align:center">0.00</td>
                         <td>{{$item->payment->total}}</td>
                     </tr>
+                    @php
+                        $TOTAL+=$item->payment->total;
+                    @endphp
                 @endforeach
-                <?php
-                $total = $bill->visits->investigations->sum('amount');
-                ?>
                 <tr>
                     <td style="text-align: right;" colspan="4" class="grand total">TOTAL:</td>
-                    <td class="grand total">{{ $total }}</td>
+                    <td class="grand total">{{ $TOTAL }}</td>
                 </tr>
                 </tbody>
             </table>
