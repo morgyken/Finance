@@ -118,17 +118,14 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                     </tr>
 
                 @endforeach
-
-                @foreach($bill->visits->dispensing as $item)
-                    @foreach($item->details as $item)
-                        <tr>
-                            <td>{{$n+=1}}</td>
-                            <td>{{$item->drug->name}}</td>
-                            <td style="text-align:center">{{$item->quantity}}</td>
-                            <td style="text-align:center">{{$item->discount}}</td>
-                            <td>{{$item->price}}</td>
-                        </tr>
-                    @endforeach
+                @foreach($bill->visits->prescriptions as $item)
+                    <tr>
+                        <td>{{$n+=1}}</td>
+                        <td>{{$item->drugs->name}}</td>
+                        <td style="text-align:center">{{$item->payment->quantity}}</td>
+                        <td style="text-align:center">0.00</td>
+                        <td>{{$item->payment->total}}</td>
+                    </tr>
                 @endforeach
                 <?php
                 $total = $bill->visits->investigations->sum('amount');

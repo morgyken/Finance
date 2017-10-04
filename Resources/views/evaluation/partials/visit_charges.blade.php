@@ -1,8 +1,7 @@
-<div class="">
-    <?php
-    $investigations = $visit->investigations;
-    ?>
-</div>
+<?php
+$investigations = $visit->investigations;
+$prescriptions = $visit->prescriptions;
+?>
 
 <div class="modal modal-default fade" id="info{{$visit->id}}">
     <div class="modal-dialog">
@@ -18,8 +17,16 @@
                     @foreach($investigations as $item)
                         <tr>
                             <td>{{$item->procedures->name}}</td>
-                            <td>{{$item->type}}</td>
+                            <td>{{ucfirst($item->type)}}</td>
                             <td>{{$item->procedures->insurance_charge??$item->procedures->price}}</td>
+                            <td><a href="#" class="btn btn-danger btn-xs">Cancel</a></td>
+                        </tr>
+                    @endforeach
+                    @foreach($prescriptions as $item)
+                        <tr>
+                            <td>{{$item->drugs->name}}</td>
+                            <td>Drug</td>
+                            <td>{{$item->drugs->insurance_p??$item->drugs->selling_p}}</td>
                             <td><a href="#" class="btn btn-danger btn-xs">Cancel</a></td>
                         </tr>
                     @endforeach

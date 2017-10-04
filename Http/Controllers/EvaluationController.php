@@ -137,7 +137,7 @@ class EvaluationController extends AdminBaseController
         foreach ($stack as $index) {
             $update = [
                 'complete' => true,
-                'quantity' => \request('qty' . $index)
+                'quantity' => \request('qty' . $index),
             ];
             $prescription = Prescriptions::find($index);
             $prescription->payment()->update($update);
@@ -178,23 +178,26 @@ class EvaluationController extends AdminBaseController
     {
         $this->data['patients'] = Patients::whereHas('visits', function ($query) {
             $query->wherePaymentMode('cash');
-            $query->whereHas('investigations', function ($q3) {
-                $q3->doesntHave('payments');
-                $q3->doesntHave('removed_bills');
-            });
-            $query->orWhereHas('dispensing', function ($q) {
-                $q->doesntHave('removed_bills');
-                $q->whereHas('details', function ($qd) {
-                    $qd->whereStatus(0);
+            $query->where(function (Builder $query) {
+                $query->whereHas('investigations', function ($q3) {
+                    $q3->doesntHave('payments');
+                    $q3->doesntHave('removed_bills');
+                });
+                $query->orWhereHas('dispensing', function ($q) {
+                    $q->doesntHave('removed_bills');
+                    $q->whereHas('details', function ($qd) {
+                        $qd->whereStatus(0);
+                    });
+                });
+                $query->orWhere(function (Builder $query) {
+                    $query->whereHas('prescriptions.payment', function (Builder $query) {
+                        $query->wherePaid(false);
+                    })->orWhereHas('prescriptions', function (Builder $builder) {
+                        $builder->whereDoesntHave('payment');
+                    });
                 });
             });
-            $query->orWhere(function (Builder $query) {
-                $query->whereHas('prescriptions.payment', function (Builder $query) {
-                    $query->wherePaid(false);
-                })->orWhereHas('prescriptions', function (Builder $builder) {
-                    $builder->whereDoesntHave('payment');
-                });
-            });
+
         })->orderBy('created_at', 'desc')
             ->get();
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)

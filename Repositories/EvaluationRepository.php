@@ -12,16 +12,21 @@
 
 namespace Ignite\Finance\Repositories;
 
+use Illuminate\Http\Request;
+
 /**
  * Description of FinanceRepository
  *
  * @author samuel
  */
-interface EvaluationRepository {
+interface EvaluationRepository
+{
 
     /**
      * Record payment
      * @return bool
      */
     public function record_payment();
+
+    public function bill_visit_many(Request $request);
 }
