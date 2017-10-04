@@ -44,6 +44,7 @@
                                         data-target="#info{{$visit->id}}">
                                     View
                                 </button>
+                                @include('finance::evaluation.partials.visit_charges')
                             </td>
                             <td>
                                 @if(patient_has_pharmacy_bill($visit->patients))
