@@ -88,7 +88,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
 
                 $item->item('Insurance Workbench', function (Item $item) {
                     $item->icon('fa fa-coffee');
-                    $item->route('finance.evaluation.insurance');
+                    $item->route('finance.evaluation.pending');
                 });
 
                 $item->item('Cash Bills', function (Item $item) {

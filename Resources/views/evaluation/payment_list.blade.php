@@ -67,7 +67,7 @@ function amount_after_discount($discount, $amount)
                                     <td>{{$patient->mobile}}</td>
                                     <td>
                                         @if(patient_has_pharmacy_bill($patient))
-                                            <a class="btn btn-default btn-xs"
+                                            <a class="btn btn-warning btn-xs"
                                                href="{{route('finance.evaluation.pay.pharmacy',$patient->id)}}">
                                                 <i class="fa fa-bolt"></i> Process Meds</a>
                                         @endif

@@ -56,11 +56,11 @@ $mode = '';
                     </li>
                 </ul>
                 <input type="hidden" id="mode" value="{{$mode}}">
-                @if($mode=='payment')
-                @include('finance::evaluation.partials.payment_search')
-                @else
-                @include('finance::evaluation.partials.search')
-                @endif
+                {{--@if($mode=='payment')--}}
+                {{--@include('finance::evaluation.partials.payment_search')--}}
+                {{--@else--}}
+                {{--@include('finance::evaluation.partials.search')--}}
+                {{--@endif--}}
                 <div class="tab-content">
                     @yield('tab')
                 </div>
@@ -131,7 +131,7 @@ $mode = '';
         $("#date2").datepicker({
             dateFormat: 'yy-mm-dd'
         });
-
+        $('.records').dataTable();
     });
 
 

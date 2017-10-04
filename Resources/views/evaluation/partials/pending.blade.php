@@ -4,7 +4,7 @@
     @if(!$pending->isEmpty())
         <form method="post" action="{{route('finance.evaluation.bill.many')}}" class="form-horizontal">
             {!! Form::token() !!}
-            <table class="table table-stripped pending_table">
+            <table class="table table-stripped pending_table records">
                 <thead>
                 <tr>
                     <th>#</th>
@@ -15,6 +15,7 @@
                     <th>Company</th>
                     <th>Scheme</th>
                     <th>Amount</th>
+                    <th>View</th>
                     <th>Action</th>
                 </tr>
                 </thead>
@@ -38,6 +39,12 @@
                             <td>{{$visit->patient_scheme?$visit->patient_scheme->schemes->companies->name:''}}</td>
                             <td>{{$visit->patient_scheme?$visit->patient_scheme->schemes->name:''}}</td>
                             <td>{{$visit->unpaid_amount}}</td>
+                            <td>
+                                <button type="button" class="btn btn-default btn-xs" data-toggle="modal"
+                                        data-target="#info{{$visit->id}}">
+                                    View
+                                </button>
+                            </td>
                             <td>
                                 @if(patient_has_pharmacy_bill($visit->patients))
                                     <a class="btn btn-success btn-xs"
