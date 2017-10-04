@@ -92,9 +92,8 @@ class EvaluationLibrary implements EvaluationRepository
 
     private function updatePrescriptions($item)
     {
-        if ($this->request->has('type' . $item)) {
-            $p = Prescriptions::find(\request('item' . $item));
-            $p->payment()->update(['paid' => true]);
+        if ($this->isDrugPayment($item)) {
+
         }
         return true;
     }
@@ -107,6 +106,7 @@ class EvaluationLibrary implements EvaluationRepository
     {
         DB::transaction(function () {
             $stock = $this->_get_selected_stack();
+
             foreach ($stock as $item) {
                 $this->updatePrescriptions($item);
             }
@@ -141,8 +141,8 @@ class EvaluationLibrary implements EvaluationRepository
                 $payment->sale = $this->request->sale;
             }
             if (isset($this->request->dispense)) {
-                $dispense = \GuzzleHttp\json_encode($this->request->dispense);
-                $payment->dispensing = \GuzzleHttp\json_encode(array_unique(json_decode($dispense, true)));
+                $dispense = json_encode($this->request->dispense);
+                $payment->dispensing = json_encode(array_unique(json_decode($dispense, true)));
             }
             $payment->user = $this->user;
             $payment->save();
@@ -256,9 +256,21 @@ class EvaluationLibrary implements EvaluationRepository
             if (isset($request->$invoice)) {
                 $this->invoice_payment_details($item, $payment);
             } else {
-                $this->investigation_payment_details($request, $item, $payment);
+                if ($this->isDrugPayment($item)) {
+                    $this->drug_payment_details($request, $item, $payment);
+                } else {
+                    $this->investigation_payment_details($request, $item, $payment);
+                }
             }
         }
+    }
+
+    private function isDrugPayment($item)
+    {
+        if ($this->request->has('type' . $item)) {
+            return (\request('type' . $item) == 'pharmacy');
+        }
+        return false;
     }
 
     private function investigation_payment_details(Request $request, $item, $payment)
@@ -274,6 +286,20 @@ class EvaluationLibrary implements EvaluationRepository
             $detail->cost = $investigation->procedures->price;
             $detail->save();
         }
+    }
+
+    private function drug_payment_details(Request $request, $item, $payment)
+    {
+        $p = Prescriptions::find(\request('item' . $item));
+        $p->payment()->update(['paid' => true]);
+        $visit = 'visits' . $item;
+        $detail = new EvaluationPaymentsDetails;
+        $detail->price = $p->payment->total;
+        $detail->prescription_id = $p->id;
+        $detail->visit = $request->$visit;
+        $detail->payment = $payment->id;
+        $detail->cost = $p->payment->total;
+        $detail->save();
     }
 
     private function invoice_payment_details($item, $payment)

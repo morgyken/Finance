@@ -7,23 +7,21 @@ use Ignite\Evaluation\Entities\Dispensing;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
 use Ignite\Evaluation\Entities\Visit;
+use Ignite\Finance\Entities\Dispatch;
+use Ignite\Finance\Entities\DispatchDetails;
 use Ignite\Finance\Entities\EvaluationPayments;
-use Ignite\Finance\Entities\PatientAccount;
-use Ignite\Finance\Entities\PatientTransaction;
-use Ignite\Finance\Http\Requests\PaymentsRequest;
-use Ignite\Finance\Repositories\EvaluationRepository;
-use Ignite\Reception\Entities\Patients;
+use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Finance\Entities\InsuranceInvoicePayment;
-use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
+use Ignite\Finance\Entities\PatientInvoice;
+use Ignite\Finance\Entities\PatientTransaction;
 use Ignite\Finance\Entities\PaymentsCheque;
-use Ignite\Finance\Entities\DispatchDetails;
-use Ignite\Finance\Entities\Dispatch;
+use Ignite\Finance\Http\Requests\PaymentsRequest;
+use Ignite\Finance\Repositories\EvaluationRepository;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
+use Ignite\Reception\Entities\Patients;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Ignite\Inventory\Entities\InventoryBatchProductSales;
-use Ignite\Finance\Entities\PatientInvoice;
-use Carbon\Carbon;
 
 class EvaluationController extends AdminBaseController
 {
@@ -57,7 +55,7 @@ class EvaluationController extends AdminBaseController
         $this->data['a4'] = 1;
         $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
         $pdf->setPaper('a4', 'Potrait');
-        return $pdf->stream('Bill' . $request->id . '.pdf');
+        return @$pdf->stream('Bill' . $request->id . '.pdf');
     }
 
     public function printNormalReceipt(Request $request)
@@ -105,7 +103,7 @@ class EvaluationController extends AdminBaseController
         $pdf = \PDF::loadView('finance::evaluation.print.receipt_t', ['data' => $this->data]);
         $customPaper = [0, 0, 300, $min_height];
         $pdf->setPaper($customPaper);
-        return $pdf->stream('receipt_' . $request->payment . '.pdf');
+        return @$pdf->stream('receipt_' . $request->payment . '.pdf');
     }
 
     public function pay_save(PaymentsRequest $request)
@@ -511,7 +509,7 @@ class EvaluationController extends AdminBaseController
         $payment = FinanceEvaluationInsurancePayments::find($request->id);
         $pdf = \PDF::loadView('finance::evaluation.print.rcpt', ['payment' => $payment]);
         $pdf->setPaper('a4', 'potrait');
-        return $pdf->stream('Bill' . $request->id . '.pdf');
+        return @$pdf->stream('Bill' . $request->id . '.pdf');
     }
 
     public function billToCash(Request $request)

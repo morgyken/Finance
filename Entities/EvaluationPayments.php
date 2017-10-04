@@ -2,6 +2,9 @@
 
 namespace Ignite\Finance\Entities;
 
+use Ignite\Evaluation\Entities\Dispensing;
+use Ignite\Evaluation\Entities\Visit;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Reception\Entities\Patients;
 use Ignite\Users\Entities\User;
 use Illuminate\Database\Eloquent\Model;
@@ -108,15 +111,15 @@ class EvaluationPayments extends Model {
     }
 
     public function visits() {
-        return $this->belongsTo(\Ignite\Evaluation\Entities\Visit::class, 'visit');
+        return $this->belongsTo(Visit::class, 'visit');
     }
 
     public function sales() {
-        return $this->belongsTo(\Ignite\Inventory\Entities\InventoryBatchProductSales::class, 'sale');
+        return $this->belongsTo(InventoryBatchProductSales::class, 'sale');
     }
 
     public function dispensing() {
-        return $this->hasMany(\Ignite\Evaluation\Entities\Dispensing::class, 'dispensing', 'id');
+        return $this->hasMany(Dispensing::class, 'dispensing', 'id');
     }
 
 }

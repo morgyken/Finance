@@ -137,8 +137,8 @@ function getAmount($sales) {
                         @foreach($payment->details as $d)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$d->investigations->procedures->name}} <i
-                                    class="small">({{$d->investigations->type}})</i></td>
+                            <td>{{$d->item_desc}} <i
+                                    class="small">({{$d->investigations->type??'Drug'}})</i></td>
                             <td>{{$d->price}}</td>
                         </tr>
                         @endforeach
