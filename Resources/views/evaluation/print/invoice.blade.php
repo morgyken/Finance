@@ -102,9 +102,9 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                 <tr>
                     <th>#</th>
                     <th>Item</th>
-                    <th style="text-align:center">Unit Price</th>
-                    <th style="text-align:center">Units</th>
-                    <th>Cost (Ksh.)</th>
+                    <th  style="text-align:right">Unit Price</th>
+                    <th  style="text-align:right">Units</th>
+                    <th  style="text-align:right">Cost (Ksh.)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -112,10 +112,10 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                 @foreach($bill->visits->investigations as $item)
                     <tr class="products">
                         <td>{{$n+=1}}</td>
-                        <td style="text-align: left;">{{$item->procedures->name}}</td>
-                        <td style="text-align:center">{{number_format($item->price,2)}}</td>
-                        <td style="text-align:center">{{$item->quantity}}</td>
-                        <td>{{number_format($item->amount,2)}}</td>
+                        <td  style="text-align:right">{{$item->procedures->name}}</td>
+                        <td  style="text-align:right">{{number_format($item->price,2)}}</td>
+                        <td  style="text-align:right">{{$item->quantity}}</td>
+                        <td  style="text-align:right">{{number_format($item->amount,2)}}</td>
                     </tr>
                     @php
                         $TOTAL+=$item->amount;
@@ -125,9 +125,9 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                     <tr>
                         <td>{{$n+=1}}</td>
                         <td>{{$item->drugs->name}}</td>
-                        <td style="text-align:center">{{number_format($item->payment->price,2)}}</td>
-                        <td style="text-align:center">{{$item->payment->quantity}}</td>
-                        <td>{{number_format($item->payment->total,2)}}</td>
+                        <td style="text-align:right">{{number_format($item->payment->price,2)}}</td>
+                        <td style="text-align:right">{{$item->payment->quantity}}</td>
+                        <td style="text-align:right">{{number_format($item->payment->total,2)}}</td>
                     </tr>
                     @php
                         $TOTAL+=$item->payment->total;

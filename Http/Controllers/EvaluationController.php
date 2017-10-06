@@ -341,7 +341,6 @@ class EvaluationController extends AdminBaseController
     {
         $this->data['pending_mode'] = 1;
         $this->data['pending'] = Visit::wherePaymentMode('insurance')
-            ->whereNull('status')
             ->orderBy('created_at', 'DESC')
             ->get();
         return view('finance::evaluation.partials.pending', ['data' => $this->data]);
@@ -430,7 +429,7 @@ class EvaluationController extends AdminBaseController
             return back();
         } else {
             flash('Bills could not be placed, please try again');
-            return back();
+            return redirect()->route('finance.evaluation.billed');
         }
     }
 
