@@ -171,6 +171,10 @@ class EvaluationController extends AdminBaseController
         $this->data['patient'] = Patients::find($patient);
         $this->data['drugs'] = Prescriptions::whereHas('visits', function (Builder $query) use ($patient) {
             $query->wherePatient($patient);
+            $query->whereHas('prescriptions.payment', function (Builder $builder) {
+                $builder->wherePaid(false);
+                $builder->whereInvoiced(false);
+            });
         })->get();
         return view('finance::evaluation.pay-pharmacy', ['data' => $this->data]);
     }
