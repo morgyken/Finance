@@ -41,24 +41,26 @@
                         <input type="hidden" name="amount[]" value="{{$item->payment}}">
                     </td>
                     <td>
-                        @if($item->visits->prescriptions->count())
-                            <small><a class="btn btn-default btn-xs"
-                                      href="{{route('evaluation.print.prescription',[$item->visits->id,true])}}"
-                                      target="_blank">
-                                    <i class="fa fa-file"></i> Print Pres</a></small>
-                        @endif
-                        <small>
+                        <div class="btn-group">
                             <a target="blank" href="{{route('finance.evaluation.ins.inv.print', $item->id)}}"
                                class="btn btn-xs btn-primary">
-                                <i class="fa fa-print"></i> Print Invoice</a>
-                        </small>
-                        @if($item->status <2)
-                            {{--<small>--}}
-                            {{--<a href="{{route('finance.evaluation.cancel', $item->id)}}"--}}
-                            {{--class="btn btn-xs btn-danger">--}}
-                            {{--<i class="fa fa-times"></i> Cancel</a>--}}
-                            {{--</small>--}}
-                        @endif
+                                <i class="fa fa-print"></i> Print</a>
+                            <button type="button" class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                @if($item->visits->prescriptions->count())
+                                    <li><a class="btn btn-default btn-xs"
+                                           href="{{route('evaluation.print.prescription',[$item->visits->id,true])}}"
+                                           target="_blank">
+                                             Print Prescript (thermal)</a></li>
+                                    <li><a class="btn btn-default btn-xs"
+                                           href="{{route('evaluation.print.prescription',[$item->visits->id])}}"
+                                           target="_blank">
+                                            Print Prescript (A5)</a></li>
+                                @endif
+                            </ul>
+                        </div>
                     </td>
                 </tr>
                 <?php
