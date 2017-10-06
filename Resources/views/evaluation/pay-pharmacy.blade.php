@@ -9,9 +9,7 @@ extract($data);
     <div class="box box-info">
         <div class="box-body">
             <div class="col-md-12">
-                <h4>Patient: {{$patient->full_name}}</h4>
-                <div id="feedback-box"><p>NOTE: Ensure the corresponding check-boxes are checked to proceed</p></div>
-                @if(!$drugs->isEmpty())
+                <h4>Patient: {{$patient->full_name}}</h4>@if(!$drugs->isEmpty())
                     {!! Form::open(['route'=>'finance.evaluation.pharmacy.dispense','id'=>'presForm']) !!}
                     @if(request('insurance'))
                         {{Form::hidden('to_redirect',true)}}
@@ -31,11 +29,6 @@ extract($data);
                         <tbody>
                         @foreach($drugs as $item)
                             <?php
-                            $price = 0;
-                            $stock = 0;
-
-                            $cash_price = $item->drugs->cash_price;
-                            $credit_price = $item->drugs->credit_price;
                             $visit = $item->visits;
                             ?>
                             <tr id="row{{$item->id}}">
@@ -61,20 +54,8 @@ extract($data);
                                     </dl>
                                 </td>
                                 <td>
-                                    <?php
-                                    if (preg_match('/Insurance/', $item->visits->mode)) {
-                                    $price = $credit_price;
-                                    ?>
-                                    <code>{{number_format($credit_price,2)}}</code>
-                                    <?php
-                                    } else {
-                                    $price = $cash_price;
-                                    ?>
-                                    <code>{{number_format($cash_price,2)}}</code>
-                                    <?php
-                                    }
-                                    ?>
-                                    <input type="hidden" value="{{$price}}" name="prc{{$item->id}}"
+                                    {{$item->payment->cost}}
+                                    <input type="hidden" value="{{$item->payment->cost}}" name="prc{{$item->id}}"
                                            id="prc{{$item->id}}">
                                 </td>
                                 <td>
