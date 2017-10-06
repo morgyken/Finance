@@ -88,7 +88,7 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
     </div>
     <div class="box-body">
         <div class="col-md-12">
-            <h1>INVOICE</h1>
+            <h1>INVOICE #{{$bill->invoice_no}}</h1>
             <br>
             <div><span>DATE:</span> {{smart_date($bill->created_at)}}</div>
             <div><span>Patient:</span> {{$bill->visits->patients->full_name}}</div>
