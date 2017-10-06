@@ -138,7 +138,7 @@ class EvaluationController extends AdminBaseController
             $update = [
                 'complete' => true,
                 'quantity' => \request('qty' . $index),
-                'invoiced' => $request->has('to_redirect'),
+//                'invoiced' => $request->has('to_redirect'),
             ];
             $prescription = Prescriptions::find($index);
             $prescription->payment()->update($update);
@@ -420,6 +420,12 @@ class EvaluationController extends AdminBaseController
             flash('Bill could not be placed, thank you');
             return back();
         }
+    }
+
+    public function prepareBill($visit_id)
+    {
+        $this->data['visit'] = Visit::find($visit_id);
+        return view('finance::evaluation.prepare-bill', ['data' => $this->data]);
     }
 
     public function billMany(Request $request)

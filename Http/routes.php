@@ -59,7 +59,8 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Rout
     $router->get('insurance', ['as' => 'insurance', 'uses' => 'EvaluationController@insurance']);
     $router->get('cash_bills', ['as' => 'cash_bills', 'uses' => 'EvaluationController@cash_bills']);
 
-    $router->get('bill/{id}', ['as' => 'bill', 'uses' => 'EvaluationController@bill']);
+    $router->get('bill/prepare/{id}', ['as' => 'prepare.bill', 'uses' => 'EvaluationController@preparebill']);
+    $router->post('bill/{id}/panda', ['as' => 'bill', 'uses' => 'EvaluationController@bill']);
     $router->post('bill/insurances', ['as' => 'bill.many', 'uses' => 'EvaluationController@billMany']);
 
     $router->get('insurance/payment', ['as' => 'insurance.payment', 'uses' => 'EvaluationController@insurancePayment']);
