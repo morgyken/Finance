@@ -32,7 +32,7 @@ function amount_after_discount($discount, $amount)
                         <a href="#patients" data-toggle="tab">
                             Patients
                             <span class="badge alert-info">
-                            {{$patients->count()}}
+                            {{$visits->count()}}
                         </span>
                         </a>
                     </li>

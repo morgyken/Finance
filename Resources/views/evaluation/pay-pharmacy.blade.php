@@ -9,7 +9,8 @@ extract($data);
     <div class="box box-info">
         <div class="box-body">
             <div class="col-md-12">
-                <h4>Patient: {{$patient->full_name}}</h4>@if(!$drugs->isEmpty())
+                <h4>Patient: {{$patient->full_name}}</h4>
+                @if(!$drugs->isEmpty())
                     {!! Form::open(['route'=>'finance.evaluation.pharmacy.dispense','id'=>'presForm']) !!}
                     @if(request('insurance'))
                         {{Form::hidden('to_redirect',true)}}
@@ -31,7 +32,7 @@ extract($data);
                             <?php
                             $visit = $item->visits;
                             ?>
-                            @if ($item->payment->complete) {
+                            @if ($item->payment->paid || $item->payment->invoiced)
                             @continue
                             @endif
                             <tr id="row{{$item->id}}">
@@ -84,7 +85,7 @@ extract($data);
                                 <input type="hidden" name="visit" value="{{$item->visits->id}}">
                             </td>
                             <td>
-                                <button type="submit" class="btn btn-xs btn-primary">
+                                <button type="submit" class="btn btn-xs btn-success">
                                     <i class="fa fa-hand-o-right"></i>
                                     Process and Bill
                                 </button>
@@ -92,6 +93,7 @@ extract($data);
                         </tr>
                         </tfoot>
                     </table>
+
                     {!! Form::close()!!}
                 @else
                     <p>No drugs ordered for this patient</p>
