@@ -31,7 +31,7 @@ extract($data);
                             <?php
                             $visit = $item->visits;
                             ?>
-                            @if ($item->payment->paid || $item->payment->invoiced) {
+                            @if ($item->payment->complete) {
                             @continue
                             @endif
                             <tr id="row{{$item->id}}">
