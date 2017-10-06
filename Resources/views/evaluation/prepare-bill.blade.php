@@ -19,7 +19,7 @@
                             continue;
                         }
                         ?>
-                        <tr>
+                        <tr id="p{{$item->id}}">
                             <td><input type="checkbox" name="procedures.p{{$item->id}}" vprice="{{$item->amount}}"></td>
                             <td>{{$item->procedures->name}}</td>
                             <td>{{ucfirst($item->type)}}</td>
@@ -28,8 +28,8 @@
                             <td style="text-align: right">{{$item->quantity}}</td>
                             <td style="text-align: right">{{number_format($item->amount,2)}}</td>
                             <td>
-                                <button class="btn btn-xs btn-danger" type="button"><i class="fa fa-ban"
-                                                                                       title="Cancel"></i></button>
+                                <button class="btn btn-xs btn-danger cancel" type="button" xs="p{{$item->id}}">
+                                    <i class="fa fa-ban" title="Cancel"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -41,7 +41,7 @@
                             continue;
                         }
                         ?>
-                        <tr>
+                        <tr id="d{{$item->id}}">
                             <td>
                                 <input type="checkbox" name="drugs.d{{$item->id}}" vprice="{{$item->payment->total}}"/>
                             </td>
@@ -52,8 +52,9 @@
                             <td style="text-align: right">{{$item->payment->quantity}}</td>
                             <td style="text-align: right">{{number_format($item->payment->total,2)}}</td>
                             <td>
-                                <button class="btn btn-xs btn-danger" type="button"><i class="fa fa-ban"
-                                                                                       title="Cancel"></i></button>
+                                <button class="btn btn-xs btn-danger cancel" type="button" xs="d{{$item->id}}">
+                                    <i class="fa fa-ban"
+                                       title="Cancel"></i></button>
                             </td>
                         </tr>
 
@@ -104,6 +105,9 @@
                 }
                 $('#thesum').html(MY_TOTAL.toFixed(2));
                 $('#amount_send').val(MY_TOTAL);
+            });
+            $(document).on('click', '.cancel', function () {
+                $('tr#' + $(this).attr('xs')).remove();
             });
         });
     </script>

@@ -59,14 +59,15 @@ function amount_after_discount($discount, $amount)
 
                         <table class="table table-striped table-condensed table-responsive" id="patients">
                             <tbody>
-                            @foreach($patients as $patient)
+                            @foreach($visits as $visit)
+                                <?php $patient=$visit->patients; ?>
                                 <tr id="patient{{$patient->patient_id}}">
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$patient->full_name}}</td>
                                     <td>{{$patient->id_no}}</td>
                                     <td>{{$patient->mobile}}</td>
                                     <td>
-                                        @if(patient_has_pharmacy_bill($patient))
+                                        @if(patient_has_pharmacy_bill($visit))
                                             <a class="btn btn-warning btn-xs"
                                                href="{{route('finance.evaluation.pay.pharmacy',$patient->id)}}">
                                                 <i class="fa fa-bolt"></i> Process Meds</a>

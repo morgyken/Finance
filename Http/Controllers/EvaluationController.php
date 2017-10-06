@@ -181,8 +181,31 @@ class EvaluationController extends AdminBaseController
 
     private function billable_patients()
     {
-        $this->data['patients'] = Patients::whereHas('visits', function ($query) {
-            $query->wherePaymentMode('cash');
+        /*
+                $this->data['patients'] = Patients::whereHas('visits', function ($query) {
+                    $query->wherePaymentMode('cash');
+                    $query->where(function (Builder $query) {
+                        $query->whereHas('investigations', function ($q3) {
+                            $q3->doesntHave('payments');
+                            $q3->doesntHave('removed_bills');
+                        });
+                        $query->orWhereHas('dispensing', function ($q) {
+                            $q->doesntHave('removed_bills');
+                            $q->whereHas('details', function ($qd) {
+                                $qd->whereStatus(0);
+                            });
+                        });
+                        $query->orWhere(function (Builder $query) {
+                            $query->whereHas('prescriptions.payment', function (Builder $query) {
+                                $query->wherePaid(false);
+                            })->orWhereHas('prescriptions', function (Builder $builder) {
+                                $builder->whereDoesntHave('payment');
+                            });
+                        });
+                    });
+                })->orderBy('created_at', 'desc')
+                    ->get();*/
+        $this->data['visits'] = Visit::wherePaymentMode('cash')->where(function (Builder $query) {
             $query->where(function (Builder $query) {
                 $query->whereHas('investigations', function ($q3) {
                     $q3->doesntHave('payments');
@@ -202,7 +225,6 @@ class EvaluationController extends AdminBaseController
                     });
                 });
             });
-
         })->orderBy('created_at', 'desc')
             ->get();
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
