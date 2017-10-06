@@ -415,9 +415,9 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->bill_visit($request)) {
             flash('Bill placed, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.billed');
         } else {
-            flash('Bill could not be placed, thank you');
+            flash('Bill could not be placed');
             return back();
         }
     }

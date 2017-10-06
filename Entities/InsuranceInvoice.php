@@ -2,6 +2,8 @@
 
 namespace Ignite\Finance\Entities;
 
+use Ignite\Evaluation\Entities\Investigations;
+use Ignite\Evaluation\Entities\PrescriptionPayment;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Evaluation\Entities\Visit;
 use Illuminate\Database\Eloquent\Model;
@@ -35,25 +37,39 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereVisit($value)
  * @mixin \Eloquent
  */
-class InsuranceInvoice extends Model {
+class InsuranceInvoice extends Model
+{
 
     protected $fillable = [];
     public $table = 'finance_insurance_invoices';
 
-    public function sales() {
+    public function sales()
+    {
         return $this->belongsTo(InventoryBatchProductSales::class, 'receipt', 'id');
     }
 
-    public function visits() {
+    public function visits()
+    {
         return $this->belongsTo(Visit::class, 'visit', 'id');
     }
 
-    public function payments() {
+    public function payments()
+    {
         return $this->hasMany(InsuranceInvoicePayment::class, 'insurance_invoice');
     }
 
-    public function getPaidAttribute() {
+    public function getPaidAttribute()
+    {
         return $this->payments->sum('amount');
     }
 
+    public function investigations()
+    {
+        return $this->hasMany(Investigations::class, 'invoiced');
+    }
+
+    public function prescriptions()
+    {
+        return $this->hasMany(PrescriptionPayment::class, 'invoiced');
+    }
 }

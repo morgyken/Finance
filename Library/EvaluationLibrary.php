@@ -542,17 +542,17 @@ class EvaluationLibrary implements EvaluationRepository
         return $stack;
     }
 
-    private function recordBilledItems(Visit $visit)
+    private function recordBilledItems(InsuranceInvoice $invoice)
     {
         $drugs = $this->_get_selected_stack('drugs_d');
         foreach ($drugs as $drug) {
             $p = Prescriptions::find($drug);
-            $p->payment()->update(['invoiced' => true]);
+            $p->payment()->update(['invoiced' => $invoice->id]);
         }
         $procedures = $this->_get_selected_stack('procedures_p');
         foreach ($procedures as $drug) {
             $p = Investigations::find($drug);
-            $p->invoiced = true;
+            $p->invoiced = $invoice->id;
             $p->save();
         }
     }
@@ -560,8 +560,8 @@ class EvaluationLibrary implements EvaluationRepository
     public function bill_visit(Request $request)
     {
         $visit = Visit::find($request->id);
-        $this->createInsuranceInvoice($visit->id, $request->amount);
-        $this->recordBilledItems($visit);
+        $invoice = $this->createInsuranceInvoice($visit->id, $request->amount);
+        $this->recordBilledItems($invoice);
         $this->updateVisitStatus($request->id, 'billed');
         $visit->status = 'billed';
         $visit->save();
@@ -605,6 +605,11 @@ class EvaluationLibrary implements EvaluationRepository
         return $visit->save();
     }
 
+    /**
+     * @param $visit
+     * @param $amount
+     * @return InsuranceInvoice
+     */
     public function createInsuranceInvoice($visit, $amount)
     {
         $inv = new InsuranceInvoice;
@@ -612,6 +617,7 @@ class EvaluationLibrary implements EvaluationRepository
         $inv->visit = $visit;
         $inv->payment = $amount;
         $inv->save();
+        return $inv;
     }
 
 }

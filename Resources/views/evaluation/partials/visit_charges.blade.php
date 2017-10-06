@@ -15,7 +15,7 @@
                         $TOTAL += $item->amount;
                         $is_paid = $item->invoiced;
                         if ($is_paid) {
-                            $PAID += $item->payment->total;
+                            $PAID += $item->amount;
                         } else {
                             $UNPAID += $item->amount;
                         }
