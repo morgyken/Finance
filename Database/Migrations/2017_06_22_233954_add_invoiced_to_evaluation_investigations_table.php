@@ -13,10 +13,10 @@ class AddInvoicedToEvaluationInvestigationsTable extends Migration {
      */
     public function up() {
         Schema::table('evaluation_investigations', function (Blueprint $table) {
-            $table->boolean('invoiced')->after('ordered')->default(false);
+            $table->unsignedInteger('invoiced')->after('ordered')->default(false);
         });
         Schema::table('inventory_evaluation_dispensing_details', function (Blueprint $table) {
-            $table->boolean('invoiced')->after('status')->default(false);
+            $table->unsignedInteger('invoiced')->after('status')->default(false);
         });
     }
 
