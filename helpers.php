@@ -10,6 +10,7 @@
  * =============================================================================
  */
 
+use Ignite\Evaluation\Entities\Visit;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\FinanceAccountGroup;
 use Ignite\Finance\Entities\FinanceAccountType;
@@ -163,7 +164,7 @@ if (!function_exists('overall_patient_service_cost')) {
     {
         $amount = 0;
 
-        $visits = \Ignite\Evaluation\Entities\Visit::wherePatient($patient)
+        $visits = Visit::wherePatient($patient)
             ->wherePayment_mode('cash')
             ->get();
 
@@ -181,7 +182,7 @@ if (!function_exists('get_patient_unpaid')) {
     function get_patient_unpaid($patient)
     {
         $amount = 0;
-        $visits = \Ignite\Evaluation\Entities\Visit::wherePatient($patient, function ($query) {
+        $visits = Visit::wherePatient($patient, function ($query) {
             $query->wherePayment_mode('cash');
         })->get();
         foreach ($visits as $visit) {
@@ -294,17 +295,35 @@ if (!function_exists('get_clinic')) {
         return $clinic;
     }
 }
+function get_unpaid_amount(Visit $visit)
+{
+    $amount = 0;
+    foreach ($visit->investigations as $item) {
+        if (!($item->is_paid || $item->invoiced))
+            $amount += $item->amount;
+    }
+    foreach ($visit->prescriptions as $item) {
+        if (!$item->is_paid) {
+            $amount += $item->priced_amount;
+        }
+    }
+    return $amount;
+}
+
 if (!function_exists('patient_has_pharmacy_bill')) {
-    function patient_has_pharmacy_bill(Patients $patient)
+    function patient_has_pharmacy_bill(Visit $visit)
     {
-        $list = Patients::where(function (Builder $query) {
+        $list = Patients::where(function (Builder $query) use ($visit) {
             $query->whereHas('visits.prescriptions.payment', function (Builder $query) {
                 $query->whereComplete(false);
             });
             $query->orWhereHas('visits.prescriptions', function (Builder $builder) {
                 $builder->whereDoesntHave('payment');
             });
+            $query->whereHas('visits', function (Builder $query) use ($visit) {
+                $query->whereId($visit->id);
+            });
         })->get()->pluck('id')->toArray();
-        return in_array($patient->id, $list);
+        return in_array($visit->patient, $list);
     }
 }

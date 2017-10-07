@@ -76,15 +76,19 @@ class EvaluationLibrary implements EvaluationRepository
 
     /**
      * Build an index of items dynamically
+     * @param null $needle
      * @return array
      */
-    private function _get_selected_stack()
+    private function _get_selected_stack($needle = null)
     {
         $stack = [];
         $input = \request()->all();
+        if (empty($needle)) {
+            $needle = 'item';
+        }
         foreach ($input as $key => $one) {
-            if (starts_with($key, 'item')) {
-                $stack[] = substr($key, 4);
+            if (starts_with($key, $needle)) {
+                $stack[] = substr($key, strlen($needle));
             }
         }
         return $stack;
@@ -538,13 +542,29 @@ class EvaluationLibrary implements EvaluationRepository
         return $stack;
     }
 
+    private function recordBilledItems(InsuranceInvoice $invoice)
+    {
+        $drugs = $this->_get_selected_stack('drugs_d');
+        foreach ($drugs as $drug) {
+            $p = Prescriptions::find($drug);
+            $p->payment()->update(['invoiced' => $invoice->id]);
+        }
+        $procedures = $this->_get_selected_stack('procedures_p');
+        foreach ($procedures as $drug) {
+            $p = Investigations::find($drug);
+            $p->invoiced = $invoice->id;
+            $p->save();
+        }
+    }
+
     public function bill_visit(Request $request)
     {
-        $this->updateVisitStatus($request->id, 'billed');
         $visit = Visit::find($request->id);
+        $invoice = $this->createInsuranceInvoice($visit->id, $request->total);
+        $this->recordBilledItems($invoice);
+        $this->updateVisitStatus($request->id, 'billed');
         $visit->status = 'billed';
         $visit->save();
-        $this->createInsuranceInvoice($visit->id, $visit->unpaid_amount);
         return 'billed';
     }
 
@@ -585,6 +605,11 @@ class EvaluationLibrary implements EvaluationRepository
         return $visit->save();
     }
 
+    /**
+     * @param $visit
+     * @param $amount
+     * @return InsuranceInvoice
+     */
     public function createInsuranceInvoice($visit, $amount)
     {
         $inv = new InsuranceInvoice;
@@ -592,6 +617,7 @@ class EvaluationLibrary implements EvaluationRepository
         $inv->visit = $visit;
         $inv->payment = $amount;
         $inv->save();
+        return $inv;
     }
 
 }

@@ -138,7 +138,7 @@ class EvaluationController extends AdminBaseController
             $update = [
                 'complete' => true,
                 'quantity' => \request('qty' . $index),
-                'invoiced' => $request->has('to_redirect'),
+//                'invoiced' => $request->has('to_redirect'),
             ];
             $prescription = Prescriptions::find($index);
             $prescription->payment()->update($update);
@@ -181,8 +181,31 @@ class EvaluationController extends AdminBaseController
 
     private function billable_patients()
     {
-        $this->data['patients'] = Patients::whereHas('visits', function ($query) {
-            $query->wherePaymentMode('cash');
+        /*
+                $this->data['patients'] = Patients::whereHas('visits', function ($query) {
+                    $query->wherePaymentMode('cash');
+                    $query->where(function (Builder $query) {
+                        $query->whereHas('investigations', function ($q3) {
+                            $q3->doesntHave('payments');
+                            $q3->doesntHave('removed_bills');
+                        });
+                        $query->orWhereHas('dispensing', function ($q) {
+                            $q->doesntHave('removed_bills');
+                            $q->whereHas('details', function ($qd) {
+                                $qd->whereStatus(0);
+                            });
+                        });
+                        $query->orWhere(function (Builder $query) {
+                            $query->whereHas('prescriptions.payment', function (Builder $query) {
+                                $query->wherePaid(false);
+                            })->orWhereHas('prescriptions', function (Builder $builder) {
+                                $builder->whereDoesntHave('payment');
+                            });
+                        });
+                    });
+                })->orderBy('created_at', 'desc')
+                    ->get();*/
+        $this->data['visits'] = Visit::wherePaymentMode('cash')->where(function (Builder $query) {
             $query->where(function (Builder $query) {
                 $query->whereHas('investigations', function ($q3) {
                     $q3->doesntHave('payments');
@@ -202,7 +225,6 @@ class EvaluationController extends AdminBaseController
                     });
                 });
             });
-
         })->orderBy('created_at', 'desc')
             ->get();
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
@@ -341,7 +363,6 @@ class EvaluationController extends AdminBaseController
     {
         $this->data['pending_mode'] = 1;
         $this->data['pending'] = Visit::wherePaymentMode('insurance')
-            ->whereNull('status')
             ->orderBy('created_at', 'DESC')
             ->get();
         return view('finance::evaluation.partials.pending', ['data' => $this->data]);
@@ -416,11 +437,17 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->bill_visit($request)) {
             flash('Bill placed, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.billed');
         } else {
-            flash('Bill could not be placed, thank you');
+            flash('Bill could not be placed');
             return back();
         }
+    }
+
+    public function prepareBill($visit_id)
+    {
+        $this->data['visit'] = Visit::find($visit_id);
+        return view('finance::evaluation.prepare-bill', ['data' => $this->data]);
     }
 
     public function billMany(Request $request)
@@ -430,7 +457,7 @@ class EvaluationController extends AdminBaseController
             return back();
         } else {
             flash('Bills could not be placed, please try again');
-            return back();
+            return redirect()->route('finance.evaluation.billed');
         }
     }
 

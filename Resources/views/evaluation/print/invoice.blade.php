@@ -102,40 +102,40 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                 <tr>
                     <th>#</th>
                     <th>Item</th>
-                    <th style="text-align:center">Units</th>
-                    <th style="text-align:center">Discount(%)</th>
-                    <th>Cost (Ksh.)</th>
+                    <th style="text-align:right">Unit Price</th>
+                    <th style="text-align:right">Units</th>
+                    <th style="text-align:right">Cost (Ksh.)</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php $n = 0;  $TOTAL = 0; ?>
-                @foreach($bill->visits->investigations as $item)
+                @foreach($bill->investigations as $item)
                     <tr class="products">
                         <td>{{$n+=1}}</td>
-                        <td style="text-align: left;">{{$item->procedures->name}}</td>
-                        <td style="text-align:center">{{$item->quantity}}</td>
-                        <td style="text-align:center">{{$item->discount}}</td>
-                        <td>{{$item->amount}}</td>
+                        <td>{{$item->procedures->name}}</td>
+                        <td style="text-align:right">{{number_format($item->price,2)}}</td>
+                        <td style="text-align:right">{{$item->quantity}}</td>
+                        <td style="text-align:right">{{number_format($item->amount,2)}}</td>
                     </tr>
                     @php
                         $TOTAL+=$item->amount;
                     @endphp
                 @endforeach
-                @foreach($bill->visits->prescriptions as $item)
+                @foreach($bill->prescriptions as $item)
                     <tr>
                         <td>{{$n+=1}}</td>
-                        <td>{{$item->drugs->name}}</td>
-                        <td style="text-align:center">{{$item->payment->quantity}}</td>
-                        <td style="text-align:center">0.00</td>
-                        <td>{{$item->payment->total}}</td>
+                        <td>{{$item->prescription->drugs->name}}</td>
+                        <td style="text-align:right">{{number_format($item->price,2)}}</td>
+                        <td style="text-align:right">{{$item->quantity}}</td>
+                        <td style="text-align:right">{{number_format($item->total,2)}}</td>
                     </tr>
                     @php
-                        $TOTAL+=$item->payment->total;
+                        $TOTAL+=$item->total;
                     @endphp
                 @endforeach
                 <tr>
                     <td style="text-align: right;" colspan="4" class="grand total">TOTAL:</td>
-                    <td class="grand total">{{ $TOTAL }}</td>
+                    <td class="grand total"  style="text-align:right">{{ number_format($TOTAL,2) }}</td>
                 </tr>
                 </tbody>
             </table>
