@@ -13,6 +13,7 @@
                 <th>Patient</th>
                 <th>Company::Scheme</th>
                 <th>Amount</th>
+                <th>View</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -41,25 +42,34 @@
                         <input type="hidden" name="amount[]" value="{{$item->payment}}">
                     </td>
                     <td>
+                        <button type="button" class="btn btn-default btn-xs" data-toggle="modal"
+                                data-target="#info{{$item->visits->id}}">
+                            View
+                        </button>
+                        @include('finance::evaluation.partials.visit_billed_charges',['visit'=>$item->visits,'only'=>'billed'])
+                    </td>
+                    <td>
                         <div class="btn-group">
                             <a target="blank" href="{{route('finance.evaluation.ins.inv.print', $item->id)}}"
                                class="btn btn-xs btn-primary">
                                 <i class="fa fa-print"></i> Print</a>
-                            <button type="button" class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                @if($item->visits->prescriptions->count())
+                            @if($item->visits->prescriptions->count())
+                                <button type="button" class="btn btn-primary dropdown-toggle btn-xs"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+
                                     <li><a class="btn btn-default btn-xs"
                                            href="{{route('evaluation.print.prescription',[$item->visits->id,true])}}"
                                            target="_blank">
-                                             Print Prescript (thermal)</a></li>
+                                            Print Prescript (thermal)</a></li>
                                     <li><a class="btn btn-default btn-xs"
                                            href="{{route('evaluation.print.prescription',[$item->visits->id])}}"
                                            target="_blank">
                                             Print Prescript (A5)</a></li>
-                                @endif
-                            </ul>
+                                </ul>
+                            @endif
                         </div>
                     </td>
                 </tr>
