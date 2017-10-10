@@ -49,9 +49,9 @@
                                        class="btn btn-xs btn-primary">
                                         <i class="fa fa-usd"></i> Bill</a>
                                 @endif
-                                <a href="{{route('finance.evaluation.tocash', $visit->id)}}"
-                                   class="btn btn-xs btn-info">
-                                    <i class="fa fa-money"></i>Change to Cash</a>
+                                {{--<a href="{{route('finance.evaluation.tocash', $visit->id)}}"--}}
+                                   {{--class="btn btn-xs btn-info">--}}
+                                    {{--<i class="fa fa-money"></i>Change to Cash</a>--}}
                             </td>
                         </tr>
                     @endif

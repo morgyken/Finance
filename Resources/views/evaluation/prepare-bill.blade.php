@@ -28,6 +28,8 @@
                             <td style="text-align: right">{{$item->quantity}}</td>
                             <td style="text-align: right">{{number_format($item->amount,2)}}</td>
                             <td>
+                                <button type="button" class="btn btn-xs btn-primary">
+                                    <i class="fa fa-exchange"></i> Change Mode</button>
                                 <button class="btn btn-xs btn-danger cancel" type="button" xs="p{{$item->id}}">
                                     <i class="fa fa-ban" title="Cancel"></i></button>
                             </td>
@@ -52,6 +54,7 @@
                             <td style="text-align: right">{{$item->payment->quantity}}</td>
                             <td style="text-align: right">{{number_format($item->payment->total,2)}}</td>
                             <td>
+                                <button type="button" class="btn btn-xs btn-primary">Change Mode</button>
                                 <button class="btn btn-xs btn-danger cancel" type="button" xs="d{{$item->id}}">
                                     <i class="fa fa-ban"
                                        title="Cancel"></i></button>

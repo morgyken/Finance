@@ -22,7 +22,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read mixed $paid
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Evaluation\Entities\Investigations[] $investigations
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\InsuranceInvoicePayment[] $payments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Evaluation\Entities\PrescriptionPayment[] $prescriptions
  * @property-read \Ignite\Inventory\Entities\InventoryBatchProductSales|null $sales
  * @property-read \Ignite\Evaluation\Entities\Visit|null $visits
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereCreatedAt($value)
