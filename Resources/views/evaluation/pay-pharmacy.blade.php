@@ -33,7 +33,7 @@ extract($data);
                             $visit = $item->visits;
                             ?>
                             @if ($item->payment->complete)
-                            @continue
+                                @continue
                             @endif
                             <tr id="row{{$item->id}}">
                                 <td>
@@ -54,6 +54,8 @@ extract($data);
                                         <dd>{{smart_date_time($item->created_at)}}</dd>
                                         <dt>Prescribed By:</dt>
                                         <dd> {{$item->users->profile->full_name}} </dd>
+                                        <dt>Notes</dt>
+                                        <dd><em><u>{{$item->notes??'N/A'}}</u></em></dd>
                                         <!-- <b>Payment Mode: </b> Cash<br> -->
                                     </dl>
                                 </td>
