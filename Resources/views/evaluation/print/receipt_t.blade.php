@@ -91,18 +91,15 @@ function getAmount($sales) {
     }
 </style>
 <div class="box box-info" style="text-align: center;">
-        <div class="box-header with-border">
-        <strong>{{config('practice.name')}}</strong>
-    <h5><img style="width:150; height:auto;" src="{{realpath(base_path('/public/reciept.jpg'))}}"/></h5>    
-    </div>
+        <div class="box-header with-border" style="text-align: center">
+            <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
+        </div>
+    <br/>
     <div class="box-body">
     @include('Inventory::partials.t_header')
-
-
-        
     <table class="row">
-        <div class="col-md-6 col-lg-6">
-        <h2 class="box-title">RECIEPT</h2>
+        <div style="text-align: center" class="col-md-6 col-lg-6">
+        <h2 style="text-align: center" class="box-title">RECIEPT</h2>
             <br>
             <strong>Name:</strong><span class="content">
                 {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}
@@ -113,14 +110,12 @@ function getAmount($sales) {
             </span>
             <br/>
             <br/>
-            <strong>Date:</strong><span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
-            <strong>Receipt No: </strong><span>{{$payment->receipt}}</span><br/><br/>
+            <strong>Date:</strong>
+            <span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
+            <strong>Receipt No: </strong>
+            <span>{{$payment->receipt}}</span><br/><br/>
         </div>
-
-
     </table>
-
-
         <div class="col-md-6">
             @if(isset($payment))
             <?php if (!$payment->sale > 0) { ?>

@@ -55,7 +55,7 @@
         }
     </style>
     <div class="box box-info">
-        <h1 class="box-title">{{config('practice.name')}}</h1>
+        <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
         <img style="width:100; height:auto; float: right" src="{{realpath(base_path('/public/logo.jpg'))}}"/>
 
         <div class="box-header with-border">

@@ -1,6 +1,6 @@
 <!-- pharmacy queue -->
 @foreach($visit->prescriptions as $item)
-    @if($item->payment->complete)
+    @if(!$item->payment->complete)
         <tr>
             @if(!$item->payment->paid)
                 <td><input type="checkbox" value="{{$item->id}}" name="item{{$item->id}}"/></td>

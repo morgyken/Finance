@@ -82,14 +82,16 @@
                 </td>
             </tr>
             @if(!$payment->deposit)
+                @if($payment->total-$bill>0)
                 <tr>
                     <td></td>
                     <td></td>
-                    <td>Change</td>
+                    <td>Balance</td>
                     <td>
                         {{$payment->total-$bill}}
                     </td>
                 </tr>
+                @endif
             @else
                 <tr>
                     <td></td>
