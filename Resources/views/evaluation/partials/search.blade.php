@@ -19,18 +19,18 @@
                         </div>
                     </div>
                     @if($mode !=='stmt_mode')
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">
-                            Patient
-                        </label>
-                        <div class="col-md-10">
-                            <div class="row">
-                                <div class="col-xs-5">
-                                    <input type='text' id="patient" class="form-control" placeholder="Patient Name" name='patient'>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        {{--<div class="form-group">--}}
+                        {{--<label class="col-md-2 control-label">--}}
+                        {{--Patient--}}
+                        {{--</label>--}}
+                        {{--<div class="col-md-10">--}}
+                        {{--<div class="row">--}}
+                        {{--<div class="col-xs-5">--}}
+                        {{--<input type='text' id="patient" class="form-control" placeholder="Patient Name" name='patient'>--}}
+                        {{--</div>--}}
+                        {{--</div>--}}
+                        {{--</div>--}}
+                        {{--</div>--}}
                     @endif
                     <div class="form-group">
                         <label class="col-md-2 control-label">
