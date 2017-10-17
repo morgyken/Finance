@@ -15,7 +15,7 @@ class CreateChangeInsurancesTable extends Migration
     {
         Schema::create('finance_change_insurances', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('patient_id');
+            $table->unsignedInteger('visit_id');
             $table->unsignedInteger('prescription_id');
             $table->unsignedInteger('procedure_id');
             $table->string('mode')->default('cash');

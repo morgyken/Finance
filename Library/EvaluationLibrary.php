@@ -14,6 +14,7 @@ namespace Ignite\Finance\Library;
 
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
+use Ignite\Finance\Entities\ChangeInsurance;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
 use Ignite\Finance\Entities\PatientAccount;
@@ -620,4 +621,28 @@ class EvaluationLibrary implements EvaluationRepository
         return $inv;
     }
 
+    public function swapBill(Request $request)
+    {
+        $drugs = $this->_get_selected_stack('drugs_d');
+        foreach ($drugs as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'prescription_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+            ];
+            ChangeInsurance::create($payload);
+        }
+        $procedures = $this->_get_selected_stack('procedures_p');
+        foreach ($procedures as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'procedure_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+            ];
+            ChangeInsurance::create($payload);
+        }
+        return true;
+    }
 }

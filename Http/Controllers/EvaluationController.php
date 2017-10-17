@@ -433,16 +433,7 @@ class EvaluationController extends AdminBaseController
         return view('finance::evaluation.partials.firm_statement', ['data' => $this->data]);
     }
 
-    public function bill(Request $request)
-    {
-        if ($this->evaluationRepository->bill_visit($request)) {
-            flash('Bill placed, thank you');
-            return redirect()->route('finance.evaluation.billed');
-        } else {
-            flash('Bill could not be placed');
-            return back();
-        }
-    }
+
 
     public function prepareBill($visit_id)
     {

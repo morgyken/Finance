@@ -31,4 +31,6 @@ interface EvaluationRepository
     public function bill_visit_many(Request $request);
 
     public function bill_visit(Request $request);
+
+    public function swapBill(Request $request);
 }

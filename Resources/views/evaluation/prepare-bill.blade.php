@@ -9,7 +9,7 @@
         </div>
         <div class="box-body">
             <div class="col-md-12">
-                {{Form::open(['route'=>['finance.evaluation.bill',$visit->id,'id'=>'inv']])}}
+                {{Form::open(['route'=>['finance.evaluation.bill',$visit->id,],'id'=>'inv'])}}
                 <table class="table table-condensed" id="panda">
                     <tbody>
                     @foreach($visit->investigations as $item)
@@ -115,7 +115,8 @@
                 $('tr#' + $(this).attr('xs')).remove();
             });
             $('#swap2cash').click(function () {
-
+                $url = "{{route('finance.evaluation.swap.mode',$visit->id)}}";
+                $('form#inv').attr('action', $url).submit();
             });
         });
     </script>
