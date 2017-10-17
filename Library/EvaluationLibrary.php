@@ -109,6 +109,7 @@ class EvaluationLibrary implements EvaluationRepository
      */
     public function record_payment()
     {
+        dd($this->request->all());
         DB::transaction(function () {
             $stock = $this->_get_selected_stack();
 

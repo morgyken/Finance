@@ -284,7 +284,19 @@ if (!function_exists('pesa')) {
         return $cashier->request($amount)->from($subscriberNumber)->usingReferenceId($referenceId);
     }
 }
-
+if (!function_exists('transferred2cash')) {
+    /**
+     * @param $item_id
+     * @param bool $drug
+     * @return bool
+     */
+    function transferred2cash($item_id, $drug = false)
+    {
+        $finder = $drug ? 'prescription_id' : 'procedure_id';
+        $count = \Ignite\Finance\Entities\ChangeInsurance::where($finder, $item_id)->count();
+        return (bool)$count;
+    }
+}
 
 if (!function_exists('get_clinic')) {
 

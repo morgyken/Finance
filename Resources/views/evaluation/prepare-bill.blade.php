@@ -15,7 +15,8 @@
                     @foreach($visit->investigations as $item)
                         <?php
                         $is_paid = $item->invoiced;
-                        if ($is_paid) {
+                        $in_cash = transferred2cash($item->id);
+                        if ($is_paid || $in_cash) {
                             continue;
                         }
                         ?>
@@ -37,7 +38,8 @@
                     @foreach($visit->prescriptions as $item)
                         <?php
                         $is_paid = $item->is_paid;
-                        if ($item->is_paid || !$item->payment->complete) {
+                        $in_cash = transferred2cash($item->id, true);
+                        if ($item->is_paid || $in_cash || !$item->payment->complete) {
                             continue;
                         }
                         ?>
