@@ -209,7 +209,10 @@ class EvaluationController extends AdminBaseController
                 });
             })
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->reject(function ($value) {
+                return empty($value->unpaid_amount);
+            });
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
             ->doesntHave('removed_bills')
             ->whereNull('insurance')
