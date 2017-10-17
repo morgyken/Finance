@@ -5,7 +5,6 @@
             <tr>
                 <th>#</th>
                 <th>Item</th>
-                <th>Discount(%)</th>
                 <th>Amount (Ksh.)</th>
             </tr>
             </thead>
@@ -20,7 +19,6 @@
                                 <i class="small">({{$d->investigations->type}})</i>
                                 x {{$d->investigations->quantity>0?$d->investigations->quantity:1}}
                             </td>
-                            <td>{{$d->investigations->discount}}</td>
                             <td>{{$d->price}}</td>
                         </tr>
                         <?php $bill += $d->investigations->amount > 0 ? $d->investigations->amount : $d->price ?>
@@ -32,10 +30,9 @@
                                 <i class="small">(Drugs)</i>
                                 x {{$d->pharmacy->payment->quantity}} units
                             </td>
-                            <td>0</td>
                             <td>{{$d->price}}</td>
                         </tr>
-                        <?php $bill +=  $d->price ?>
+                        <?php $bill += $d->price ?>
                     @endif
                 @endforeach
             @endif
@@ -53,7 +50,6 @@
                         <small>{{$item->price}} x {{$item->quantity}}</small>
                         (drug)
                     </td>
-                    <td></td>
                     <td>{{$item->price*$item->quantity}}</td>
                 </tr>
                 <?php $bill += $item->price * $item->quantity ?>
@@ -66,38 +62,34 @@
             <tfoot>
             <tr>
                 <td></td>
-                <td></td>
-                <td>Total</td>
-                <td>
+                <td style="text-align: right">Total</td>
+                <th>
                     {{$bill}}
-                </td>
+                </th>
             </tr>
             @endif
             <tr>
                 <td></td>
-                <td></td>
-                <td>Amount Paid</td>
-                <td>
+                <td style="text-align: right">Amount Paid</td>
+                <th>
                     {{$payment->total}}
-                </td>
+                </th>
             </tr>
             @if(!$payment->deposit)
                 <tr>
                     <td></td>
-                    <td></td>
-                    <td>Change</td>
-                    <td>
+                    <td style="text-align: right">Change</td>
+                    <th>
                         {{$payment->total-$bill}}
-                    </td>
+                    </th>
                 </tr>
             @else
                 <tr>
                     <td></td>
-                    <td></td>
-                    <td>Total Account Balance</td>
-                    <td>
+                    <td style="text-align: right">Total Account Balance</td>
+                    <th>
                         {{get_patient_balance($payment->patients->id)}}
-                    </td>
+                    </th>
                 </tr>
             @endif
             </tfoot>

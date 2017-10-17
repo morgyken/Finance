@@ -98,7 +98,8 @@ class EvaluationLibrary implements EvaluationRepository
     private function updatePrescriptions($item)
     {
         if ($this->isDrugPayment($item)) {
-
+            $p = Prescriptions::find(\request('item' . $item));
+            $p->payment()->update(['paid' => true]);
         }
         return true;
     }
@@ -109,7 +110,6 @@ class EvaluationLibrary implements EvaluationRepository
      */
     public function record_payment()
     {
-        dd($this->request->all());
         DB::transaction(function () {
             $stock = $this->_get_selected_stack();
 
@@ -283,15 +283,14 @@ class EvaluationLibrary implements EvaluationRepository
     {
         $visit = 'visits' . $item;
         $investigation = Investigations::find($item);
-        if (isset($investigation)) {
-            $detail = new EvaluationPaymentsDetails;
-            $detail->price = $investigation->price;
-            $detail->investigation = $item;
-            $detail->visit = $request->$visit;
-            $detail->payment = $payment->id;
-            $detail->cost = $investigation->procedures->price;
-            $detail->save();
-        }
+        $detail = new EvaluationPaymentsDetails;
+        $detail->price = $investigation->price;
+        $detail->investigation = $item;
+        $detail->visit = $request->$visit;
+        $detail->payment = $payment->id;
+        $detail->cost = $investigation->procedures->price;
+        $detail->save();
+
     }
 
     private function drug_payment_details(Request $request, $item, $payment)
