@@ -9,8 +9,9 @@
                 <tr>
                     <th>#</th>
                     <th>Patient ID</th>
-                    <th>Patient</th>
+                    <th>Name</th>
                     <th>Visit</th>
+                    <th>Clinic</th>
                     <th>Company</th>
                     <th>Scheme</th>
                     <th>Amount</th>
@@ -26,8 +27,8 @@
                             <td>{{$loop->iteration}}</td>
                             <td>{{$visit->id}}</td>
                             <td>{{$visit->patients->full_name}}</td>
-                            <td>{{$visit->created_at->format('dS M y g:i a')}} -
-                                Clinic {{$visit->clinics->name}}</td>
+                            <td>{{$visit->created_at->format('d/m/y')}} </td>
+                            <td>{{$visit->clinics->name}}</td>
                             <td>{{$visit->patient_scheme?$visit->patient_scheme->schemes->companies->name:''}}</td>
                             <td>{{$visit->patient_scheme?$visit->patient_scheme->schemes->name:''}}</td>
                             <td>{{$visit->unpaid_amount}}</td>
@@ -50,8 +51,8 @@
                                         <i class="fa fa-usd"></i> Bill</a>
                                 @endif
                                 {{--<a href="{{route('finance.evaluation.tocash', $visit->id)}}"--}}
-                                   {{--class="btn btn-xs btn-info">--}}
-                                    {{--<i class="fa fa-money"></i>Change to Cash</a>--}}
+                                {{--class="btn btn-xs btn-info">--}}
+                                {{--<i class="fa fa-money"></i>Change to Cash</a>--}}
                             </td>
                         </tr>
                     @endif
@@ -61,6 +62,34 @@
             </table>
             {{--<button type="submit" class="btn btn-primary">Bill Selected Insurance</button>--}}
         </form>
+        <script>
+            $(function () {
+                $('.records').dataTable({
+                    searching: false,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            title: 'Pending Insurance Payments',
+                            text: '<i class="fa fa-file-excel-o"></i> Excel',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [1, 2, 3, 5, 6, 7]
+                            }
+                        }, {
+                            extend: 'pdf',
+                            title: 'Pending Insurance Payments',
+                            text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [1, 2, 3, 5, 6, 7]
+                            }
+                        },
+
+                    ]
+                });
+            });
+        </script>
     @else
         <p>No pending insurance bill</p>
     @endif

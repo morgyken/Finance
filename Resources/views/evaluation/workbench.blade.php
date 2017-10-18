@@ -131,7 +131,8 @@ $mode = '';
             $("#date2").datepicker({
                 dateFormat: 'yy-mm-dd'
             });
-            $('.records').dataTable();
+//            $("#date_cheque").datepicker({dateFormat: 'yy-mm-dd'});
+
         });
 
 
@@ -148,8 +149,6 @@ $mode = '';
             }
         }
 
-        $("#date1").datepicker({dateFormat: 'yy-mm-dd'});
-        $("#date_cheque").datepicker({dateFormat: 'yy-mm-dd'});
 
     </script>
     <style>

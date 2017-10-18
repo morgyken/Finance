@@ -560,13 +560,12 @@ class EvaluationLibrary implements EvaluationRepository
 
     public function bill_visit(Request $request)
     {
-        $visit = Visit::find($request->id);
+        $visit = Visit::find($request->visit);
         $invoice = $this->createInsuranceInvoice($visit->id, $request->total);
         $this->recordBilledItems($invoice);
-        $this->updateVisitStatus($request->id, 'billed');
+        $this->updateVisitStatus($visit->id, 'billed');
         $visit->status = 'billed';
-        $visit->save();
-        return 'billed';
+        return $visit->save();
     }
 
     public function bill_visit_many(Request $request)
@@ -614,7 +613,7 @@ class EvaluationLibrary implements EvaluationRepository
     public function createInsuranceInvoice($visit, $amount)
     {
         $inv = new InsuranceInvoice;
-        $inv->invoice_no = 'INV-' . $visit . '-' . date('dmyHis');
+        $inv->invoice_no = 'INV' . time();
         $inv->visit = $visit;
         $inv->payment = $amount;
         $inv->save();

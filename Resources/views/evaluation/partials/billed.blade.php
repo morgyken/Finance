@@ -10,9 +10,11 @@
                 <th>#</th>
                 <th></th>
                 <th>Invoice</th>
-                <th>Patient</th>
-                <th>Company::Scheme</th>
+                <th>Name</th>
+                <th>Company</th>
+                <th>Scheme</th>
                 <th>Amount</th>
+                <th>Date</th>
                 <th>View</th>
                 <th>Action</th>
             </tr>
@@ -34,9 +36,12 @@
                     <td>
                         {{$item->invoice_no}}
                     </td>
+                    <td>
+                        {{$item->created_at->format('d/m/y')}}
+                    </td>
                     <td>{{$item->visits->patients->full_name}}</td>
-                    <td>{{$item->visits->patient_scheme?$item->visits->patient_scheme->schemes->companies->name:''}}
-                        ::{{$item->visits->patient_scheme?$item->visits->patient_scheme->schemes->name:''}}</td>
+                    <td>{{$item->visits->patient_scheme?$item->visits->patient_scheme->schemes->companies->name:''}}</td>
+                    <td>{{$item->visits->patient_scheme?$item->visits->patient_scheme->schemes->name:''}}</td>
                     <td>
                         {{$item->payment}}
                         <input type="hidden" name="amount[]" value="{{$item->payment}}">
@@ -96,6 +101,32 @@
 
         <script type="text/javascript">
             var mode = 'billing';
+            $(function () {
+                $('.records').dataTable({
+                    searching: false,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            title: 'Billed Invoices',
+                            text: '<i class="fa fa-file-excel-o"></i> Excel',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [0, 2, 3, 5, 6]
+                            }
+                        }, {
+                            extend: 'pdf',
+                            title: 'Billed Invoices',
+                            text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [0, 2, 3, 5, 6]
+                            }
+                        },
+
+                    ]
+                });
+            });
         </script>
     @else
         <p>No billed insurance bills</p>
