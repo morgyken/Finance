@@ -44,12 +44,12 @@ class PreparePayments extends Command
                             $q3->doesntHave('payments');
                             $q3->doesntHave('removed_bills');
                         });
-                        $query->orWhereHas('dispensing', function ($q) {
-                            $q->doesntHave('removed_bills');
-                            $q->whereHas('details', function ($qd) {
-                                $qd->whereStatus(0);
-                            });
-                        });
+//                        $query->orWhereHas('dispensing', function ($q) {
+//                            $q->doesntHave('removed_bills');
+//                            $q->whereHas('details', function ($qd) {
+//                                $qd->whereStatus(0);
+//                            });
+//                        });
                         $query->orWhere(function (Builder $query) {
                             $query->whereHas('prescriptions.payment', function (Builder $query) {
                                 $query->wherePaid(false);
