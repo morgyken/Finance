@@ -76,81 +76,9 @@ $mode = '';
         </div>
     </div>
     <script type="text/javascript">
-        $(document).ready(function () {
-
-            function get_invoices(firm) {
-                //initialize
-                var mode = $('#mode').val();
-                var patient = $('#patient').val();
-                var date1 = $('#date1').val();
-                var date2 = $('#date2').val();
-                $.ajax({
-                    type: 'get',
-                    url: "{{route('api.finance.evaluation.firm.invoices')}}",
-                    data: {firm: firm, mode: mode, date1: date1, date2: date2, patient: patient},
-                    success: function (response) {
-                        $('.response').html(response);
-                    }
-                }); //ajax
-            }
-
-            $("#action-btn").hide();
-            $("#action-scene").html('<span class="label label-danger">Select an Insurance Firm for action</span>');
-
-            $(".company").change(function () {
-                getInvs(this.value);
-            });
-
-            function getInvs(id) {
-                get_invoices(id);
-                if (mode === 'payment') {
-                    $("#action-scene").html('<input type="submit" class="btn-primary" id="action-btn" value="Receive Payment">');
-                } else {
-                    $("#action-scene").html('<input type="submit" class="btn-primary" value="Dispatch Selected Invoices" >');
-                }
-            }
-
-            $(".cheque_amount").keyup(function () {
-                $('#pay_balance').val(this.value);
-            });
-
-            $("#cheque_no").keyup(function () {
-                $('#paycheck_no').val(this.value);
-            });
-
-
-            $("#payment_table").mouseover(function () {
-                //$('#pay_balance').val($(".cheque_amount").val());
-            });
-
-            $("#date1").datepicker({
-                dateFormat: 'yy-mm-dd', onSelect: function (date) {
-                    $("#date2").datepicker('option', 'minDate', date);
-                }
-            });
-            $("#date2").datepicker({
-                dateFormat: 'yy-mm-dd'
-            });
-//            $("#date_cheque").datepicker({dateFormat: 'yy-mm-dd'});
-
-        });
-
-
-        function updateAmount(amount, i) {
-            $amount = $('#pay_dis_tot');
-            $sum = $('#pay_sum');
-            $balance = $('#pay_balance');
-            if ($('#pay_check' + i).is(':checked')) {
-                $amount.val(parseInt($amount.val(), 10) + amount);
-                $balance.val(parseInt($balance.val(), 10) - amount);
-            } else {
-                $amount.val(parseInt($amount.val(), 10) - amount);
-                $balance.val(parseInt($balance.val(), 10) + amount);
-            }
-        }
-
-
+        var SCHEMES_URL = "{{route('api.settings.get_schemes')}}";
     </script>
+    <script src="{{m_asset('finance:js/insurancee.js')}}"></script>
     <style>
         .disabled {
             pointer-events: none;

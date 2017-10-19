@@ -45,11 +45,9 @@
                                        href="{{route('finance.evaluation.pay.pharmacy',[$visit->patients->id,'insurance'=>true])}}">
                                         <i class="fa fa-bolt"></i> Process Meds</a>
                                 @endif
-                                @if($visit->unpaid_amount>0)
-                                    <a href="{{route('finance.evaluation.prepare.bill', $visit->id)}}"
-                                       class="btn btn-xs btn-primary">
-                                        <i class="fa fa-usd"></i> Bill</a>
-                                @endif
+                                <a href="{{route('finance.evaluation.prepare.bill', $visit->id)}}"
+                                   class="btn btn-xs btn-primary">
+                                    <i class="fa fa-usd"></i> Bill</a>
                                 {{--<a href="{{route('finance.evaluation.tocash', $visit->id)}}"--}}
                                 {{--class="btn btn-xs btn-info">--}}
                                 {{--<i class="fa fa-money"></i>Change to Cash</a>--}}

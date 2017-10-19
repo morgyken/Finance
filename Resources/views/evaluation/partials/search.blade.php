@@ -8,30 +8,24 @@
             </div>
 
             <div class="panel-body">
-                <form class="form-horizontal row-border" action="#">
+                <form class="form-horizontal" action="#">
                     <div class="form-group">
                         <label class="col-md-2 control-label">
                             Insurance Company
                         </label>
                         <div class="col-md-5">
-                            {!! Form::select('company',get_insurance_companies(), null, ['class' => 'form-control company', 'placeholder' => 'Choose...']) !!}
+                            {!! Form::select('company',get_insurance_companies(), null, ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group" id="scheme">
+                        <label class="col-md-2 control-label">
+                            Scheme
+                        </label>
+                        <div class="col-md-5">
+                            {!! Form::select('scheme',[], null, ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}
                             <span class="help-block">Select an insurance company for action.</span>
                         </div>
                     </div>
-                    @if($mode !=='stmt_mode')
-                        {{--<div class="form-group">--}}
-                        {{--<label class="col-md-2 control-label">--}}
-                        {{--Patient--}}
-                        {{--</label>--}}
-                        {{--<div class="col-md-10">--}}
-                        {{--<div class="row">--}}
-                        {{--<div class="col-xs-5">--}}
-                        {{--<input type='text' id="patient" class="form-control" placeholder="Patient Name" name='patient'>--}}
-                        {{--</div>--}}
-                        {{--</div>--}}
-                        {{--</div>--}}
-                        {{--</div>--}}
-                    @endif
                     <div class="form-group">
                         <label class="col-md-2 control-label">
                             Time Period
@@ -42,7 +36,8 @@
                                     <input type='text' id="date1" placeholder="Date 1" name='date1'>
                                 </div>
                                 <div class="col-xs-4 col-md-3">
-                                    <input type='text' id="date2" style="float: right" placeholder="Date 2" name='date2'>
+                                    <input type='text' id="date2" style="float: right" placeholder="Date 2"
+                                           name='date2'>
                                 </div>
                             </div>
                         </div>

@@ -15,6 +15,7 @@ use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Finance\Entities\InsuranceInvoicePayment;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Finance\Entities\PatientTransaction;
+use Ignite\Finance\Entities\PaymentManifest;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
@@ -126,6 +127,20 @@ class EvaluationController extends AdminBaseController
             $this->data['patient'] = Patients::find($patient);
             $this->data['patient_invoices'] = PatientInvoice::wherePatient_id($patient)->get();
             return view('finance::evaluation.pay', ['data' => $this->data]);
+        }
+        if (m_setting('finance.background_manifest')) {
+            $this->data['manifests'] = PaymentManifest::whereType('cash')->get();
+            $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
+                ->doesntHave('removed_bills')
+                ->whereNull('insurance')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $this->data['invoiced'] = Patients::whereHas('invoices', function ($query) {
+                $query->whereStatus('unpaid')
+                    ->orWhere('status', '=', 'part_paid');
+            })->get();
+            return view('finance::payment_list', ['data' => $this->data]);
         }
         $this->billable_patients();
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
@@ -348,6 +363,10 @@ class EvaluationController extends AdminBaseController
     public function pendingBills()
     {
         $this->data['pending_mode'] = 1;
+        if (m_setting('finance.background_manifest')) {
+            $this->data['pending'] = PaymentManifest::whereType('insurance')->get();
+            return view('finance::pending-insurance', ['data' => $this->data]);
+        }
         $this->data['pending'] = Visit::wherePaymentMode('insurance')
             ->orderBy('created_at', 'DESC')
             ->get();
