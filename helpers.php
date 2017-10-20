@@ -246,16 +246,16 @@ if (!function_exists('get_clinic')) {
 
 }
 
-if (!function_exists('get_patient_balance')) {
+if (!function_exists('get_patient_balance_real')) {
 
-    function get_patient_balance($patient_id)
+    function get_patient_balance_real($patient_id)
     {
-        $account = \Ignite\Finance\Entities\PatientAccount::findOrNew($patient_id);
-        if (!empty($account)) {
-            return $account->balance;
-        } else {
-            return 0;
-        }
+        return EvaluationPayments::wherePatient($patient_id)->whereDeposit(true)->sum('amount');
+//        $account = \Ignite\Finance\Entities\PatientAccount::find($patient_id);
+//        if ($account) {
+//            return $account->balance;
+//        }
+//        return 0;
     }
 }
 if (!function_exists('pesa')) {
