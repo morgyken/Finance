@@ -313,17 +313,21 @@ function get_unpaid_amount(Visit $visit)
 if (!function_exists('patient_has_pharmacy_bill')) {
     function patient_has_pharmacy_bill(Visit $visit)
     {
-        $list = Patients::where(function (Builder $query) use ($visit) {
-            $query->whereHas('visits.prescriptions.payment', function (Builder $query) {
-                $query->whereComplete(false);
-            });
-            $query->orWhereHas('visits.prescriptions', function (Builder $builder) {
-                $builder->whereDoesntHave('payment');
-            });
-            $query->whereHas('visits', function (Builder $query) use ($visit) {
-                $query->whereId($visit->id);
-            });
-        })->get()->pluck('id')->toArray();
-        return in_array($visit->patient, $list);
+        try{
+            $list = Patients::where(function (Builder $query) use ($visit) {
+                $query->whereHas('visits.prescriptions.payment', function (Builder $query) {
+                    $query->whereComplete(false);
+                });
+                $query->orWhereHas('visits.prescriptions', function (Builder $builder) {
+                    $builder->whereDoesntHave('payment');
+                });
+                $query->whereHas('visits', function (Builder $query) use ($visit) {
+                    $query->whereId($visit->id);
+                });
+            })->get()->pluck('id')->toArray();
+            return in_array($visit->patient, $list);
+        }catch (\Exception $e){
+            return null;
+        }
     }
 }

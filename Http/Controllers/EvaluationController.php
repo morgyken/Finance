@@ -217,13 +217,17 @@ class EvaluationController extends AdminBaseController
                         $qd->whereStatus(0);
                     });
                 });
-                $query->orWhere(function (Builder $query) {
-                    $query->whereHas('prescriptions.payment', function (Builder $query) {
-                        $query->wherePaid(false);
-                    })->orWhereHas('prescriptions', function (Builder $builder) {
-                        $builder->whereDoesntHave('payment');
+                try{
+                    $query->orWhere(function (Builder $query) {
+                        $query->whereHas('prescriptions.payment', function (Builder $query) {
+                            $query->wherePaid(false);
+                        })->orWhereHas('prescriptions', function (Builder $builder) {
+                            $builder->whereDoesntHave('payment');
+                        });
                     });
-                });
+                }catch (\Exception $e){
+
+                }
             });
         })->orderBy('created_at', 'desc')
             ->get();

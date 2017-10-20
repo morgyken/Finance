@@ -45,6 +45,7 @@ function getAmount($sales) {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
+        table-layout: fixed;
     }
 
     table th{
@@ -106,9 +107,9 @@ function getAmount($sales) {
                 <table class="table table-striped" id="items">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Item</th>
-                            <th>Cost (Ksh.)</th>
+                            <th style="width: 10%">#</th>
+                            <th style="width: 70%">Item</th>
+                            <th style="width: 20%">Price</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,7 +117,7 @@ function getAmount($sales) {
                         @foreach($payment->details as $d)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td><small>{{$d->item_desc}}</small></td>
+                            <td><small>{{substr($d->item_desc,0,35)}}</small></td>
                             <td style="text-align: right">{{$d->price}}</td>
                         </tr>
                         @endforeach

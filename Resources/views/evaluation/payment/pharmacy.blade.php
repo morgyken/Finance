@@ -1,4 +1,5 @@
 <!-- pharmacy queue -->
+<?php try{ ?>
 @foreach($visit->prescriptions as $item)
     @if(!$item->payment->complete)
         <tr>
@@ -21,3 +22,6 @@
         </tr>
     @endif
 @endforeach
+<?php }catch (\Exception $e){
+    echo 'Ooops something weird happened';
+} ?>
