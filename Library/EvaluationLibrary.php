@@ -151,7 +151,6 @@ class EvaluationLibrary implements EvaluationRepository
                 $payment->dispensing = json_encode(array_unique(json_decode($dispense, true)));
             }
             $payment->user = $this->user;
-            $payment->save();
             $payment->amount = $this->payment_methods($payment);
             if (isset($this->request->deposit)) {
                 $payment->deposit = true;

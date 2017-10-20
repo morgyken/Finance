@@ -32,6 +32,12 @@ $router->group(['prefix' => 'gl', 'as' => 'gl.'], function (Router $router) {
     $router->match(['get', 'post'], 'payment/{id}', ['uses' => 'GlController@payments', 'as' => 'payment.details']);
 });
 
+$router->group(['prefix' => 'self-accounts', 'as' => 'account.'], function (Router $router) {
+    $router->get('patients', ['uses' => 'FinanceController@list', 'as' => 'list']);
+    $router->get('deposit/{id}/request', ['uses' => 'FinanceController@deposit', 'as' => 'deposit']);
+    $router->get('deposit/{id}/done', ['uses' => 'FinanceController@doneDeposit', 'as' => 'deposit.done']);
+    $router->post('deposit/{id}/do', ['uses' => 'FinanceController@saveDeposit', 'as' => 'deposit.save']);
+});
 //financials
 $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Router $router) {
     $router->post('pharmacy/dispense', ['uses' => 'EvaluationController@pharmacy_dispense', 'as' => 'pharmacy.dispense']);
@@ -43,7 +49,6 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Rout
     $router->get('patient/invoices/{id}/purge', ['uses' => 'EvaluationController@purge_patient_invoice', 'as' => 'purge_patient_invoice']);
     $router->get('patient/invoices/{id}/print', ['uses' => 'EvaluationController@print_patient_invoice', 'as' => 'patient_invoice.print']);
 
-    $router->get('accounts', ['uses' => 'EvaluationController@accounts', 'as' => 'accounts']);
 
     $router->get('sale/pay/{sale?}', ['as' => 'sale.pay', 'uses' => 'EvaluationController@sale_pay']);
     $router->get('sale/details/{sale}', ['uses' => 'EvaluationController@sale_details', 'as' => 'sale']);

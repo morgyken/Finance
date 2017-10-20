@@ -44,14 +44,9 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
                     $item->icon('fa fa-euro');
                     $item->route('finance.evaluation.pay');
                 });
-//                $item->item('Pharmacy Payment', function (Item $item) {
-//                    $item->icon('fa fa-btc');
-//                    $item->route('finance.evaluation.pay.pharmacy');
-//                });
-
                 $item->item('Patient Accounts', function (Item $item) {
                     $item->icon('fa fa-list');
-                    $item->route('finance.evaluation.accounts');
+                    $item->route('finance.account.list');
                 });
 
                 $item->item('Patient Invoices', function (Item $item) {

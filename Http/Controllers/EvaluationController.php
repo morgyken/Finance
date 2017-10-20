@@ -313,16 +313,6 @@ class EvaluationController extends AdminBaseController
         return view('finance::evaluation.details', ['data' => $this->data]);
     }
 
-    /*
-      public function get_patients_with_drugs() {
-      return Patients::whereHas('visits', function ($query) {
-      $query->wherePaymentMode('cash');
-      $query->whereHas('dispensing', function ($q) {
-      $q->wherePayment_status(0);
-      });
-      })->get();
-      } */
-
     public function sale_pay($sale = null)
     {
         if (!empty($sale)) {
@@ -336,12 +326,6 @@ class EvaluationController extends AdminBaseController
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 
-
-    public function accounts()
-    {
-        $this->data['patients'] = Patients::all();
-        return view('finance::patient_accounts', ['data' => $this->data]);
-    }
 
     public function individual_account($patient)
     {
