@@ -5,8 +5,8 @@
             <tr>
                 <th>#</th>
                 <th>Item</th>
-                <th>Discount(%)</th>
-                <th>Amount (Ksh.)</th>
+                <th style="width: 10%">Disc(%)</th>
+                <th style="text-align: right">Amount (Ksh.)</th>
             </tr>
             </thead>
             <tbody>
@@ -17,11 +17,10 @@
                         <tr>
                             <td>{{$n+=1}}</td>
                             <td>{{$d->item_desc}}
-                                <i class="small">({{$d->investigations->type}})</i>
                                 x {{$d->investigations->quantity>0?$d->investigations->quantity:1}}
                             </td>
                             <td>{{$d->investigations->discount}}</td>
-                            <td>{{$d->price}}</td>
+                            <td style="text-align: right">{{$d->price}}</td>
                         </tr>
                         <?php $bill += $d->investigations->amount > 0 ? $d->investigations->amount : $d->price ?>
                     @endif
@@ -33,7 +32,7 @@
                                 x {{$d->pharmacy->payment->quantity}} units
                             </td>
                             <td>0</td>
-                            <td>{{$d->price}}</td>
+                            <td style="text-align: right">{{$d->price}}</td>
                         </tr>
                         <?php $bill +=  $d->price ?>
                     @endif
@@ -54,7 +53,7 @@
                         (drug)
                     </td>
                     <td></td>
-                    <td>{{$item->price*$item->quantity}}</td>
+                    <td style="text-align: right">{{$item->price*$item->quantity}}</td>
                 </tr>
                 <?php $bill += $item->price * $item->quantity ?>
             @endforeach
@@ -64,23 +63,15 @@
             ?>
             </tbody>
             <tfoot>
-            <tr>
+            <tr style="text-align: right">
                 <td></td>
                 <td></td>
                 <td>Total</td>
                 <td>
-                    {{$bill}}
+                    {{number_format($bill,2)}}
                 </td>
             </tr>
             @endif
-            <tr>
-                <td></td>
-                <td></td>
-                <td>Amount Paid</td>
-                <td>
-                    {{$payment->total}}
-                </td>
-            </tr>
             @if(!$payment->deposit)
                 @if($payment->total-$bill>0)
                 <tr>
@@ -103,7 +94,6 @@
                 </tr>
             @endif
             </tfoot>
-
     </table>
 @else
     <table class="table table-striped">
@@ -147,15 +137,6 @@
             <th>Payment:</th>
             <th>
                 {{number_format(ceil($payment->total),2)}}
-            </th>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <th>Change:</th>
-            <th>
-                {{number_format(ceil($payment->total-$topay),2)}}
             </th>
         </tr>
         </tfoot>

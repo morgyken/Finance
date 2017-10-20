@@ -93,28 +93,12 @@ function getAmount($sales) {
 <div class="box box-info" style="text-align: center;">
         <div class="box-header with-border" style="text-align: center">
             <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
+            @include('finance::evaluation.print.logo')
         </div>
-    <br/>
     <div class="box-body">
-    @include('Inventory::partials.t_header')
+    @include('finance::evaluation.print.details')
     <table class="row">
-        <div style="text-align: center" class="col-md-6 col-lg-6">
-        <h2 style="text-align: center" class="box-title">RECIEPT</h2>
-            <br>
-            <strong>Name:</strong><span class="content">
-                {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}
-            </span>
-            <br/>
-            <strong>Patient No:</strong><span class="content">
-                {{$payment->patients?m_setting('reception.patient_id_abr').$payment->patients->id:'Walkin Patient'}}
-            </span>
-            <br/>
-            <br/>
-            <strong>Date:</strong>
-            <span class="content"> {{(new Date($payment->created_at))->format('j/m/Y H:i')}}</span><br/>
-            <strong>Receipt No: </strong>
-            <span>{{$payment->receipt}}</span><br/><br/>
-        </div>
+        @include('finance::evaluation.print.patient_details')
     </table>
         <div class="col-md-6">
             @if(isset($payment))
@@ -132,9 +116,8 @@ function getAmount($sales) {
                         @foreach($payment->details as $d)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$d->item_desc}} <i
-                                    class="small">({{$d->investigations->type??'Drug'}})</i></td>
-                            <td>{{$d->price}}</td>
+                            <td><small>{{$d->item_desc}}</small></td>
+                            <td style="text-align: right">{{$d->price}}</td>
                         </tr>
                         @endforeach
                         @endif
@@ -153,7 +136,7 @@ function getAmount($sales) {
                                         (drug)
                                         Discount (%) :{{$item->discount}}
                                     </td>
-                                    <td>{{amount_after_discount($item->discount, $item->price*$item->quantity)}}</td>
+                                    <td style="text-align: right">{{amount_after_discount($item->discount, $item->price*$item->quantity)}}</td>
                                 </tr>
                                 @endforeach
                                 <?php
@@ -161,12 +144,6 @@ function getAmount($sales) {
                         }
                         ?>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td style="text-align:right" colspan='2'>Amount Paid</td>
-                            <td>{{$payment->total}}</td>
-                        </tr>
-                    </tfoot>
                 </table>
             <?php } else { ?>
 
@@ -188,7 +165,7 @@ function getAmount($sales) {
                             <td>{{$item->quantity}}</td>
                             <td>{{$item->unit_cost}}</td>
                             <td>{{$item->discount}}</td>
-                            <td>{{number_format(amount_after_discount($item->discount, $item->unit_cost*$item->quantity),2)}}</td>
+                            <td style="text-align: right">{{number_format(amount_after_discount($item->discount, $item->unit_cost*$item->quantity),2)}}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -197,8 +174,8 @@ function getAmount($sales) {
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>Total</td>
-                            <td>
+                            <td style="text-align: right">Total</td>
+                            <td style="text-align: right">
                                 {{number_format(getAmount($payment->sales),2)}}
                             </td>
                         </tr>
@@ -208,31 +185,47 @@ function getAmount($sales) {
             @endif
         </div>
         <div class="col-md-6">
-            <h4>Payment Details</h4>
-            @if(!empty($payment->CashAmount))
-            Cash Payment: Ksh. {{$payment->cash->amount}}
-            <br/>
-            @endif
-            @if(!empty($payment->MpesaAmount))
-            MPESA Ref: {{$payment->mpesa->reference}}<br/>
-            Amount: Ksh {{$payment->mpesa->amount}}
-            <br/>
-            @endif
-            @if(!empty($payment->ChequeAmount))
-            <h4>Cheque Payment</h4>
-            Amount: Ksh {{$payment->cheque->amount}}
-            <br/>
-            @endif
-            @if(!empty($payment->CardAmount))
-            <h4>Card Payment</h4>
-            Amount: Ksh {{$payment->card->amount}}
-            <br/>
-            @endif
+
+            <table style="text-align: right">
+                <tr>
+                    <th colspan="2">Payment Details</th>
+                </tr>
+                @if(!empty($payment->CashAmount))
+                    <tr>
+                        <td>Cash Payment:</td>
+                        <td>{{number_format($payment->cash->amount,2)}}</td>
+                    </tr>
+                @endif
+
+                @if(!empty($payment->mpesa))
+                    <tr>
+                        <td>Mpesa {{$payment->mpesa->reference?'('.$payment->mpesa->reference.')':''}}:</td>
+                        <td>{{number_format($payment->mpesa->amount,2)}}</td>
+                    </tr>
+                @endif
+
+                @if(!empty($payment->cheque))
+                    <tr>
+                        <td>Cheque Payment:</td>
+                        <td>{{number_format($payment->cheque->amount,2)}}</td>
+                    </tr>
+                @endif
+
+                @if(!empty($payment->card))
+                    <tr>
+                        <td>Card Payment:</td>
+                        <td>{{number_format($payment->card->amount,2)}}</td>
+                    </tr>
+                @endif
+                <tr style="text-align: right">
+                    <th style="text-align: right">Total Amount Paid:</th>
+                    <th style="text-align: right">Ksh. {{number_format($payment->total,2)}}</th>
+                </tr>
+            </table>
         </div>
     </div>
     <hr/>
     <strong>Signature:</strong><u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>
-
     <br/><br/>
     Payment Confirmed by: <u>{{Auth::user()->profile->full_name}}</u>
 </div>

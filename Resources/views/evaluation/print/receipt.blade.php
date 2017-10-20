@@ -94,81 +94,10 @@ function getAmount($sales) {
     <?php } else { ?>
     <h1 class="box-title">{{get_clinic()->name?get_clinic()->name:config('practice.name')}}</h1>
     <?php } ?>
-    @if(isset($a4))
-        @if(get_logo())
-            <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
-        @else
-            <img style="width:100; height:auto; float: right" src=""/>
-        @endif
-    @else
-        <center>
-            <?php try{ ?>
-            <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
-            <?php
-            }catch(\Exception $e){
-            ?>
-            <img style="width:100; height:auto; float: right" src=""/>
-            <?php
-            }
-            ?>
-        </center>
-    @endif
-    <div class="box-header with-border">
-        <p style="font-size: 90%; <?php if (!isset($a4)) { ?> text-align: center<?php } ?>">
-            @if(!empty($clinic->address))
-                P.O Box {{$clinic->address}}, {{$clinic->town}}.<br/>
-                Visit us: {{$clinic->location}}<br>
-                {{$clinic->street}}<br>
-                Email: {{$clinic->email}}<br>
-                Call Us: {{$clinic->mobile}}
-                <br/> {{$clinic->telephone?"Or: ".$clinic->telephone:''}}<br>
-            @else
-                P.O Box {{config('practice.address')}}, {{config('practice.town')}}.<br/>
-                Visit us: {{config('practice.building')?config('practice.building').'.':''}}<br>
-                {{config('practice.street')?config('practice.street').'.':''}}<br>
-                Email: {{config('practice.email')}}<br>
-                {{config('practice.telephone')?'Call Us:- '.config('practice.telephone'):''}}<br>
-            @endif
-        </p>
-    </div>
+    @include('finance::evaluation.print.logo')
+    @include('finance::evaluation.print.details')
     <div class="box-body">
-        <div class="col-md-12">
-            @if(!$payment->deposit)
-                <?php if (!isset($a4)) { ?>
-                <center>
-                    <h1>RECEIPT</h1>
-                </center>
-                <?php } else { ?>
-                <h1>RECEIPT</h1>
-                <?php } ?>
-            @else
-                <?php if (!isset($a4)) { ?>
-                <center>
-                    <h1>Deposit Slip</h1>
-                </center>
-                <?php } else { ?>
-                <h1>Deposit Slip</h1>
-                <?php } ?>
-            @endif
-            <br>
-            <strong>Name:</strong>
-                <span class="content">
-                    {{$payment->patients?$payment->patients->full_name:'Walkin Patient'}}
-                </span>
-                <br/>
-                <strong>No:</strong>
-                <span class="content">
-                    {{$payment->patients?m_setting('reception.patient_id_abr').$payment->patients->id:'Walkin Patient'}}
-                </span>
-                <br/>
-            <strong>Date:</strong>
-                <span class="content">
-                    {{(new Date($payment->created_at))->format('j/m/Y H:i')}}
-                </span>
-                <br/>
-            <br/>
-            <strong><?php echo $payment->deposit?'Slip No: ':'Receipt No: '; ?></strong><span>{{$payment->receipt}}</span><br/><br/>
-        </div>
+        @include('finance::evaluation.print.patient_details')
         <div class="col-md-6">
             @if(!$invoice_mode)
                 @include('finance::evaluation.payment.details.main_mode')
@@ -177,26 +106,42 @@ function getAmount($sales) {
             @endif
         </div>
         <div class="col-md-6">
-            <h4>Payment Details</h4>
-            @if(!empty($payment->CashAmount))
-                Cash Payment: Ksh. {{$payment->cash->amount}}
-                <br/>
-            @endif
-            @if(!empty($payment->MpesaAmount))
-                MPESA Ref: {{$payment->mpesa->reference}}<br/>
-                Amount: Ksh {{$payment->mpesa->amount}}
-                <br/>
-            @endif
-            @if(!empty($payment->ChequeAmount))
-                <h4>Cheque Payment</h4>
-                Amount: Ksh {{$payment->cheque->amount}}
-                <br/>
-            @endif
-            @if(!empty($payment->CardAmount))
-                <h4>Card Payment</h4>
-                Amount: Ksh {{$payment->card->amount}}
-                <br/>
-            @endif
+            <table style="text-align: right">
+                <tr>
+                    <th colspan="2">Payment Details</th>
+                </tr>
+                @if(!empty($payment->CashAmount))
+                    <tr>
+                        <td>Cash Payment:</td>
+                        <td>{{number_format($payment->cash->amount,2)}}</td>
+                    </tr>
+                @endif
+
+                @if(!empty($payment->mpesa))
+                    <tr>
+                        <td>Mpesa {{$payment->mpesa->reference?'('.$payment->mpesa->reference.')':''}}:</td>
+                        <td>{{number_format($payment->mpesa->amount,2)}}</td>
+                    </tr>
+                @endif
+
+                @if(!empty($payment->cheque))
+                    <tr>
+                        <td>Cheque Payment:</td>
+                        <td>{{number_format($payment->cheque->amount,2)}}</td>
+                    </tr>
+                @endif
+
+                @if(!empty($payment->card))
+                    <tr>
+                        <td>Card Payment:</td>
+                        <td>{{number_format($payment->card->amount,2)}}</td>
+                    </tr>
+                @endif
+                <tr style="text-align: right">
+                    <th style="text-align: right">Total Amount Paid:</th>
+                    <th style="text-align: right">Ksh. {{number_format($payment->total,2)}}</th>
+                </tr>
+            </table>
         </div>
     </div>
     <hr/>
