@@ -550,10 +550,10 @@ class EvaluationLibrary implements EvaluationRepository
             $p->payment()->update(['invoiced' => $invoice->id]);
         }
         $procedures = $this->_get_selected_stack('procedures_p');
-        foreach ($procedures as $drug) {
-            $p = Investigations::find($drug);
+        foreach ($procedures as $item) {
+            $p = Investigations::find($item);
             $p->invoiced = $invoice->id;
-            $p->save();
+            $p->update();
         }
     }
 
