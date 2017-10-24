@@ -104,6 +104,31 @@
         <script type="text/javascript">
             var mode = 'billing';
             $(function () {
+                var billedIds = [], arrIndex = {};
+                var position = 0;
+
+                function add_replace_item(object) {
+                    var index = arrIndex[object.id];
+                    if (index === undefined) {
+                        index = position;
+                        arrIndex[object.id] = index;
+                        position++;
+                    }
+                    billedIds[index] = object;
+                    calc();
+                }
+
+                function remove_item(id) {
+                    billedIds = billedIds.filter(function (obj) {
+                        return obj.id !== id;
+                    });
+                    calc();
+                }
+
+                function calc() {
+                    $("#action-scene").html('<input type="submit" class="btn btn-success" value="Dispatch Selected Invoices" >');
+                }
+
                 $('.records').dataTable({
                     pageLength: 25,
                     dom: 'Bfrtip',
@@ -132,6 +157,17 @@
                     checkboxClass: 'icheckbox_flat-green',
                     radioClass: 'iradio_square-blue',
                     increaseArea: '20%' // optional
+                });
+                $('#billed_table').find('input[type=checkbox]').on('ifChanged', function (e) {
+                    e.stopImmediatePropagation();
+                    var the_id = $(this).val();
+                    if ($(this).is(':checked')) {
+                        add_replace_item({
+                            id: the_id
+                        });
+                    } else {
+                        remove_item(the_id);
+                    }
                 });
             });
         </script>
