@@ -18,6 +18,8 @@ class CreatePaymentManifestsTable extends Migration
             $table->string('type')->default('cash');
             $table->unsignedInteger('visit_id');
             $table->unsignedInteger('patient_id');
+            $table->unsignedInteger('company_id')->nullable();
+            $table->unsignedInteger('scheme_id')->nullable();
             $table->boolean('has_meds')->default(false);
             $table->double('amount', 10, 2);
             $table->timestamps();

@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property int $visit_id
  * @property int $patient_id
+ * @property int|null $company_id
+ * @property int|null $scheme_id
  * @property int $has_meds
  * @property float $amount
  * @property \Carbon\Carbon|null $created_at
@@ -20,10 +22,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Ignite\Reception\Entities\Patients $patient
  * @property-read \Ignite\Evaluation\Entities\Visit $visit
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereHasMeds($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest wherePatientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereSchemeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PaymentManifest whereVisitId($value)

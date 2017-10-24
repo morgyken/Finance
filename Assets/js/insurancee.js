@@ -1,6 +1,5 @@
 $(function () {
     $("#action-btn").hide();
-    $('#scheme').hide();
     $("#action-scene").html('<span class="label label-danger">Select an Insurance Firm for action</span>');
 
     $("select[name=company]").change(function () {
@@ -12,12 +11,13 @@ $(function () {
             url: SCHEMES_URL,
             data: {'id': this.value},
             success: function (data) {
-                var options = null;
+                var options = '<option value="">Select scheme</option>';
                 $.each(data, function (key, value) {
                     options += '<option value="' + key + '">' + value + '</option>';
                 });
                 $("select[name=scheme]").html(options);
                 $('#scheme').show();
+                $("select[name=scheme]").val(THE_SCHEME);
             }
         });
     });
@@ -84,4 +84,5 @@ $(function () {
         }
     }
 
+    $("select[name=company]").change();
 });

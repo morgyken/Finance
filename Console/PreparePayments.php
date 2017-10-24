@@ -4,6 +4,7 @@ namespace Ignite\Finance\Console;
 
 use Ignite\Evaluation\Entities\Visit;
 use Ignite\Finance\Entities\PaymentManifest;
+use Ignite\Settings\Entities\Schemes;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\Console\Input\InputOption;
@@ -80,6 +81,10 @@ class PreparePayments extends Command
             $one->type = $visit->payment_mode;
             $one->amount = $visit->unpaid_amount;
             $one->has_meds = patient_has_pharmacy_bill($visit);
+            if ($one->type === 'insurance') {
+                $one->company_id = @$visit->patient_scheme->schemes->company;
+                $one->scheme_id = @$visit->patient_scheme->schemes->id;
+            }
             $one->save();
             $worker++;
         }
