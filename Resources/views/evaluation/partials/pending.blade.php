@@ -48,9 +48,9 @@
                                 <a href="{{route('finance.evaluation.prepare.bill', $visit->id)}}"
                                    class="btn btn-xs btn-primary">
                                     <i class="fa fa-usd"></i> Bill</a>
-                                {{--<a href="{{route('finance.evaluation.tocash', $visit->id)}}"--}}
-                                {{--class="btn btn-xs btn-info">--}}
-                                {{--<i class="fa fa-money"></i>Change to Cash</a>--}}
+                                <a href="{{route('finance.change_mode', $visit->id)}}"
+                                   class="btn btn-xs btn-info">
+                                    <i class="fa fa-exchange"></i>Change</a>
                             </td>
                         </tr>
                     @endif

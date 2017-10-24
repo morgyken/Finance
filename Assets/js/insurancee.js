@@ -1,9 +1,11 @@
 $(function () {
     $("#action-btn").hide();
+    $('#scheme').hide();
     $("#action-scene").html('<span class="label label-danger">Select an Insurance Firm for action</span>');
 
     $("select[name=company]").change(function () {
         if (!this.value) {
+            $('#scheme').hide();
             return;
         }
         $.ajax({

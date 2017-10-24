@@ -83,9 +83,6 @@
                     </tfoot>
                 </table>
                 <div class="pull-right">
-                    <button type="button" class="btn btn-primary" id="swap2cash">
-                        <i class="fa fa-exchange"></i> Change to Cash
-                    </button>
                     <button type="submit" class="btn btn-success">
                         <i class="fa fa-money"></i> Bill Selected Items
                     </button>
@@ -115,10 +112,6 @@
             });
             $(document).on('click', '.cancel', function () {
                 $('tr#' + $(this).attr('xs')).remove();
-            });
-            $('#swap2cash').click(function () {
-                $url = "{{route('finance.evaluation.swap.mode',$visit->id)}}";
-                $('form#inv').attr('action', $url).submit();
             });
         });
     </script>

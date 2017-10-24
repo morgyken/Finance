@@ -3,6 +3,7 @@
 namespace Ignite\Finance\Http\Controllers;
 
 use Ignite\Core\Http\Controllers\AdminBaseController;
+use Ignite\Evaluation\Entities\Visit;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Finance\Entities\PaymentsCard;
@@ -77,6 +78,12 @@ class FinanceController extends AdminBaseController
         $this->data['payment'] = EvaluationPayments::find($id);
         $this->data['patient'] = Patients::find($this->data['payment']->patient);
         return view('finance::deposit_details', ['data' => $this->data]);
+    }
+
+    public function changeMode($visit_id)
+    {
+        $this->data['visit'] = Visit::find($visit_id);
+        return view('finance::change-mod', ['data' => $this->data]);
     }
 
     public function saveDeposit(Request $request, $patient)

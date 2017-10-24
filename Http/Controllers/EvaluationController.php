@@ -426,7 +426,7 @@ class EvaluationController extends AdminBaseController
     public function prepareBill($visit_id)
     {
         $this->data['visit'] = Visit::find($visit_id);
-        return view('finance::evaluation.prepare-bill', ['data' => $this->data]);
+        return view('finance::prepare-bill', ['data' => $this->data]);
     }
 
     public function billMany(Request $request)
