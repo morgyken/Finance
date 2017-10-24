@@ -9,7 +9,7 @@
         </div>
         <div class="box-body">
             <div class="col-md-12">
-                {{Form::open(['route'=>['finance.evaluation.swap.mode',$visit->id,],'id'=>'inv'])}}
+                {{Form::open(['route'=>['finance.evaluation.swap.mode',$visit->id],'id'=>'inv'])}}
                 <table class="table table-condensed" id="panda">
                     <tbody>
                     @foreach($visit->investigations as $item)
@@ -73,7 +73,7 @@
                     </tfoot>
                 </table>
                 <div class="pull-right">
-                    <button type="button" class="btn btn-primary" id="swap2cash">
+                    <button type="submit" class="btn btn-primary" id="swap2cash">
                         <i class="fa fa-exchange"></i> Change to Cash
                     </button>
                 </div>
