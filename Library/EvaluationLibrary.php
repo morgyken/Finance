@@ -616,6 +616,9 @@ class EvaluationLibrary implements EvaluationRepository
         $inv->invoice_no = 'INV' . time();
         $inv->visit = $visit;
         $inv->payment = $amount;
+        $_v = Visit::find($visit);
+        $inv->company_id = @$_v->patient_scheme->schemes->company;
+        $inv->scheme_id = @$_v->patient_scheme->schemes->id;
         $inv->save();
         return $inv;
     }
