@@ -85,6 +85,7 @@ class PreparePayments extends Command
                 $one->company_id = @$visit->patient_scheme->schemes->company;
                 $one->scheme_id = @$visit->patient_scheme->schemes->id;
             }
+            $one->date = $visit->created_at->toDateString();
             $one->save();
             $worker++;
         }

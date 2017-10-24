@@ -22,7 +22,7 @@ class CreatePaymentManifestsTable extends Migration
             $table->unsignedInteger('scheme_id')->nullable();
             $table->boolean('has_meds')->default(false);
             $table->double('amount', 10, 2);
-            $table->timestamps();
+            $table->date('date');
         });
     }
 
