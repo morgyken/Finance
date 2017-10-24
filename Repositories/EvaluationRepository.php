@@ -28,9 +28,26 @@ interface EvaluationRepository
      */
     public function record_payment();
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function bill_visit_many(Request $request);
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function bill_visit(Request $request);
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function swapBill(Request $request);
+
+    /**
+     * @return mixed
+     */
+    public function getPending();
 }

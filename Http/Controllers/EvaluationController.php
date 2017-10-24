@@ -348,7 +348,7 @@ class EvaluationController extends AdminBaseController
     {
         $this->data['pending_mode'] = 1;
         if (m_setting('finance.background_manifest')) {
-            $this->data['pending'] = PaymentManifest::whereType('insurance')->get();
+            $this->data['pending'] = $this->evaluationRepository->getPending();
             return view('finance::pending-insurance', ['data' => $this->data]);
         }
         $this->data['pending'] = Visit::wherePaymentMode('insurance')

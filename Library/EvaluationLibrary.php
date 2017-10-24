@@ -19,6 +19,7 @@ use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
 use Ignite\Finance\Entities\PatientAccount;
 use Ignite\Finance\Entities\PatientTransaction;
+use Ignite\Finance\Entities\PaymentManifest;
 use Ignite\Finance\Entities\PaymentsCard;
 use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
@@ -642,5 +643,27 @@ class EvaluationLibrary implements EvaluationRepository
             ChangeInsurance::create($payload);
         }
         return true;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPending()
+    {
+        $request = \request();
+        $pending = PaymentManifest::whereType('insurance')->orderBy('date', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('date', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $pending = $pending->where('date', '<=', $request->date2);
+        }
+        return $pending->get();
     }
 }
