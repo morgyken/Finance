@@ -646,7 +646,7 @@ class EvaluationLibrary implements EvaluationRepository
     }
 
     /**
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
     public function getPending()
     {
@@ -663,6 +663,28 @@ class EvaluationLibrary implements EvaluationRepository
         }
         if ($request->has('date2')) {
             $pending = $pending->where('date', '<=', $request->date2);
+        }
+        return $pending->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getBilledInvoices()
+    {
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $pending = $pending->where('created_at', '<=', $request->date2);
         }
         return $pending->get();
     }

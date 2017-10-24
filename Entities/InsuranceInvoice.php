@@ -6,6 +6,7 @@ use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\PrescriptionPayment;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Evaluation\Entities\Visit;
+use Ignite\Settings\Entities\Schemes;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $invoice_no
  * @property int|null $visit
+ * @property int|null $company_id
+ * @property int|null $scheme_id
  * @property int|null $receipt
  * @property int|null $payment
  * @property string|null $invoice_date
@@ -26,7 +29,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\InsuranceInvoicePayment[] $payments
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Evaluation\Entities\PrescriptionPayment[] $prescriptions
  * @property-read \Ignite\Inventory\Entities\InventoryBatchProductSales|null $sales
+ * @property-read \Ignite\Settings\Entities\Schemes|null $scheme
  * @property-read \Ignite\Evaluation\Entities\Visit|null $visits
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereDispatch($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereId($value)
@@ -34,6 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereInvoiceNo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice wherePayment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereReceipt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereSchemeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereVisit($value)
@@ -48,6 +54,11 @@ class InsuranceInvoice extends Model
     public function sales()
     {
         return $this->belongsTo(InventoryBatchProductSales::class, 'receipt', 'id');
+    }
+
+    public function scheme()
+    {
+        return $this->belongsTo(Schemes::class, 'scheme_id');
     }
 
     public function visits()
@@ -73,5 +84,10 @@ class InsuranceInvoice extends Model
     public function prescriptions()
     {
         return $this->hasMany(PrescriptionPayment::class, 'invoiced');
+    }
+
+    public function getNiceStatusAttribute()
+    {
+        return get_billing_status($this->status);
     }
 }

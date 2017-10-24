@@ -50,4 +50,6 @@ interface EvaluationRepository
      * @return mixed
      */
     public function getPending();
+
+    public function getBilledInvoices();
 }

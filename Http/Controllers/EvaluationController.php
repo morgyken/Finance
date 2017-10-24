@@ -360,9 +360,7 @@ class EvaluationController extends AdminBaseController
     public function billedBills()
     {
         $this->data['bill_mode'] = 1;
-        $this->data['billed'] = InsuranceInvoice::where('visit', '>', 0)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $this->data['billed'] = $this->evaluationRepository->getBilledInvoices();
         return view('finance::evaluation.partials.billed', ['data' => $this->data]);
     }
 

@@ -63,7 +63,6 @@
         <script>
             $(function () {
                 $('.records').dataTable({
-                    searching: false,
                     dom: 'Bfrtip',
                     buttons: [
                         {

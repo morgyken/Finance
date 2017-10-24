@@ -307,6 +307,51 @@ if (!function_exists('get_clinic')) {
         return $clinic;
     }
 }
+function get_billing_status($status)
+{
+    switch ($status) {
+        case '0':
+            return '<span  class="btn-default btn-xs">
+                        <small>
+                            <i class="fa fa-hourglass-start" aria-hidden="true"></i>
+                            Billed
+                        </small>
+                    </span>';
+        case '1':
+            return '<span  class="btn-info btn-xs">
+                        <small>
+                            <i class="fa fa-hourglass-start" aria-hidden="true"></i>
+                            Dispatched
+                        </small>
+                    </span>';
+        case '2':
+            return '<span  class="btn-primary btn-xs">
+                        <small>
+                            <i class="fa fa-hourglass-half" aria-hidden="true"></i>
+                            Partially Paid
+                        </small>
+                    </span>';
+        case '3':
+            return '<span  class="btn-success btn-xs">
+                        <small>
+                            <i class="fa fa-hourglass" aria-hidden="true"></i>
+                            Fully Paid
+                        </small>
+                    </span>';
+        case '4':
+            return ' <span  class="btn-warning btn-xs">
+                        <small>
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            Overpaid
+                        </small>
+                    </span>';
+        default:
+            return '<span  class="btn-default btn-xs">
+                        <small><i style="color:red" class="fa fa-trash"></i>cancelled</small>
+                        </span>';
+    }
+}
+
 function get_unpaid_amount(Visit $visit)
 {
     $amount = 0;

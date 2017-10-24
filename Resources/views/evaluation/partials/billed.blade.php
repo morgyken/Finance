@@ -10,11 +10,12 @@
                 <th>#</th>
                 <th></th>
                 <th>Invoice</th>
+                <th>Date</th>
                 <th>Name</th>
                 <th>Company</th>
                 <th>Scheme</th>
                 <th>Amount</th>
-                <th>Date</th>
+                <th>Status</th>
                 <th>View</th>
                 <th>Action</th>
             </tr>
@@ -40,12 +41,13 @@
                         {{$item->created_at->format('d/m/y')}}
                     </td>
                     <td>{{$item->visits->patients->full_name}}</td>
-                    <td>{{$item->visits->patient_scheme?$item->visits->patient_scheme->schemes->companies->name:''}}</td>
-                    <td>{{$item->visits->patient_scheme?$item->visits->patient_scheme->schemes->name:''}}</td>
+                    <td>{{$item->scheme->companies->name}}</td>
+                    <td>{{$item->scheme->name}}</td>
                     <td>
                         {{$item->payment}}
                         <input type="hidden" name="amount[]" value="{{$item->payment}}">
                     </td>
+                    <td>{!! $item->nice_status !!}</td>
                     <td>
                         <button type="button" class="btn btn-default btn-xs" data-toggle="modal"
                                 data-target="#info{{$item->visits->id}}">
@@ -103,7 +105,7 @@
             var mode = 'billing';
             $(function () {
                 $('.records').dataTable({
-                    searching: false,
+                    pageLength: 25,
                     dom: 'Bfrtip',
                     buttons: [
                         {
@@ -112,7 +114,7 @@
                             text: '<i class="fa fa-file-excel-o"></i> Excel',
                             className: 'btn btn-default',
                             exportOptions: {
-                                columns: [0, 2, 3, 5, 6]
+                                columns: [0, 2, 3, 4, 5, 6, 7]
                             }
                         }, {
                             extend: 'pdf',
@@ -120,11 +122,16 @@
                             text: '<i class="fa fa-file-pdf-o"></i> PDF',
                             className: 'btn btn-default',
                             exportOptions: {
-                                columns: [0, 2, 3, 5, 6]
+                                columns: [0, 2, 3, 4, 5, 6, 7]
                             }
                         },
 
                     ]
+                });
+                $('#billed_table').find('input[type=checkbox]').iCheck({
+                    checkboxClass: 'icheckbox_flat-green',
+                    radioClass: 'iradio_square-blue',
+                    increaseArea: '20%' // optional
                 });
             });
         </script>

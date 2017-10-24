@@ -58,29 +58,28 @@
         <script>
             $(function () {
                 $('.records').dataTable({
-                    pageLength: 50
-//                    searching: false,
-//                    dom: 'Bfrtip',
-//                    buttons: [
-//                        {
-//                            extend: 'excel',
-//                            title: 'Pending Insurance Payments',
-//                            text: '<i class="fa fa-file-excel-o"></i> Excel',
-//                            className: 'btn btn-default',
-//                            exportOptions: {
-//                                columns: [1, 2, 3, 5, 6, 7]
-//                            }
-//                        }, {
-//                            extend: 'pdf',
-//                            title: 'Pending Insurance Payments',
-//                            text: '<i class="fa fa-file-pdf-o"></i> PDF',
-//                            className: 'btn btn-default',
-//                            exportOptions: {
-//                                columns: [1, 2, 3, 5, 6, 7]
-//                            }
-//                        },
-//
-//                    ]
+                    pageLength: 50,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'excel',
+                            title: 'Pending Insurance Payments',
+                            text: '<i class="fa fa-file-excel-o"></i> Excel',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [1, 2, 3, 5, 6, 7]
+                            }
+                        }, {
+                            extend: 'pdf',
+                            title: 'Pending Insurance Payments',
+                            text: '<i class="fa fa-file-pdf-o"></i> PDF',
+                            className: 'btn btn-default',
+                            exportOptions: {
+                                columns: [1, 2, 3, 5, 6, 7]
+                            }
+                        },
+
+                    ]
                 });
             });
         </script>

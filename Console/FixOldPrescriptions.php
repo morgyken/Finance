@@ -4,6 +4,7 @@ namespace Ignite\Finance\Console;
 
 use Ignite\Evaluation\Entities\Prescriptions;
 use Ignite\Evaluation\Entities\Visit;
+use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Inventory\Entities\InventoryProducts;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -46,6 +47,15 @@ class FixOldPrescriptions extends Command
             ];
             $prescription->payment()->create($attributes);
             $this->info("Working....");
+        }
+        $this->info("Checking something else...");
+        $_ins = InsuranceInvoice::all();
+        foreach ($_ins as $one) {
+            if (empty($one->scheme_id)) {
+                $one->company_id = @$one->visits->patient_scheme->schemes->company;
+                $one->scheme_id = @$one->visits->patient_scheme->schemes->id;
+                $one->save();
+            }
         }
         $this->info("Done!, Thank you");
     }
