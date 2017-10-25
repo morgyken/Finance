@@ -189,7 +189,7 @@
                         $balance.val(bal);
                         if (bal < 0) {
                             $balance.css("background-color", "pink");
-                            $("#action-scene").html('<span class="label label-danger">Amount not sufficient</span>');
+//                            $("#action-scene").html('<span class="label label-danger">Amount not sufficient</span>');
                         }
                         else {
                             $balance.css("background-color", "");
