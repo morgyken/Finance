@@ -392,9 +392,8 @@ class EvaluationController extends AdminBaseController
     public function paidInvoices()
     {
         $this->data['paid_mode'] = 1;
-//        $this->data['payment'] = $this->evaluationRepository->getPaidInvoices();
-        $this->data['payment'] = $this->evaluationRepository->getInvoiceByStatus([2, 3]);
-        return view('finance::evaluation.partials.paid', ['data' => $this->data]);
+        $this->data['payment'] = $this->evaluationRepository->getPaidInvoices();
+        return view('finance::evaluation.partials.paid2', ['data' => $this->data]);
     }
 
     public function companyStatements(Request $request)

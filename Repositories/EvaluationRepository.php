@@ -53,7 +53,7 @@ interface EvaluationRepository
 
 
     /**
-     * @param int|array|null $status
+     * @param int|null $status
      * @param int|null $who
      * @return mixed
      */
