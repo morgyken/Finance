@@ -56,6 +56,9 @@ class FixOldPrescriptions extends Command
                 $one->scheme_id = @$one->visits->patient_scheme->schemes->id;
                 $one->save();
             }
+            if (empty($one->visit) || empty($one->company_id) || empty($one->scheme_id)) {
+                $one->delete();
+            }
         }
         $this->info("Done!, Thank you");
     }

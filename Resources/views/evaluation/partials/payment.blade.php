@@ -102,7 +102,7 @@
                         <td>{{$inv->paid}}</td>
                         <td>
                             <input readonly type="text" size="5" name="amount{{$inv->id}}"
-                                   id="pay_amount{{$inv->id}}" value="{{$bal}}">
+                                   id="pay_amount{{$inv->id}}" value="{{$bal}}" class="amounts">
                             {!! Form::hidden('patient',$inv->visits->patients->id) !!}
                         </td>
                     </tr>
@@ -164,7 +164,9 @@
                         PAID_AMOUNT = parseInt(this.value);
                         calc();
                     });
-
+                    $(document).on('keyup', '.amounts', function () {
+                        calc();
+                    });
 
                     function calc() {
                         if (billedIds.length > 0)
@@ -189,7 +191,7 @@
                         $balance.val(bal);
                         if (bal < 0) {
                             $balance.css("background-color", "pink");
-//                            $("#action-scene").html('<span class="label label-danger">Amount not sufficient</span>');
+                            $("#action-scene").html('<span class="label label-danger">Amount not sufficient</span>');
                         }
                         else {
                             $balance.css("background-color", "");

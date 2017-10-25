@@ -8,7 +8,7 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th></th>
+                <th>Select</th>
                 <th>Invoice</th>
                 <th>Date</th>
                 <th>Name</th>
@@ -22,7 +22,6 @@
             </thead>
             <tbody class="response">
             @foreach($billed as $item)
-                <?php try { ?>
                 <tr>
                     <td>{{$loop->iteration}}</td>
                     <td>
@@ -38,9 +37,9 @@
                     <td>
                         {{$item->created_at->format('d/m/y')}}
                     </td>
-                    <td>{{$item->visits->patients->full_name}}</td>
-                    <td>{{$item->scheme->companies->name}}</td>
-                    <td>{{$item->scheme->name}}</td>
+                    <td>{{@$item->visits->patients->full_name}}</td>
+                    <td>{{@$item->scheme->companies->name}}</td>
+                    <td>{{@$item->scheme->name}}</td>
                     <td>
                         {{$item->payment}}
                         <input type="hidden" name="amount[]" value="{{$item->payment}}">
@@ -78,11 +77,6 @@
                         </div>
                     </td>
                 </tr>
-                <?php
-                } catch (\Exception $e) {
-
-                }
-                ?>
             @endforeach
             </tbody>
             <tfoot>
@@ -93,7 +87,7 @@
                 <td colspan="3">
                     <!-- Dispatch Total:<input id="dis_tot" disabled="disabled" size="7" value="0.00"> --></td>
                 <td style="text-align: right"></td>
-                <td></td>
+                <td colspan="4"></td>
             </tr>
             </tfoot>
         </table>

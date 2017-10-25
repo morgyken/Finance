@@ -331,30 +331,33 @@ class EvaluationLibrary implements EvaluationRepository
      */
     public function record_insurance_payment()
     {
+        \DB::beginTransaction();
         $batch = new FinanceEvaluationInsurancePayments;
         $batch->company = $this->request->company;
         $batch->user = \Auth::user()->id;
         $batch->amount = $this->request->ChequeAmount;
         $batch->save();
 
-        $this->saveCheque($batch);
 
+        $this->saveCheque($batch);
         foreach ($this->request->invoice as $key => $invoice) {
             $amount = 'amount' . $invoice;
+            $this->updateInvoiceStatus($invoice, $this->request->$amount);
             $payment = new InsuranceInvoicePayment;
             $payment->amount = $this->request->$amount;
             $payment->insurance_invoice = $invoice;
             $payment->user = $this->user;
             $payment->batch = $batch->id;
             $payment->save();
-            $this->updateInvoiceStatus($invoice, $this->request->$amount);
         }
+        \DB::commit();
         return true;
     }
 
     /**
      * Update Insurance Invoice Status
-     * @param type invoice_id, amount
+     * @param $invoice
+     * @param $amount
      * @return bool
      */
     public function updateInvoiceStatus($invoice, $amount)
@@ -367,24 +370,20 @@ class EvaluationLibrary implements EvaluationRepository
             $inv->status = 2;
         } elseif ($settled > $bill) {//fully (3)
             $inv->status = 3;
-        }/* elseif ($settled > $bill) {// overpaid (4)
-          $inv->status = 4;
-          } */
+        } elseif ($settled > $bill) {// overpaid (4)
+            $inv->status = 4;
+        }
         $inv->save();
     }
 
+    /**
+     * @param $invoice
+     * @return mixed
+     */
     public function getPriorInvoicePaidAmount($invoice)
     {
-        $payment = InsuranceInvoicePayment::where('insurance_invoice', '=', $invoice)->get(); //find(['insurance_invoice' => $invoice]);
-        if (!$payment->isEmpty()) {
-            $paid = 0;
-            foreach ($payment as $p) {
-                $paid += $p->amount;
-            }
-            return $paid;
-        } else {
-            return 0;
-        }
+        return InsuranceInvoicePayment::where('insurance_invoice', '=', $invoice)
+            ->sum('amount');
     }
 
     private function payment_methods(EvaluationPayments $payment)
