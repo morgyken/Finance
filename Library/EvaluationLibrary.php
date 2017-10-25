@@ -691,4 +691,26 @@ class EvaluationLibrary implements EvaluationRepository
         }
         return $pending->get();
     }
+
+    public function getDispatchedInvoices()
+    {
+//        return DispatchDetails::orderBy('created_at', 'DESC')
+//            ->get();
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC')->whereStatus(1);
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $pending = $pending->where('created_at', '<=', $request->date2);
+        }
+//        dd($pending->toSql());
+        return $pending->get();
+    }
 }

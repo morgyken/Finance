@@ -52,4 +52,6 @@ interface EvaluationRepository
     public function getPending();
 
     public function getBilledInvoices();
+
+    public function getDispatchedInvoices();
 }

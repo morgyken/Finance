@@ -367,8 +367,7 @@ class EvaluationController extends AdminBaseController
     public function dispatchedInvoices()
     {
         $this->data['dispatch_mode'] = 1;
-        $this->data['dispatched'] = DispatchDetails::orderBy('created_at', 'DESC')
-            ->get();
+        $this->data['dispatched'] = $this->evaluationRepository->getDispatchedInvoices();
         return view('finance::evaluation.partials.dispatched', ['data' => $this->data]);
     }
 
