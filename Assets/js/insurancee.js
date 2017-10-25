@@ -31,18 +31,6 @@ $(function () {
         }
     }
 
-    $(".cheque_amount").keyup(function () {
-        $('#pay_balance').val(this.value);
-    });
-
-    $("#cheque_no").keyup(function () {
-        $('#paycheck_no').val(this.value);
-    });
-
-
-    $("#payment_table").mouseover(function () {
-        //$('#pay_balance').val($(".cheque_amount").val());
-    });
 
     $("#date1").datepicker({
         dateFormat: 'yy-mm-dd', onSelect: function (date) {
@@ -69,19 +57,6 @@ $(function () {
                 $('.response').html(response);
             }
         }); //ajax
-    }
-
-    function updateAmount(amount, i) {
-        $amount = $('#pay_dis_tot');
-        $sum = $('#pay_sum');
-        $balance = $('#pay_balance');
-        if ($('#pay_check' + i).is(':checked')) {
-            $amount.val(parseInt($amount.val(), 10) + amount);
-            $balance.val(parseInt($balance.val(), 10) - amount);
-        } else {
-            $amount.val(parseInt($amount.val(), 10) - amount);
-            $balance.val(parseInt($balance.val(), 10) + amount);
-        }
     }
 
     $("select[name=company]").change();

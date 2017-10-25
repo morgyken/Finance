@@ -715,7 +715,7 @@ class EvaluationLibrary implements EvaluationRepository
         return $pending->get();
     }
 
-    public function getInvoiceByStatus($status = null)
+    public function getInvoiceByStatus($status = null, $who = null)
     {
         $request = \request();
         $pending = InsuranceInvoice::orderBy('created_at', 'DESC');
@@ -724,6 +724,9 @@ class EvaluationLibrary implements EvaluationRepository
         }
         if ($request->has('company')) {
             $pending = $pending->where('company_id', $request->company);
+        }
+        if ($who) {
+            $pending = $pending->where('company_id', $who);
         }
         if ($request->has('scheme')) {
             $pending = $pending->where('scheme_id', $request->scheme);

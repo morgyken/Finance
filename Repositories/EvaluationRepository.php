@@ -54,7 +54,10 @@ interface EvaluationRepository
 
     /**
      * @param int|null $status
+     * @param int|null $who
      * @return mixed
      */
-    public function getInvoiceByStatus($status = null);
+    public function getInvoiceByStatus($status = null, $who = null);
+
+    public function record_insurance_payment();
 }

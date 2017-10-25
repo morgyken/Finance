@@ -21,6 +21,7 @@ use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Reception\Entities\Patients;
+use Ignite\Settings\Entities\Insurance;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -381,9 +382,10 @@ class EvaluationController extends AdminBaseController
     public function companyInvoicePayment()
     {
         $this->data['payment_mode'] = 1;
-        $this->data['billed'] = InsuranceInvoice::where('visit', '>', 0)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        if ($who = \request('who')) {
+            $this->data['company'] = Insurance::find($who);
+            $this->data['billed'] = $this->evaluationRepository->getInvoiceByStatus(1, $who);
+        }
         return view('finance::evaluation.partials.payment', ['data' => $this->data]);
     }
 
@@ -481,8 +483,9 @@ class EvaluationController extends AdminBaseController
 
     public function saveInsuranceInvoicePayments(Request $request)
     {
-        if (isset($request->company)) {
+        if ($request->has('company')) {
             $this->evaluationRepository->record_insurance_payment();
+            flash()->success('Payment recorded successfully');
             return back();
         } else {
             flash()->error('Select an insurance company to continue');
