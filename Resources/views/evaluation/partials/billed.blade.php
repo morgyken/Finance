@@ -126,7 +126,11 @@
                 }
 
                 function calc() {
-                    $("#action-scene").html('<input type="submit" class="btn btn-success" value="Dispatch Selected Invoices" >');
+                    if (billedIds.length > 0)
+                        $("#action-scene").html('<input type="submit" class="btn btn-success" value="Dispatch Selected Invoices" >');
+                    else
+                        $("#action-scene").html('<span class="label label-danger">Select an Insurance Firm for action</span>');
+
                 }
 
                 $('.records').dataTable({
