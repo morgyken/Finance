@@ -26,6 +26,7 @@ use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\PaymentsMpesa;
 use Ignite\Finance\Repositories\EvaluationRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -729,6 +730,53 @@ class EvaluationLibrary implements EvaluationRepository
         }
         if ($request->has('scheme')) {
             $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->get();
+    }
+
+    public function getPaidInvoices()
+    {
+        $request = \request();
+        $pending = PaymentsCheque::where('insurance_payment', '>', 0)
+            ->orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->whereHas('insurance_payments', function (Builder $query) use ($request) {
+                $query->where('company', $request->company);
+            });
+        }
+        if ($request->has('scheme')) {
+//            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->get();
+    }
+
+    public function companyStatements()
+    {
+        $request = \request();
+        $pending = InsuranceInvoicePayment::orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->whereHas('invoice.scheme', function (Builder $query) use ($request) {
+                $query->where('company', $request->company);
+            });
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->whereHas('invoice.scheme', function (Builder $query) use ($request) {
+                $query->where('id', $request->scheme);
+            });
         }
         if ($request->has('date1')) {
             $pending = $pending->where('created_at', '>=', $request->date1);

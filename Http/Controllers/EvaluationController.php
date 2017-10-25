@@ -392,29 +392,14 @@ class EvaluationController extends AdminBaseController
     public function paidInvoices()
     {
         $this->data['paid_mode'] = 1;
-        /*
-          $this->data['partpaid'] = InsuranceInvoice::where('visit', '>', 0)
-          ->whereStatus(2)
-          ->get();
-          $this->data['paid'] = InsuranceInvoice::where('visit', '>', 0)
-          ->whereStatus(3)
-          ->get();
-          $this->data['overpaid'] = InsuranceInvoice::where('visit', '>', 0)
-          ->whereStatus(4)
-          ->get();
-         *
-         */
-        $this->data['payment'] = PaymentsCheque::where('insurance_payment', '>', 0)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $this->data['payment'] = $this->evaluationRepository->getPaidInvoices();
         return view('finance::evaluation.partials.paid2', ['data' => $this->data]);
     }
 
     public function companyStatements(Request $request)
     {
         $this->data['stmt_mode'] = 1;
-        $this->data['payments'] = InsuranceInvoicePayment::orderBy('created_at', 'DESC')->get();
-
+        $this->data['payments'] = $this->evaluationRepository->companyStatements();
         return view('finance::evaluation.partials.firm_statement', ['data' => $this->data]);
     }
 

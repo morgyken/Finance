@@ -60,4 +60,8 @@ interface EvaluationRepository
     public function getInvoiceByStatus($status = null, $who = null);
 
     public function record_insurance_payment();
+
+    public function getPaidInvoices();
+
+    public function companyStatements();
 }
