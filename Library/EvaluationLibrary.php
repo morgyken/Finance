@@ -12,6 +12,7 @@
 
 namespace Ignite\Finance\Library;
 
+use Carbon\Carbon;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
 use Ignite\Finance\Entities\ChangeInsurance;
@@ -665,7 +666,8 @@ class EvaluationLibrary implements EvaluationRepository
             $pending = $pending->where('date', '>=', $request->date1);
         }
         if ($request->has('date2')) {
-            $pending = $pending->where('date', '<=', $request->date2);
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('date', '<=', $date);
         }
         return $pending->get();
     }
@@ -687,7 +689,8 @@ class EvaluationLibrary implements EvaluationRepository
             $pending = $pending->where('created_at', '>=', $request->date1);
         }
         if ($request->has('date2')) {
-            $pending = $pending->where('created_at', '<=', $request->date2);
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
         }
         return $pending->get();
     }
@@ -708,7 +711,8 @@ class EvaluationLibrary implements EvaluationRepository
             $pending = $pending->where('created_at', '>=', $request->date1);
         }
         if ($request->has('date2')) {
-            $pending = $pending->where('created_at', '<=', $request->date2);
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
         }
 //        dd($pending->toSql());
         return $pending->get();
