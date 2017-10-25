@@ -720,7 +720,11 @@ class EvaluationLibrary implements EvaluationRepository
         $request = \request();
         $pending = InsuranceInvoice::orderBy('created_at', 'DESC');
         if (!empty($status)) {
-            $pending = $pending->whereStatus($status);
+            if (is_array($status)) {
+                $pending = $pending->whereIn('status', $status);
+            } else {
+                $pending = $pending->whereStatus($status);
+            }
         }
         if ($request->has('company')) {
             $pending = $pending->where('company_id', $request->company);
