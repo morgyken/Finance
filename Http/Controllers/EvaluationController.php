@@ -546,7 +546,7 @@ class EvaluationController extends AdminBaseController
         $item = null;
         foreach ($dispatch as $dis) {
             $inv = InsuranceInvoice::find($dis->insurance_invoice);
-            $inv->status = 0;
+            $inv->status = 5;
             $inv->save();
             $item = $dis->dispatch;
         }
