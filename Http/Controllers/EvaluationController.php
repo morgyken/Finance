@@ -540,14 +540,14 @@ class EvaluationController extends AdminBaseController
         return $pdf->stream('dispatch_' . $request->id . '.pdf');
     }
 
-    public function purgeDispatch(Request $request)
+    public function purgeDispatch($id)
     {
-        $dispatch = DispatchDetails::whereDispatch($request->id)->get();
+        $dispatch = DispatchDetails::where('insurance_invoice', $id)->get();
         $item = null;
         foreach ($dispatch as $dis) {
             $inv = InsuranceInvoice::find($dis->insurance_invoice);
             $inv->status = 0;
-            $inv->update();
+            $inv->save();
             $item = $dis->dispatch;
         }
         $batch = Dispatch::find($item);
