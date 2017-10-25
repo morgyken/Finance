@@ -360,24 +360,21 @@ class EvaluationController extends AdminBaseController
     public function billedBills()
     {
         $this->data['bill_mode'] = 1;
-        $this->data['billed'] = $this->evaluationRepository->getBilledInvoices();
+        $this->data['billed'] = $this->evaluationRepository->getInvoiceByStatus();
         return view('finance::evaluation.partials.billed', ['data' => $this->data]);
     }
 
     public function dispatchedInvoices()
     {
         $this->data['dispatch_mode'] = 1;
-        $this->data['dispatched'] = $this->evaluationRepository->getDispatchedInvoices();
+        $this->data['dispatched'] = $this->evaluationRepository->getInvoiceByStatus(1);
         return view('finance::evaluation.partials.dispatched', ['data' => $this->data]);
     }
 
     public function cancelledBills()
     {
         $this->data['cancel_mode'] = 1;
-        $this->data['canceled'] = InsuranceInvoice::where('visit', '>', 0)
-            ->whereStatus(5)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $this->data['canceled'] = $this->evaluationRepository->getInvoiceByStatus(5);
         return view('finance::evaluation.partials.cancelled', ['data' => $this->data]);
     }
 

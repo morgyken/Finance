@@ -697,8 +697,6 @@ class EvaluationLibrary implements EvaluationRepository
 
     public function getDispatchedInvoices()
     {
-//        return DispatchDetails::orderBy('created_at', 'DESC')
-//            ->get();
         $request = \request();
         $pending = InsuranceInvoice::orderBy('created_at', 'DESC')->whereStatus(1);
         if ($request->has('company')) {
@@ -714,7 +712,29 @@ class EvaluationLibrary implements EvaluationRepository
             $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
             $pending = $pending->where('created_at', '<=', $date);
         }
-//        dd($pending->toSql());
+        return $pending->get();
+    }
+
+    public function getInvoiceByStatus($status = null)
+    {
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC');
+        if (!empty($status)) {
+            $pending = $pending->whereStatus($status);
+        }
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
         return $pending->get();
     }
 }

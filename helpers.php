@@ -311,43 +311,38 @@ function get_billing_status($status)
 {
     switch ($status) {
         case '0':
-            return '<span  class="btn-default btn-xs">
+            return '<span  class="label label-default">
                         <small>
-                            <i class="fa fa-hourglass-start" aria-hidden="true"></i>
                             Billed
                         </small>
                     </span>';
         case '1':
-            return '<span  class="btn-info btn-xs">
+            return '<span  class="label label-info">
                         <small>
-                            <i class="fa fa-hourglass-start" aria-hidden="true"></i>
                             Dispatched
                         </small>
                     </span>';
         case '2':
-            return '<span  class="btn-primary btn-xs">
+            return '<span  class="label label-primary">
                         <small>
-                            <i class="fa fa-hourglass-half" aria-hidden="true"></i>
                             Partially Paid
                         </small>
                     </span>';
         case '3':
-            return '<span  class="btn-success btn-xs">
+            return '<span  class="label label-success">
                         <small>
-                            <i class="fa fa-hourglass" aria-hidden="true"></i>
                             Fully Paid
                         </small>
                     </span>';
         case '4':
-            return ' <span  class="btn-warning btn-xs">
+            return ' <span  class="label label-warning">
                         <small>
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>
                             Overpaid
                         </small>
                     </span>';
         default:
-            return '<span  class="btn-default btn-xs">
-                        <small><i style="color:red" class="fa fa-trash"></i>cancelled</small>
+            return '<span  class="label label-danger">
+                        <small>Cancelled</small>
                         </span>';
     }
 }

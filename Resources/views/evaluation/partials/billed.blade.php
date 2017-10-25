@@ -21,12 +21,10 @@
             </tr>
             </thead>
             <tbody class="response">
-            <?php $t = $n = 0; ?>
             @foreach($billed as $item)
                 <?php try { ?>
-                <?php $t += $item->visits->unpaid_amount ?>
                 <tr>
-                    <td>{{$n+=1}}</td>
+                    <td>{{$loop->iteration}}</td>
                     <td>
                         @if($item->status ==0)
                             <input id="check{{$item->id}}" type="checkbox" name="bill[]" value="{{$item->id}}">

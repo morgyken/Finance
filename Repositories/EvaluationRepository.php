@@ -51,7 +51,10 @@ interface EvaluationRepository
      */
     public function getPending();
 
-    public function getBilledInvoices();
 
-    public function getDispatchedInvoices();
+    /**
+     * @param int|null $status
+     * @return mixed
+     */
+    public function getInvoiceByStatus($status = null);
 }
