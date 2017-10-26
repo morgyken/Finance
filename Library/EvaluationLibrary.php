@@ -593,10 +593,9 @@ class EvaluationLibrary implements EvaluationRepository
         return $inv->update();
     }
 
-    public static function dispatchBills(Request $request)
+    public function dispatchBills(Request $request)
     {
-        FinanceLibrary::dispatchBills($request);
-        return TRUE;
+        return FinanceLibrary::dispatchBills($request);
     }
 
     public function updateVisitStatus($visit_id, $new_status)

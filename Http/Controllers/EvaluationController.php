@@ -12,11 +12,9 @@ use Ignite\Finance\Entities\DispatchDetails;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Finance\Entities\InsuranceInvoice;
-use Ignite\Finance\Entities\InsuranceInvoicePayment;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Finance\Entities\PatientTransaction;
 use Ignite\Finance\Entities\PaymentManifest;
-use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
@@ -414,7 +412,7 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->bill_visit_many($request)) {
             flash('Bills placed, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.billed');
         } else {
             flash('Bills could not be placed, please try again');
             return redirect()->route('finance.evaluation.billed');
@@ -425,7 +423,7 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->cancel_visit_bill($request)) {
             flash('Bill cancelled, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.cancelled');
         } else {
             flash('Bill could not be cancelled, thank you');
             return back();
@@ -436,7 +434,7 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->undoBillCancel($request)) {
             flash('Bill cancellation undone successfully, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.pending');
         } else {
             flash('Bill cancellation could not be undone at this time, please try again');
             return back();
@@ -447,7 +445,7 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->dispatchBills($request)) {
             flash('Bill(s) dispatched, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.dispatched');
         } else {
             flash('Bills could not be dispatched, please try again later');
             return back();
@@ -471,7 +469,7 @@ class EvaluationController extends AdminBaseController
         if ($request->has('company')) {
             $this->evaluationRepository->record_insurance_payment();
             flash()->success('Payment recorded successfully');
-            return back();
+            return redirect()->route('finance.evaluation.paid');
         } else {
             flash()->error('Select an insurance company to continue');
             return back();
@@ -517,12 +515,12 @@ class EvaluationController extends AdminBaseController
         return back();
     }
 
-    public function printDispatch(Request $request)
+    public function printDispatch($id)
     {
-        $dispatch = Dispatch::find($request->id);
+        $dispatch = Dispatch::find($id);
         $pdf = \PDF::loadView('finance::evaluation.print.dispatch', ['dispatch' => $dispatch]);
         $pdf->setPaper('a4', 'Landscape');
-        return $pdf->stream('dispatch_' . $request->id . '.pdf');
+        return @$pdf->stream('dispatch_' . $id . '.pdf');
     }
 
     public function purgeDispatch($id)

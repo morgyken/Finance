@@ -28,7 +28,7 @@
                         <a target="blank" href="{{route('finance.evaluation.payment')}}" class="btn btn-xs btn-primary">
                             <i class="fa fa-money"></i> Receive Payment</a>
 
-                        <a target="blank" href="{{route('finance.evaluation.print_dispatch', $item->id)}}"
+                        <a target="blank" href="{{route('finance.evaluation.print_dispatch', $item->dispatch)}}"
                            class="btn btn-xs btn-warning">
                             <i class="fa fa-print"></i>Print</a>
 

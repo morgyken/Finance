@@ -64,4 +64,8 @@ interface EvaluationRepository
     public function getPaidInvoices();
 
     public function companyStatements();
+
+    public function undoBillCancel(Request $request);
+
+    public function dispatchBills(Request $request);
 }
