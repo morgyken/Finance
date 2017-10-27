@@ -365,6 +365,9 @@ function get_unpaid_amount(Visit $visit)
 if (!function_exists('patient_has_pharmacy_bill')) {
     function patient_has_pharmacy_bill(Visit $visit)
     {
+        return Visit::whereId($visit->id)->whereHas('prescription.payment', function (Builder $query) {
+            $query->whereComplete(false);
+        })->count();
         $list = Patients::where(function (Builder $query) use ($visit) {
             $query->whereHas('visits.prescriptions.payment', function (Builder $query) {
                 $query->whereComplete(false);
