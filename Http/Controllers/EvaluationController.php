@@ -128,7 +128,7 @@ class EvaluationController extends AdminBaseController
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
         if (m_setting('finance.background_manifest')) {
-            $this->data['manifests'] = PaymentManifest::whereType('cash')->get();
+            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->get();
             $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
                 ->doesntHave('removed_bills')
                 ->whereNull('insurance')
