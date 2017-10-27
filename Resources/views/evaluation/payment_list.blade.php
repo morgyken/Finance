@@ -60,11 +60,12 @@ function amount_after_discount($discount, $amount)
                         <table class="table table-striped table-condensed table-responsive" id="patients">
                             <tbody>
                             @foreach($visits as $visit)
-                                <?php $patient=$visit->patients; ?>
+                                <?php $patient = $visit->patients; ?>
                                 <tr id="patient{{$patient->patient_id}}">
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$patient->full_name}}</td>
                                     <td>{{$patient->id_no}}</td>
+                                    <td>{{$visit->created_at->format('d/m/y')}} </td>
                                     <td>{{$patient->mobile}}</td>
                                     <td>
                                         @if(patient_has_pharmacy_bill($visit))
@@ -90,6 +91,7 @@ function amount_after_discount($discount, $amount)
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>ID Number</th>
+                                <th>Date</th>
                                 <th>Mobile</th>
                                 <th>Actions</th>
                             </tr>
