@@ -5,7 +5,7 @@
             <tr>
                 <th>#</th>
                 <th>Item</th>
-                <th style="width: 10%">Disc(%)</th>
+                <th style="text-align: center"</th>
                 <th style="text-align: right">Amount (Ksh.)</th>
             </tr>
             </thead>

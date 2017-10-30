@@ -10,9 +10,9 @@
 
 <div class="col-md-12">
     @if(!$payment->deposit)
-        <h1>RECEIPT</h1>
+        <h4>RECEIPT</h4>
     @else
-        <h1>Deposit Slip</h1>
+        <h4>Deposit Slip</h4>
     @endif
     <strong>Name:</strong>
     <span class="content">
