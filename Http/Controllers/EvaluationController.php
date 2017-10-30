@@ -53,9 +53,10 @@ class EvaluationController extends AdminBaseController
         $this->data['payment'] = $payment = EvaluationPayments::find($request->payment);
         $this->data['disp'] = json_decode($payment->dispensing);
         $this->data['a4'] = 1;
-        $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
-        $pdf->setPaper('a4', 'Potrait');
-        return @$pdf->stream('Bill' . $request->id . '.pdf');
+        return view('finance::evaluation.print.receipt', ['data' => $this->data]);
+       // $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
+       // $pdf->setPaper('a4', 'Potrait');
+        //return @$pdf->stream('Bill' . $request->id . '.pdf');
     }
 
     public function printNormalReceipt(Request $request)

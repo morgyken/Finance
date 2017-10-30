@@ -8,14 +8,14 @@
 ?>
 @if(isset($a4))
     @if(get_logo())
-        <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+        <img style="width:100; height:auto; float: right" src="{{URL::to(get_logo_image())}}"/>
     @else
         <img style="width:100; height:auto; float: right" src=""/>
     @endif
 @else
     <center>
         <?php try{ ?>
-        <img style="width:100; height:auto; float: right" src="{{realpath(base_path(get_logo()))}}"/>
+        <img style="width:100; height:auto; float: right" src="{{URL::to(get_logo_image())}}"/>
         <?php
         }catch(\Exception $e){
         ?>

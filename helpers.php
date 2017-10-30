@@ -234,6 +234,24 @@ if (!function_exists('get_logo')) {
 
 }
 
+if (!function_exists('get_logo_image')) {
+
+    function get_logo_image()
+    {
+        $this_clinic = \Session::get('clinic');
+        $practice = \Ignite\Settings\Entities\Practice::findOrNew(1);
+        $clinic = \Ignite\Settings\Entities\Clinics::findOrNew($this_clinic);
+        if (!empty($clinic->logo)) {
+            $logo = $clinic->logo;
+        } else {
+            $logo = $practice->logo;
+        }
+        
+        return substr($logo, strpos($logo, "public/") + 7);
+    }
+
+}
+
 
 if (!function_exists('get_clinic')) {
 

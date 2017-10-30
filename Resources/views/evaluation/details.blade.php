@@ -84,16 +84,16 @@ function getAmount($sales) {
         </div>
     </div>
     <div class="box-footer">
-        <div class="col-md-4 col-lg-4 col-sm-12">
-            {!! Form::open(['route'=>'finance.evaluation.normal.rcpt.print','target'=>'_blank'])!!}
-            {!! Form::hidden('payment',$payment->id) !!}
-            @if($invoice_mode)
-            {!! Form::hidden('invoice',true) !!}
-            @endif
-            <button class="btn btn-primary btn-sm" type="submit">
-                <i class="fa fa-print"></i> Print Receipt (Thermal Printer)</button>
-            {{Form::close()}}
-        </div>
+        {{--<div class="col-md-4 col-lg-4 col-sm-12">--}}
+            {{--{!! Form::open(['route'=>'finance.evaluation.normal.rcpt.print','target'=>'_blank'])!!}--}}
+            {{--{!! Form::hidden('payment',$payment->id) !!}--}}
+            {{--@if($invoice_mode)--}}
+            {{--{!! Form::hidden('invoice',true) !!}--}}
+            {{--@endif--}}
+            {{--<button class="btn btn-primary btn-sm" type="submit">--}}
+                {{--<i class="fa fa-print"></i> Print Receipt (Thermal Printer)</button>--}}
+            {{--{{Form::close()}}--}}
+        {{--</div>--}}
 
         <div class="col-md-4 col-lg-4 col-sm-12">
             {!! Form::open(['route'=>'finance.evaluation.a4.rcpt.print','target'=>'_blank'])!!}
@@ -102,7 +102,7 @@ function getAmount($sales) {
             {!! Form::hidden('invoice',true) !!}
             @endif
             <button class="btn btn-primary btn-sm" type="submit">
-                <i class="fa fa-print"></i> Print Receipt (A4)</button>
+                <i class="fa fa-print"></i> Print Receipt</button>
             {{Form::close()}}
         </div>
     </div>
