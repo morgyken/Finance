@@ -12,4 +12,8 @@ return [
         'view' => 'text',
         'hint' => 'A 3-digit code added to receipt-number'
     ],
+    'background_manifest' => [
+        'view' => 'checkbox',
+        'description' => 'Use a background job to process payment list'
+    ]
 ];

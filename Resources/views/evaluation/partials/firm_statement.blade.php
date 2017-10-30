@@ -55,8 +55,8 @@ $AMOUNT = 0
                                     {{$item->created_at}}
                                 </td>
                                 <td>{{$item->invoice->invoice_no}}</td>
-                                <td>{{$item->invoice->visits->patient_scheme->schemes->companies->name}}</td>
-                                <td>{{$item->invoice->visits->patient_scheme->schemes->name}}</td>
+                                <td>{{$item->invoice->scheme->companies->name}}</td>
+                                <td>{{$item->invoice->scheme->name}}</td>
                                 <td>{{$item->invoice->visits->patients->full_name}}</td>
                                 <td style="text-align: center">{{$item->amount}}
                                     <i class="fa fa-sort-asc" style="color: green" aria-hidden="true"></i>

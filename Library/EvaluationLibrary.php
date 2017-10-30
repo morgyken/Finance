@@ -12,17 +12,21 @@
 
 namespace Ignite\Finance\Library;
 
+use Carbon\Carbon;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
+use Ignite\Finance\Entities\ChangeInsurance;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
 use Ignite\Finance\Entities\PatientAccount;
 use Ignite\Finance\Entities\PatientTransaction;
+use Ignite\Finance\Entities\PaymentManifest;
 use Ignite\Finance\Entities\PaymentsCard;
 use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\PaymentsMpesa;
 use Ignite\Finance\Repositories\EvaluationRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -97,7 +101,8 @@ class EvaluationLibrary implements EvaluationRepository
     private function updatePrescriptions($item)
     {
         if ($this->isDrugPayment($item)) {
-
+            $p = Prescriptions::find(\request('item' . $item));
+            $p->payment()->update(['paid' => true]);
         }
         return true;
     }
@@ -281,15 +286,14 @@ class EvaluationLibrary implements EvaluationRepository
     {
         $visit = 'visits' . $item;
         $investigation = Investigations::find($item);
-        if (isset($investigation)) {
-            $detail = new EvaluationPaymentsDetails;
-            $detail->price = $investigation->price;
-            $detail->investigation = $item;
-            $detail->visit = $request->$visit;
-            $detail->payment = $payment->id;
-            $detail->cost = $investigation->procedures->price;
-            $detail->save();
-        }
+        $detail = new EvaluationPaymentsDetails;
+        $detail->price = $investigation->price;
+        $detail->investigation = $item;
+        $detail->visit = $request->$visit;
+        $detail->payment = $payment->id;
+        $detail->cost = $investigation->procedures->price;
+        $detail->save();
+
     }
 
     private function drug_payment_details(Request $request, $item, $payment)
@@ -329,30 +333,33 @@ class EvaluationLibrary implements EvaluationRepository
      */
     public function record_insurance_payment()
     {
+        \DB::beginTransaction();
         $batch = new FinanceEvaluationInsurancePayments;
         $batch->company = $this->request->company;
         $batch->user = \Auth::user()->id;
         $batch->amount = $this->request->ChequeAmount;
         $batch->save();
 
-        $this->saveCheque($batch);
 
+        $this->saveCheque($batch);
         foreach ($this->request->invoice as $key => $invoice) {
             $amount = 'amount' . $invoice;
+            $this->updateInvoiceStatus($invoice, $this->request->$amount);
             $payment = new InsuranceInvoicePayment;
             $payment->amount = $this->request->$amount;
             $payment->insurance_invoice = $invoice;
             $payment->user = $this->user;
             $payment->batch = $batch->id;
             $payment->save();
-            $this->updateInvoiceStatus($invoice, $this->request->$amount);
         }
+        \DB::commit();
         return true;
     }
 
     /**
      * Update Insurance Invoice Status
-     * @param type invoice_id, amount
+     * @param $invoice
+     * @param $amount
      * @return bool
      */
     public function updateInvoiceStatus($invoice, $amount)
@@ -365,24 +372,20 @@ class EvaluationLibrary implements EvaluationRepository
             $inv->status = 2;
         } elseif ($settled > $bill) {//fully (3)
             $inv->status = 3;
-        }/* elseif ($settled > $bill) {// overpaid (4)
-          $inv->status = 4;
-          } */
+        } elseif ($settled > $bill) {// overpaid (4)
+            $inv->status = 4;
+        }
         $inv->save();
     }
 
+    /**
+     * @param $invoice
+     * @return mixed
+     */
     public function getPriorInvoicePaidAmount($invoice)
     {
-        $payment = InsuranceInvoicePayment::where('insurance_invoice', '=', $invoice)->get(); //find(['insurance_invoice' => $invoice]);
-        if (!$payment->isEmpty()) {
-            $paid = 0;
-            foreach ($payment as $p) {
-                $paid += $p->amount;
-            }
-            return $paid;
-        } else {
-            return 0;
-        }
+        return InsuranceInvoicePayment::where('insurance_invoice', '=', $invoice)
+            ->sum('amount');
     }
 
     private function payment_methods(EvaluationPayments $payment)
@@ -559,13 +562,12 @@ class EvaluationLibrary implements EvaluationRepository
 
     public function bill_visit(Request $request)
     {
-        $visit = Visit::find($request->id);
+        $visit = Visit::find($request->visit);
         $invoice = $this->createInsuranceInvoice($visit->id, $request->total);
         $this->recordBilledItems($invoice);
-        $this->updateVisitStatus($request->id, 'billed');
+        $this->updateVisitStatus($visit->id, 'billed');
         $visit->status = 'billed';
-        $visit->save();
-        return 'billed';
+        return $visit->save();
     }
 
     public function bill_visit_many(Request $request)
@@ -592,10 +594,9 @@ class EvaluationLibrary implements EvaluationRepository
         return $inv->update();
     }
 
-    public static function dispatchBills(Request $request)
+    public function dispatchBills(Request $request)
     {
-        FinanceLibrary::dispatchBills($request);
-        return TRUE;
+        return FinanceLibrary::dispatchBills($request);
     }
 
     public function updateVisitStatus($visit_id, $new_status)
@@ -613,11 +614,177 @@ class EvaluationLibrary implements EvaluationRepository
     public function createInsuranceInvoice($visit, $amount)
     {
         $inv = new InsuranceInvoice;
-        $inv->invoice_no = 'INV-' . $visit . '-' . date('dmyHis');
+        $inv->invoice_no = 'INV' . time();
         $inv->visit = $visit;
         $inv->payment = $amount;
+        $_v = Visit::find($visit);
+        $inv->company_id = @$_v->patient_scheme->schemes->company;
+        $inv->scheme_id = @$_v->patient_scheme->schemes->id;
         $inv->save();
         return $inv;
     }
 
+    public function swapBill(Request $request)
+    {
+        $drugs = $this->_get_selected_stack('drugs_d');
+        foreach ($drugs as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'prescription_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+            ];
+            ChangeInsurance::create($payload);
+        }
+        $procedures = $this->_get_selected_stack('procedures_p');
+        foreach ($procedures as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'procedure_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+            ];
+            ChangeInsurance::create($payload);
+        }
+        return true;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getPending()
+    {
+        $request = \request();
+        $pending = PaymentManifest::whereType('insurance')->orderBy('date', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('date', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('date', '<=', $date);
+        }
+        return $pending->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getBilledInvoices()
+    {
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->get();
+    }
+
+    public function getDispatchedInvoices()
+    {
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC')->whereStatus(1);
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->get();
+    }
+
+    public function getInvoiceByStatus($status = null, $who = null)
+    {
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC');
+        if (!empty($status)) {
+            $pending = $pending->whereStatus($status);
+        }
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($who) {
+            $pending = $pending->where('company_id', $who);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->get();
+    }
+
+    public function getPaidInvoices()
+    {
+        $request = \request();
+        $pending = PaymentsCheque::where('insurance_payment', '>', 0)
+            ->orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->whereHas('insurance_payments', function (Builder $query) use ($request) {
+                $query->where('company', $request->company);
+            });
+        }
+        if ($request->has('scheme')) {
+//            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->get();
+    }
+
+    public function companyStatements()
+    {
+        $request = \request();
+        $pending = InsuranceInvoicePayment::orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->whereHas('invoice.scheme', function (Builder $query) use ($request) {
+                $query->where('company', $request->company);
+            });
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->whereHas('invoice.scheme', function (Builder $query) use ($request) {
+                $query->where('id', $request->scheme);
+            });
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->get();
+    }
 }

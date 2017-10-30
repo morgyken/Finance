@@ -13,7 +13,7 @@
                     @foreach($visit->investigations as $item)
                         <?php
                         $TOTAL += $item->amount;
-                        $is_paid = $item->invoiced;
+                        $is_paid = $item->invoiced || $item->is_paid;
                         if ($is_paid) {
                             $PAID += $item->amount;
                         } else {
@@ -68,7 +68,8 @@
                     <tr>
                         <th style="text-align: right;" colspan="6" class="grand total">TOTAL:</th>
                         <th style="text-align: right">{{ number_format($TOTAL,2) }}</th>
-                    </tr>  <tr>
+                    </tr>
+                    <tr>
                         <th style="text-align: right;" colspan="6" class="grand total">Processed Amount:</th>
                         <th style="text-align: right">{{ number_format($PAID,2) }}</th>
                     </tr>

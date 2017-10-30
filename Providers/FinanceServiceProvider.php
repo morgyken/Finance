@@ -3,6 +3,7 @@
 namespace Ignite\Finance\Providers;
 
 use Ignite\Finance\Console\FixOldPrescriptions;
+use Ignite\Finance\Console\PreparePayments;
 use Ignite\Finance\Library\EvaluationLibrary;
 use Ignite\Finance\Library\FinanceLibrary;
 use Ignite\Finance\Library\InventoryLibrary;
@@ -44,7 +45,10 @@ class FinanceServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerBindings();
-        $this->commands([FixOldPrescriptions::class]);
+        $this->commands([
+            FixOldPrescriptions::class,
+            PreparePayments::class
+        ]);
     }
 
     /**

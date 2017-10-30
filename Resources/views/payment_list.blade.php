@@ -5,17 +5,6 @@
  *  Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
 extract($data);
-
-function amount_after_discount($discount, $amount)
-{
-    try {
-        $discounted = $amount - (($discount / 100) * $amount);
-        return ceil($discounted);
-    } catch (\Exception $e) {
-        return $amount;
-    }
-}
-
 ?>
 @extends('layouts.app')
 @section('content_title','Patient Accounts')
@@ -32,7 +21,7 @@ function amount_after_discount($discount, $amount)
                         <a href="#patients" data-toggle="tab">
                             Patients
                             <span class="badge alert-info">
-                            {{$visits->count()}}
+                            {{$manifests->count()}}
                         </span>
                         </a>
                     </li>
@@ -59,16 +48,15 @@ function amount_after_discount($discount, $amount)
 
                         <table class="table table-striped table-condensed table-responsive" id="patients">
                             <tbody>
-                            @foreach($visits as $visit)
-                                <?php $patient = $visit->patients; ?>
+                            @foreach($manifests as $visit)
+                                <?php $patient = $visit->patient; ?>
                                 <tr id="patient{{$patient->patient_id}}">
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$patient->full_name}}</td>
                                     <td>{{$patient->id_no}}</td>
-                                    <td>{{$visit->created_at->format('d/m/y')}} </td>
                                     <td>{{$patient->mobile}}</td>
                                     <td>
-                                        @if(patient_has_pharmacy_bill($visit))
+                                        @if($visit->has_meds)
                                             <a class="btn btn-warning btn-xs"
                                                href="{{route('finance.evaluation.pay.pharmacy',$patient->id)}}">
                                                 <i class="fa fa-bolt"></i> Process Meds</a>
@@ -91,7 +79,6 @@ function amount_after_discount($discount, $amount)
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>ID Number</th>
-                                <th>Date</th>
                                 <th>Mobile</th>
                                 <th>Actions</th>
                             </tr>

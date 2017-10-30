@@ -8,36 +8,36 @@
 <strong>Payment Options</strong>
 <hr/>
 @if (count($errors) > 0)
-<div class="alert alert-danger">
-    <strong>Uh Oh!</strong> Check the following<br>
-    <ul>
-        @foreach ($errors->all() as $error)
-        <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-</div>
+    <div class="alert alert-danger">
+        <strong>Uh Oh!</strong> Check the following<br>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
 @endif
 <?php $___p = null ?>
 @if(isset($patient))
     <?php $___p = $patient->id ?>
-{!! Form::hidden('patient',$patient->id) !!}
+    {!! Form::hidden('patient',$patient->id) !!}
 @elseif(isset($visit))
     <?php $___p = $$visit->patients->id ?>
-{!! Form::hidden('patient',$visit->patients->id) !!}
+    {!! Form::hidden('patient',$visit->patients->id) !!}
 @elseif(isset($sales))
     <?php $___p = $sales->patient ?>
-<input type="hidden" name="patient" value="{{$sales->patient}}">
+    <input type="hidden" name="patient" value="{{$sales->patient}}">
 @endif
 <!--
 @if(get_patient_balance($___p)>0)
     <?php $prepaid = get_patient_balance($___p) ?>
-    <h3>
-        <i class="fa fa-info-circle"></i> Patient has
-        {{number_format(get_patient_balance($___p),2)}}
-        in their account.
-    </h3>
+            <h3>
+                <i class="fa fa-info-circle"></i> Patient has
+{{number_format(get_patient_balance($___p),2)}}
+            in their account.
+        </h3>
 @endif
--->
+        -->
 <div class="accordion form-horizontal" id="someForm">
     <h4>Cash</h4>
     <div>
@@ -45,7 +45,7 @@
             <label class="col-md-4 control-label">Cash Amount</label>
             <div class="col-md-8">
                 @if(isset($visit))
-                <input type="hidden" name="visit" value="{{$visit->id}}">
+                    <input type="hidden" name="visit" value="{{$visit->id}}">
                 @endif
                 {!! Form::text('CashAmount',old('CashAmount'),['class'=>'form-control','placeholder'=>'Cash Amount']) !!}
             </div>
@@ -155,7 +155,9 @@
             <span id="balance"></span>
         </div>
         <div class="pull-right">
-            <button class="btn btn-success" type="submit" @if(!empty($invoice_mode)) id="saver" @endif><i class="fa fa-save"></i> Save</button>
+            <button class="btn btn-success" type="submit" @if(!empty($invoice_mode)) id="saver" @endif><i
+                        class="fa fa-save"></i> Save
+            </button>
         </div>
     </div>
 </div>

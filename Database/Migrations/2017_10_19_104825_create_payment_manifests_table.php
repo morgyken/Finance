@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChangeInsurancesTable extends Migration
+class CreatePaymentManifestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateChangeInsurancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('finance_change_insurances', function (Blueprint $table) {
+        Schema::create('finance_payment_manifests', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('type')->default('cash');
             $table->unsignedInteger('visit_id');
-            $table->unsignedInteger('prescription_id');
-            $table->unsignedInteger('procedure_id');
-            $table->string('mode')->default('cash');
+            $table->unsignedInteger('patient_id');
+            $table->unsignedInteger('company_id')->nullable();
             $table->unsignedInteger('scheme_id')->nullable();
-            $table->unsignedInteger('user_id');
-            $table->timestamps();
+            $table->boolean('has_meds')->default(false);
+            $table->double('amount', 10, 2);
+            $table->date('date');
         });
     }
 
@@ -32,6 +33,6 @@ class CreateChangeInsurancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('finance_change_insurances');
+        Schema::dropIfExists('finance_payment_manifests');
     }
 }

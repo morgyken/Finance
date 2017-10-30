@@ -246,7 +246,7 @@ if (!function_exists('get_logo_image')) {
         } else {
             $logo = $practice->logo;
         }
-        
+
         return substr($logo, strpos($logo, "public/") + 7);
     }
 
@@ -264,16 +264,16 @@ if (!function_exists('get_clinic')) {
 
 }
 
-if (!function_exists('get_patient_balance')) {
+if (!function_exists('get_patient_balance_real')) {
 
-    function get_patient_balance($patient_id)
+    function get_patient_balance_real($patient_id)
     {
-        $account = \Ignite\Finance\Entities\PatientAccount::findOrNew($patient_id);
-        if (!empty($account)) {
-            return $account->balance;
-        } else {
-            return 0;
-        }
+        return EvaluationPayments::wherePatient($patient_id)->whereDeposit(true)->sum('amount');
+//        $account = \Ignite\Finance\Entities\PatientAccount::find($patient_id);
+//        if ($account) {
+//            return $account->balance;
+//        }
+//        return 0;
     }
 }
 if (!function_exists('pesa')) {
@@ -302,7 +302,19 @@ if (!function_exists('pesa')) {
         return $cashier->request($amount)->from($subscriberNumber)->usingReferenceId($referenceId);
     }
 }
-
+if (!function_exists('transferred2cash')) {
+    /**
+     * @param $item_id
+     * @param bool $drug
+     * @return bool
+     */
+    function transferred2cash($item_id, $drug = false)
+    {
+        $finder = $drug ? 'prescription_id' : 'procedure_id';
+        $count = \Ignite\Finance\Entities\ChangeInsurance::where($finder, $item_id)->count();
+        return (bool)$count;
+    }
+}
 
 if (!function_exists('get_clinic')) {
 
@@ -313,6 +325,46 @@ if (!function_exists('get_clinic')) {
         return $clinic;
     }
 }
+function get_billing_status($status)
+{
+    switch ($status) {
+        case '0':
+            return '<span  class="label label-default">
+                        <small>
+                            Billed
+                        </small>
+                    </span>';
+        case '1':
+            return '<span  class="label label-info">
+                        <small>
+                            Dispatched
+                        </small>
+                    </span>';
+        case '2':
+            return '<span  class="label label-primary">
+                        <small>
+                            Partially Paid
+                        </small>
+                    </span>';
+        case '3':
+            return '<span  class="label label-success">
+                        <small>
+                            Fully Paid
+                        </small>
+                    </span>';
+        case '4':
+            return ' <span  class="label label-warning">
+                        <small>
+                            Overpaid
+                        </small>
+                    </span>';
+        default:
+            return '<span  class="label label-danger">
+                        <small>Cancelled</small>
+                        </span>';
+    }
+}
+
 function get_unpaid_amount(Visit $visit)
 {
     $amount = 0;
@@ -331,21 +383,8 @@ function get_unpaid_amount(Visit $visit)
 if (!function_exists('patient_has_pharmacy_bill')) {
     function patient_has_pharmacy_bill(Visit $visit)
     {
-        try{
-            $list = Patients::where(function (Builder $query) use ($visit) {
-                $query->whereHas('visits.prescriptions.payment', function (Builder $query) {
-                    $query->whereComplete(false);
-                });
-                $query->orWhereHas('visits.prescriptions', function (Builder $builder) {
-                    $builder->whereDoesntHave('payment');
-                });
-                $query->whereHas('visits', function (Builder $query) use ($visit) {
-                    $query->whereId($visit->id);
-                });
-            })->get()->pluck('id')->toArray();
-            return in_array($visit->patient, $list);
-        }catch (\Exception $e){
-            return null;
-        }
+        return Visit::whereId($visit->id)->whereHas('prescriptions.payment', function (Builder $query) {
+            $query->whereComplete(false);
+        })->count();
     }
 }

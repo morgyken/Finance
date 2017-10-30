@@ -12,14 +12,14 @@ use Ignite\Finance\Entities\DispatchDetails;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Finance\Entities\InsuranceInvoice;
-use Ignite\Finance\Entities\InsuranceInvoicePayment;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Finance\Entities\PatientTransaction;
-use Ignite\Finance\Entities\PaymentsCheque;
+use Ignite\Finance\Entities\PaymentManifest;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Reception\Entities\Patients;
+use Ignite\Settings\Entities\Insurance;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -54,8 +54,8 @@ class EvaluationController extends AdminBaseController
         $this->data['disp'] = json_decode($payment->dispensing);
         $this->data['a4'] = 1;
         return view('finance::evaluation.print.receipt', ['data' => $this->data]);
-       // $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
-       // $pdf->setPaper('a4', 'Potrait');
+        // $pdf = \PDF::loadView('finance::evaluation.print.receipt', ['data' => $this->data]);
+        // $pdf->setPaper('a4', 'Potrait');
         //return @$pdf->stream('Bill' . $request->id . '.pdf');
     }
 
@@ -131,6 +131,20 @@ class EvaluationController extends AdminBaseController
             $this->data['patient_invoices'] = PatientInvoice::wherePatient_id($patient)->get();
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
+        if (m_setting('finance.background_manifest')) {
+            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->get();
+            $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
+                ->doesntHave('removed_bills')
+                ->whereNull('insurance')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $this->data['invoiced'] = Patients::whereHas('invoices', function ($query) {
+                $query->whereStatus('unpaid')
+                    ->orWhere('status', '=', 'part_paid');
+            })->get();
+            return view('finance::payment_list', ['data' => $this->data]);
+        }
         $this->billable_patients();
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
@@ -185,43 +199,13 @@ class EvaluationController extends AdminBaseController
 
     private function billable_patients()
     {
-        /*
-                $this->data['patients'] = Patients::whereHas('visits', function ($query) {
-                    $query->wherePaymentMode('cash');
-                    $query->where(function (Builder $query) {
-                        $query->whereHas('investigations', function ($q3) {
-                            $q3->doesntHave('payments');
-                            $q3->doesntHave('removed_bills');
-                        });
-                        $query->orWhereHas('dispensing', function ($q) {
-                            $q->doesntHave('removed_bills');
-                            $q->whereHas('details', function ($qd) {
-                                $qd->whereStatus(0);
-                            });
-                        });
-                        $query->orWhere(function (Builder $query) {
-                            $query->whereHas('prescriptions.payment', function (Builder $query) {
-                                $query->wherePaid(false);
-                            })->orWhereHas('prescriptions', function (Builder $builder) {
-                                $builder->whereDoesntHave('payment');
-                            });
-                        });
+        $this->data['visits'] = Visit::wherePaymentMode('cash')
+            ->where(function (Builder $query) {
+                $query->where(function (Builder $query) {
+                    $query->whereHas('investigations', function ($q3) {
+                        $q3->doesntHave('payments');
+                        $q3->doesntHave('removed_bills');
                     });
-                })->orderBy('created_at', 'desc')
-                    ->get();*/
-        $this->data['visits'] = Visit::wherePaymentMode('cash')->where(function (Builder $query) {
-            $query->where(function (Builder $query) {
-                $query->whereHas('investigations', function ($q3) {
-                    $q3->doesntHave('payments');
-                    $q3->doesntHave('removed_bills');
-                });
-                $query->orWhereHas('dispensing', function ($q) {
-                    $q->doesntHave('removed_bills');
-                    $q->whereHas('details', function ($qd) {
-                        $qd->whereStatus(0);
-                    });
-                });
-                try{
                     $query->orWhere(function (Builder $query) {
                         $query->whereHas('prescriptions.payment', function (Builder $query) {
                             $query->wherePaid(false);
@@ -229,12 +213,18 @@ class EvaluationController extends AdminBaseController
                             $builder->whereDoesntHave('payment');
                         });
                     });
-                }catch (\Exception $e){
-
-                }
+                });
+            })
+            ->orWhere(function (Builder $query) {
+                $query->whereHas('to_cash', function (Builder $query) {
+                    $query->whereMode('cash');
+                });
+            })
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->reject(function ($value) {
+                return empty($value->unpaid_amount);
             });
-        })->orderBy('created_at', 'desc')
-            ->get();
         $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
             ->doesntHave('removed_bills')
             ->whereNull('insurance')
@@ -320,16 +310,6 @@ class EvaluationController extends AdminBaseController
         return view('finance::evaluation.details', ['data' => $this->data]);
     }
 
-    /*
-      public function get_patients_with_drugs() {
-      return Patients::whereHas('visits', function ($query) {
-      $query->wherePaymentMode('cash');
-      $query->whereHas('dispensing', function ($q) {
-      $q->wherePayment_status(0);
-      });
-      })->get();
-      } */
-
     public function sale_pay($sale = null)
     {
         if (!empty($sale)) {
@@ -343,12 +323,6 @@ class EvaluationController extends AdminBaseController
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 
-
-    public function accounts()
-    {
-        $this->data['patients'] = Patients::all();
-        return view('finance::patient_accounts', ['data' => $this->data]);
-    }
 
     public function individual_account($patient)
     {
@@ -370,6 +344,10 @@ class EvaluationController extends AdminBaseController
     public function pendingBills()
     {
         $this->data['pending_mode'] = 1;
+        if (m_setting('finance.background_manifest')) {
+            $this->data['pending'] = $this->evaluationRepository->getPending();
+            return view('finance::pending-insurance', ['data' => $this->data]);
+        }
         $this->data['pending'] = Visit::wherePaymentMode('insurance')
             ->orderBy('created_at', 'DESC')
             ->get();
@@ -379,90 +357,60 @@ class EvaluationController extends AdminBaseController
     public function billedBills()
     {
         $this->data['bill_mode'] = 1;
-        $this->data['billed'] = InsuranceInvoice::where('visit', '>', 0)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $this->data['billed'] = $this->evaluationRepository->getInvoiceByStatus();
         return view('finance::evaluation.partials.billed', ['data' => $this->data]);
     }
 
     public function dispatchedInvoices()
     {
         $this->data['dispatch_mode'] = 1;
-        $this->data['dispatched'] = DispatchDetails::orderBy('created_at', 'DESC')
-            ->get();
+        $this->data['dispatched'] = $this->evaluationRepository->getInvoiceByStatus(1);
         return view('finance::evaluation.partials.dispatched', ['data' => $this->data]);
     }
 
     public function cancelledBills()
     {
         $this->data['cancel_mode'] = 1;
-        $this->data['canceled'] = InsuranceInvoice::where('visit', '>', 0)
-            ->whereStatus(5)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $this->data['canceled'] = $this->evaluationRepository->getInvoiceByStatus(5);
         return view('finance::evaluation.partials.cancelled', ['data' => $this->data]);
     }
 
     public function companyInvoicePayment()
     {
         $this->data['payment_mode'] = 1;
-        $this->data['billed'] = InsuranceInvoice::where('visit', '>', 0)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        if ($who = \request('who')) {
+            $this->data['company'] = Insurance::find($who);
+            $this->data['billed'] = $this->evaluationRepository->getInvoiceByStatus(1, $who);
+        }
         return view('finance::evaluation.partials.payment', ['data' => $this->data]);
     }
 
     public function paidInvoices()
     {
         $this->data['paid_mode'] = 1;
-        /*
-          $this->data['partpaid'] = InsuranceInvoice::where('visit', '>', 0)
-          ->whereStatus(2)
-          ->get();
-          $this->data['paid'] = InsuranceInvoice::where('visit', '>', 0)
-          ->whereStatus(3)
-          ->get();
-          $this->data['overpaid'] = InsuranceInvoice::where('visit', '>', 0)
-          ->whereStatus(4)
-          ->get();
-         *
-         */
-        $this->data['payment'] = PaymentsCheque::where('insurance_payment', '>', 0)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        $this->data['payment'] = $this->evaluationRepository->getPaidInvoices();
         return view('finance::evaluation.partials.paid2', ['data' => $this->data]);
     }
 
     public function companyStatements(Request $request)
     {
         $this->data['stmt_mode'] = 1;
-        $this->data['payments'] = InsuranceInvoicePayment::orderBy('created_at', 'DESC')->get();
-
+        $this->data['payments'] = $this->evaluationRepository->companyStatements();
         return view('finance::evaluation.partials.firm_statement', ['data' => $this->data]);
     }
 
-    public function bill(Request $request)
-    {
-        if ($this->evaluationRepository->bill_visit($request)) {
-            flash('Bill placed, thank you');
-            return redirect()->route('finance.evaluation.billed');
-        } else {
-            flash('Bill could not be placed');
-            return back();
-        }
-    }
 
     public function prepareBill($visit_id)
     {
         $this->data['visit'] = Visit::find($visit_id);
-        return view('finance::evaluation.prepare-bill', ['data' => $this->data]);
+        return view('finance::prepare-bill', ['data' => $this->data]);
     }
 
     public function billMany(Request $request)
     {
         if ($this->evaluationRepository->bill_visit_many($request)) {
             flash('Bills placed, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.billed');
         } else {
             flash('Bills could not be placed, please try again');
             return redirect()->route('finance.evaluation.billed');
@@ -473,7 +421,7 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->cancel_visit_bill($request)) {
             flash('Bill cancelled, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.cancelled');
         } else {
             flash('Bill could not be cancelled, thank you');
             return back();
@@ -484,7 +432,7 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->undoBillCancel($request)) {
             flash('Bill cancellation undone successfully, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.pending');
         } else {
             flash('Bill cancellation could not be undone at this time, please try again');
             return back();
@@ -495,7 +443,7 @@ class EvaluationController extends AdminBaseController
     {
         if ($this->evaluationRepository->dispatchBills($request)) {
             flash('Bill(s) dispatched, thank you');
-            return back();
+            return redirect()->route('finance.evaluation.dispatched');
         } else {
             flash('Bills could not be dispatched, please try again later');
             return back();
@@ -516,9 +464,10 @@ class EvaluationController extends AdminBaseController
 
     public function saveInsuranceInvoicePayments(Request $request)
     {
-        if (isset($request->company)) {
+        if ($request->has('company')) {
             $this->evaluationRepository->record_insurance_payment();
-            return back();
+            flash()->success('Payment recorded successfully');
+            return redirect()->route('finance.evaluation.paid');
         } else {
             flash()->error('Select an insurance company to continue');
             return back();
@@ -564,22 +513,22 @@ class EvaluationController extends AdminBaseController
         return back();
     }
 
-    public function printDispatch(Request $request)
+    public function printDispatch($id)
     {
-        $dispatch = Dispatch::find($request->id);
+        $dispatch = Dispatch::find($id);
         $pdf = \PDF::loadView('finance::evaluation.print.dispatch', ['dispatch' => $dispatch]);
         $pdf->setPaper('a4', 'Landscape');
-        return $pdf->stream('dispatch_' . $request->id . '.pdf');
+        return @$pdf->stream('dispatch_' . $id . '.pdf');
     }
 
-    public function purgeDispatch(Request $request)
+    public function purgeDispatch($id)
     {
-        $dispatch = DispatchDetails::whereDispatch($request->id)->get();
+        $dispatch = DispatchDetails::where('insurance_invoice', $id)->get();
         $item = null;
         foreach ($dispatch as $dis) {
             $inv = InsuranceInvoice::find($dis->insurance_invoice);
-            $inv->status = 0;
-            $inv->update();
+            $inv->status = 5;
+            $inv->save();
             $item = $dis->dispatch;
         }
         $batch = Dispatch::find($item);

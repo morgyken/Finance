@@ -9,13 +9,14 @@
         </div>
         <div class="box-body">
             <div class="col-md-12">
-                {{Form::open(['route'=>['finance.evaluation.bill',$visit->id]])}}
+                {{Form::open(['route'=>['finance.evaluation.bill',$visit->id,],'id'=>'inv'])}}
                 <table class="table table-condensed" id="panda">
                     <tbody>
                     @foreach($visit->investigations as $item)
                         <?php
                         $is_paid = $item->invoiced;
-                        if ($is_paid) {
+                        $in_cash = transferred2cash($item->id);
+                        if ($is_paid || $in_cash) {
                             continue;
                         }
                         ?>
@@ -28,8 +29,6 @@
                             <td style="text-align: right">{{$item->quantity}}</td>
                             <td style="text-align: right">{{number_format($item->amount,2)}}</td>
                             <td>
-                                <button type="button" class="btn btn-xs btn-primary">
-                                    <i class="fa fa-exchange"></i> Change Mode</button>
                                 <button class="btn btn-xs btn-danger cancel" type="button" xs="p{{$item->id}}">
                                     <i class="fa fa-ban" title="Cancel"></i></button>
                             </td>
@@ -39,7 +38,8 @@
                     @foreach($visit->prescriptions as $item)
                         <?php
                         $is_paid = $item->is_paid;
-                        if ($item->is_paid || !$item->payment->complete) {
+                        $in_cash = transferred2cash($item->id, true);
+                        if ($item->is_paid || $in_cash || !$item->payment->complete) {
                             continue;
                         }
                         ?>
@@ -54,7 +54,6 @@
                             <td style="text-align: right">{{$item->payment->quantity}}</td>
                             <td style="text-align: right">{{number_format($item->payment->total,2)}}</td>
                             <td>
-                                <button type="button" class="btn btn-xs btn-primary">Change Mode</button>
                                 <button class="btn btn-xs btn-danger cancel" type="button" xs="d{{$item->id}}">
                                     <i class="fa fa-ban"
                                        title="Cancel"></i></button>
@@ -84,7 +83,9 @@
                     </tfoot>
                 </table>
                 <div class="pull-right">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-money"></i> Bill Selected</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-money"></i> Bill Selected Items
+                    </button>
                 </div>
                 <input type="hidden" name="total" id="amount_send"/>
                 {{Form::close()}}
