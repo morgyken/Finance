@@ -22,8 +22,7 @@ function getAmount($sales) {
 ?>
 <html>
 <title>RECEIPT</title>
-{{--<body onload="window.print()">--}}
-<body>
+<body onload="window.print()">
 <style>
     body{
         /*font-weight: bold;*/
