@@ -100,7 +100,10 @@ class EvaluationController extends AdminBaseController
 
         $this->data['disp'] = json_decode($payment->dispensing);
 
+        //$pdf = \PDF::loadView('finance::evaluation.print.receipt_t', ['data' => $this->data]);
+
         $pdf = \PDF::loadView('finance::evaluation.print.receipt_t', ['data' => $this->data]);
+
         $customPaper = [0, 0, 300, $min_height];
         $pdf->setPaper($customPaper);
         return @$pdf->stream('receipt_' . $request->payment . '.pdf');

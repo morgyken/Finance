@@ -4,18 +4,7 @@
     <head>
         <meta charset="utf-8">
         <title>RECEIPT</title>
-
 <?php
-/*
- * Collabmed Solutions Ltd
- * Project: iClinic
- *  Author: Samuel Okoth <sodhiambo@collabmed.com>
- */
-/*
-  $payment = $data;
-  //dd($payment);
-  $patient = Ignite\Reception\Entities\Patients::find($payment->patient);
-  $pays = paymentFor($payment); */
 extract($data);
 $t = 0;
 
@@ -35,8 +24,8 @@ function getAmount($sales) {
     }
     return $total;
 }
-?>
 
+?>
 <style>
     body{
         font-weight: bold;
@@ -45,7 +34,7 @@ function getAmount($sales) {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
-        table-layout: fixed;
+        /*table-layout: fixed;*/
     }
 
     table th{
@@ -107,9 +96,9 @@ function getAmount($sales) {
                 <table class="table table-striped" id="items">
                     <thead>
                         <tr>
-                            <th style="width: 10%">#</th>
-                            <th style="width: 70%">Item</th>
-                            <th style="width: 20%">Price</th>
+                            <th>#</th>
+                            <th>Item</th>
+                            <th>Price</th>
                         </tr>
                     </thead>
                     <tbody>
