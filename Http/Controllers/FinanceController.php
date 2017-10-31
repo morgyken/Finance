@@ -42,10 +42,9 @@ class FinanceController extends AdminBaseController
     {
         if ($this->evaluationRepository->swapBill($request)) {
             flash('That was done');
-//            return redirect()->route('finance.evaluation.billed');
-        } else {
-            flash()->error('Could not do that!');
+            return redirect()->route('finance.evaluation.pending');
         }
+        flash()->error('Could not do that!');
         return back();
     }
 

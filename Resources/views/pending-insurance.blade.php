@@ -16,7 +16,7 @@
                     <th>Scheme</th>
                     <th>Amount</th>
                     <th>View</th>
-                    <th>Action</th>
+                    <th class="disabled-sorting text-right">Action</th>
                 </tr>
                 </thead>
                 <tbody class="response">
@@ -48,6 +48,9 @@
                             <a href="{{route('finance.evaluation.prepare.bill', $visit->id)}}"
                                class="btn btn-xs btn-primary">
                                 <i class="fa fa-usd"></i> Bill</a>
+                            <a href="{{route('finance.change_mode', $visit->id)}}"
+                               class="btn btn-xs btn-info">
+                                <i class="fa fa-exchange"></i>Change</a>
                         </td>
                     </tr>
                 @endforeach

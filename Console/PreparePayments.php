@@ -45,18 +45,13 @@ class PreparePayments extends Command
                             $q3->doesntHave('payments');
                             $q3->doesntHave('removed_bills');
                         });
-//                        $query->orWhereHas('dispensing', function ($q) {
-//                            $q->doesntHave('removed_bills');
-//                            $q->whereHas('details', function ($qd) {
-//                                $qd->whereStatus(0);
-//                            });
-//                        });
                         $query->orWhere(function (Builder $query) {
                             $query->whereHas('prescriptions.payment', function (Builder $query) {
                                 $query->wherePaid(false);
-                            })->orWhereHas('prescriptions', function (Builder $builder) {
-                                $builder->whereDoesntHave('payment');
                             });
+//                                ->orWhereHas('prescriptions', function (Builder $builder) {
+//                                $builder->whereDoesntHave('payment');
+//                            });
                         });
                     });
                 })
@@ -66,7 +61,14 @@ class PreparePayments extends Command
                     });
                 });
         })->orWhere(function (Builder $query) {
-            $query->wherePaymentMode('insurance');
+            $query->where(function (Builder $query) {
+                $query->wherePaymentMode('insurance');
+            });
+            $query->orWhere(function (Builder $query) {
+                $query->whereHas('to_cash', function (Builder $query) {
+                    $query->whereMode('insurance');
+                });
+            });
         })->orderBy('created_at', 'asc')
             ->get()
             ->reject(function ($value) {

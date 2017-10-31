@@ -29,20 +29,26 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientAccount whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class PatientAccount extends Model {
+class PatientAccount extends Model
+{
 
     protected $table = 'finance_patient_accounts';
-    protected  $guarded = [];
-    public function patients() {
+    protected $guarded = [];
+
+    public function patients()
+    {
         return $this->belongsTo(Patients::class, 'patient', 'patient_id');
     }
 
-    public function getLatestBalance($id){
-    	return PatientAccount::where("patient", $id)->latest()->first()->balance;
+    public function getLatestBalance($id)
+    {
+        return get_patient_balance($id);
+        return PatientAccount::where("patient", $id)->latest()->first()->balance;
     }
 
-    public static function latestBalance($id){
-    	return PatientAccount::where("patient", $id)->latest()->first();
+    public static function latestBalance($id)
+    {
+        return PatientAccount::where("patient", $id)->latest()->first();
     }
 
 }

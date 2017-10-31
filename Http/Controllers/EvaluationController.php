@@ -120,6 +120,16 @@ class EvaluationController extends AdminBaseController
         }
     }
 
+    public function payPOS()
+    {
+        $this->data['sales'] = InventoryBatchProductSales::wherePaid(false)
+            ->doesntHave('removed_bills')
+            ->whereNull('insurance')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('finance::pay_pos', ['data' => $this->data]);
+    }
+
     public function pay(Request $request)
     {
         $patient = $request->patient;
@@ -133,11 +143,6 @@ class EvaluationController extends AdminBaseController
         }
         if (m_setting('finance.background_manifest')) {
             $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->get();
-            $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
-                ->doesntHave('removed_bills')
-                ->whereNull('insurance')
-                ->orderBy('created_at', 'desc')
-                ->get();
 
             $this->data['invoiced'] = Patients::whereHas('invoices', function ($query) {
                 $query->whereStatus('unpaid')
@@ -225,11 +230,11 @@ class EvaluationController extends AdminBaseController
             ->reject(function ($value) {
                 return empty($value->unpaid_amount);
             });
-        $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
-            ->doesntHave('removed_bills')
-            ->whereNull('insurance')
-            ->orderBy('created_at', 'desc')
-            ->get();
+//        $this->data['sales'] = InventoryBatchProductSales::wherePaid(false)
+//            ->doesntHave('removed_bills')
+//            ->whereNull('insurance')
+//            ->orderBy('created_at', 'desc')
+//            ->get();
 
         $this->data['invoiced'] = Patients::whereHas('invoices', function ($query) {
             $query->whereStatus('unpaid')
