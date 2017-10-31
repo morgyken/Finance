@@ -68,10 +68,7 @@ extract($data);
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
-            try {
-                $('table').DataTable();
-            } catch (e) {
-            }
+            $('table').dataTable({pageLength: 25});
         });
     </script>
 @endsection
