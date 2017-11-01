@@ -58,6 +58,7 @@ class FixOldPrescriptions extends Command
             }
             if (empty($one->visit) || empty($one->company_id) || empty($one->scheme_id)) {
                 $one->delete();
+                $this->warn('Delete invoice ...' . $one->invoice_no);
             }
         }
         $this->info("Done!, Thank you");

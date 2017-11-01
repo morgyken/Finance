@@ -54,16 +54,20 @@
                     </td>
                     <td>
                         <div class="btn-group">
-                            <a target="blank" href="{{route('finance.evaluation.ins.inv.print', $item->id)}}"
+                            <a target="blank" href="{{route('finance.evaluation.ins.inv.print_thermal', $item->id)}}"
                                class="btn btn-xs btn-primary">
-                                <i class="fa fa-print"></i> Print</a>
-                            @if($item->visits->prescriptions->count())
-                                <button type="button" class="btn btn-primary dropdown-toggle btn-xs"
-                                        data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-
+                                <i class="fa fa-print"></i></a>
+                            <button type="button" class="btn btn-primary dropdown-toggle btn-xs"
+                                    data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a target="blank"
+                                       href="{{route('finance.evaluation.ins.inv.print', $item->id)}}">
+                                        Print (A4)</a>
+                                </li>
+                                @if($item->visits->prescriptions->count())
                                     <li><a class="btn btn-default btn-xs"
                                            href="{{route('evaluation.print.prescription',[$item->visits->id,true])}}"
                                            target="_blank">
@@ -72,8 +76,8 @@
                                            href="{{route('evaluation.print.prescription',[$item->visits->id])}}"
                                            target="_blank">
                                             Print Prescript (A5)</a></li>
-                                </ul>
-                            @endif
+                                @endif
+                            </ul>
                         </div>
                     </td>
                 </tr>

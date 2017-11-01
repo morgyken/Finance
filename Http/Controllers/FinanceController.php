@@ -100,6 +100,18 @@ class FinanceController extends AdminBaseController
         return redirect()->route('finance.account.deposit.done', $payment->id);
     }
 
+    public function printThermalInvoice(Request $request)
+    {
+        $bill = InsuranceInvoice::find($request->id);
+        $k = 10;
+        $height = 600 + ($bill->investigations->count() * $k) + ($bill->prescriptions->count() * $k);
+        $pdf = \PDF::loadView('finance::evaluation.print.invoice', ['bill' => $bill]);
+        $customPaper = [0, 0, 300, $height];
+        $pdf->setPaper($customPaper);
+        return @$pdf->stream('Bill' . $request->id . '.pdf');
+    }
+
+
     private function payment_methods(Request $request, EvaluationPayments $payment)
     {
         $paid_amount = 0;
