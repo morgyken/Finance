@@ -15,6 +15,7 @@ namespace Ignite\Finance\Library;
 use Carbon\Carbon;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
+use Ignite\Evaluation\Entities\Procedures;
 use Ignite\Finance\Entities\ChangeInsurance;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
@@ -28,6 +29,7 @@ use Ignite\Finance\Entities\PaymentsMpesa;
 use Ignite\Finance\Entities\SplitInsurance;
 use Ignite\Finance\Entities\SplitInsuranceItems;
 use Ignite\Finance\Repositories\EvaluationRepository;
+use Ignite\Inventory\Entities\InventoryProducts;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -635,24 +637,29 @@ class EvaluationLibrary implements EvaluationRepository
     {
         $drugs = $this->_get_selected_stack('drugs_d');
         foreach ($drugs as $drug) {
+            $p = InventoryProducts::find($drug);
             $payload = [
                 'visit_id' => $request->visit,
                 'prescription_id' => $drug,
                 'mode' => 'cash',
                 'user_id' => $request->user()->id,
+                'amount' => $p->cash_price,
             ];
             ChangeInsurance::create($payload);
         }
         $procedures = $this->_get_selected_stack('procedures_p');
         foreach ($procedures as $drug) {
+            $p = Procedures::find($drug);
             $payload = [
                 'visit_id' => $request->visit,
                 'procedure_id' => $drug,
                 'mode' => 'cash',
                 'user_id' => $request->user()->id,
+                'amount' => $p->price,
             ];
             ChangeInsurance::create($payload);
         }
+        reload_payments();
         return true;
     }
 

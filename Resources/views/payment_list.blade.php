@@ -47,6 +47,7 @@ extract($data);
                                     <td>{{$patient->full_name}}</td>
                                     <td>{{$patient->id_no}}</td>
                                     <td>{{$patient->mobile}}</td>
+                                    <td>{{$visit->amount}}</td>
                                     <td>
                                         @if($visit->has_meds)
                                             <a class="btn btn-warning btn-xs"
@@ -72,6 +73,7 @@ extract($data);
                                 <th>Name</th>
                                 <th>ID Number</th>
                                 <th>Mobile</th>
+                                <th>Amount</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>

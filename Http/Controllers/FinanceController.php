@@ -31,6 +31,7 @@ class FinanceController extends AdminBaseController
     {
         parent::__construct();
         $this->evaluationRepository = $evaluationRepository;
+        reload_payments();
     }
 
     public function billing()
