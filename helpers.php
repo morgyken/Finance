@@ -367,17 +367,35 @@ function get_billing_status($status)
 
 function get_unpaid_amount(Visit $visit)
 {
+    return get_unpaid_amount_for($visit, 'cash') + get_unpaid_amount_for($visit, 'insurance');
+}
+
+
+function get_unpaid_amount_for(Visit $visit, $mode)
+{
     $amount = 0;
-    foreach ($visit->investigations as $item) {
-        if (!($item->is_paid || $item->invoiced))
-            $amount += $item->amount;
-    }
-    foreach ($visit->prescriptions as $item) {
-        if (!$item->is_paid) {
-            $amount += $item->priced_amount;
+    $k = $visit->to_cash;
+    if ($visit->payment_mode == $mode) {
+        foreach ($visit->investigations as $item) {
+            if (!($item->is_paid || $item->invoiced)) {
+                if (!in_array($item->procedure, $k->pluck('procedure_id')->toArray()))
+                    $amount += $item->amount;
+            }
+        }
+        foreach ($visit->prescriptions as $item) {
+            if (!$item->is_paid) {
+                if (!in_array($item->drug, $k->pluck('prescription_id')->toArray()))
+                    $amount += $item->priced_amount;
+            }
         }
     }
-    return $amount;
+    $extra = \Ignite\Finance\Entities\ChangeInsurance::whereMode($mode)->whereVisitId($visit->id)->sum('amount');
+    return $amount + $extra;
+}
+
+function reload_payments()
+{
+    return \Artisan::call('finance:prepare-payments');
 }
 
 if (!function_exists('patient_has_pharmacy_bill')) {

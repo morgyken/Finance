@@ -35,7 +35,7 @@
                         <?php
                         $is_paid = $item->is_paid;
                         $in_cash = transferred2cash($item->id, true);
-                        if ($item->is_paid || $in_cash || !$item->payment->complete) {
+                        if ($item->is_paid || $in_cash) {
                             continue;
                         }
                         ?>
