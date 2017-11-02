@@ -31,7 +31,7 @@ function getAmount($sales) {
     table{
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
-        /*width: 100%;*/
+        width: 100%;
     }
 
     table th{
