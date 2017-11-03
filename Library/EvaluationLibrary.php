@@ -640,6 +640,7 @@ class EvaluationLibrary implements EvaluationRepository
             ];
             ChangeInsurance::create($payload);
         }
+
         $procedures = $this->_get_selected_stack('procedures_p');
         foreach ($procedures as $drug) {
             $p = Procedures::find($drug);
@@ -649,7 +650,7 @@ class EvaluationLibrary implements EvaluationRepository
                     'procedure_id' => $drug,
                     'mode' => 'cash',
                     'user_id' => $request->user()->id,
-                    'amount' => $p->price?$p->price:'',
+                    'amount' => $p->price,
                 ];
                 ChangeInsurance::create($payload);
             }
