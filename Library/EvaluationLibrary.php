@@ -648,7 +648,7 @@ class EvaluationLibrary implements EvaluationRepository
                 'procedure_id' => $drug,
                 'mode' => 'cash',
                 'user_id' => $request->user()->id,
-                'amount' => $p->price,
+                'amount' => $p->price?$p->price:'',
             ];
             ChangeInsurance::create($payload);
         }
