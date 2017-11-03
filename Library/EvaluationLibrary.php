@@ -637,6 +637,32 @@ class EvaluationLibrary implements EvaluationRepository
     {
         $drugs = $this->_get_selected_stack('drugs_d');
         foreach ($drugs as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'prescription_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+            ];
+            ChangeInsurance::create($payload);
+        }
+        $procedures = $this->_get_selected_stack('procedures_p');
+        foreach ($procedures as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'procedure_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+            ];
+            ChangeInsurance::create($payload);
+        }
+        return true;
+    }
+
+    /*
+    public function swapBill(Request $request)
+    {
+        $drugs = $this->_get_selected_stack('drugs_d');
+        foreach ($drugs as $drug) {
             $p = InventoryProducts::find($drug);
             $payload = [
                 'visit_id' => $request->visit,
@@ -663,6 +689,7 @@ class EvaluationLibrary implements EvaluationRepository
         reload_payments();
         return true;
     }
+    */
 
     public function saveSplitBill(Request $request){
 
