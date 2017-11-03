@@ -16,8 +16,7 @@ class AddVisitIdToFinanceChangeInsurancesTable extends Migration
         try{
             Schema::table('finance_change_insurances', function (Blueprint $table) {
                 $table->integer('visit_id')->unsigned();
-
-                $table->foreign('visit')
+                $table->foreign('visit_id')
                     ->references('id')
                     ->on('evaluation_visits')
                     ->onUpdate('cascade')

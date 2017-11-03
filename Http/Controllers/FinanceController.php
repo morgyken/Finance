@@ -48,6 +48,16 @@ class FinanceController extends AdminBaseController
         return back();
     }
 
+    public function saveSplitBill(Request $request)
+    {
+        if ($this->evaluationRepository->saveSplitBill($request)) {
+            flash('That was done');
+            return redirect()->route('finance.evaluation.pending');
+        }
+        flash()->error('Could not do that!');
+        return back();
+    }
+
     public function bill(Request $request)
     {
         if ($this->evaluationRepository->bill_visit($request)) {
@@ -83,6 +93,12 @@ class FinanceController extends AdminBaseController
     {
         $this->data['visit'] = Visit::find($visit_id);
         return view('finance::change-mod', ['data' => $this->data]);
+    }
+
+    public function splitBill($visit_id)
+    {
+        $this->data['visit'] = Visit::find($visit_id);
+        return view('finance::split-bill', ['data' => $this->data]);
     }
 
     public function saveDeposit(Request $request, $patient)

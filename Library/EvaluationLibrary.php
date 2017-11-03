@@ -25,6 +25,8 @@ use Ignite\Finance\Entities\PaymentsCard;
 use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\PaymentsMpesa;
+use Ignite\Finance\Entities\SplitInsurance;
+use Ignite\Finance\Entities\SplitInsuranceItems;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -645,6 +647,40 @@ class EvaluationLibrary implements EvaluationRepository
                 'user_id' => $request->user()->id,
             ];
             ChangeInsurance::create($payload);
+        }
+        return true;
+    }
+
+    public function saveSplitBill(Request $request){
+
+        $drugs = $this->_get_selected_stack('drugs_d');
+        $parent = new SplitInsurance();
+        $parent->visit_id = $request->visit;
+        $parent->scheme = $request->scheme;
+        $parent->user_id = $request->user()->id;
+        $parent->save();
+
+        foreach ($drugs as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'parent_id' => $parent->id,
+                'prescription_id' => $drug,
+                'mode' => 'insurance',
+                'user_id' => $request->user()->id,
+            ];
+            SplitInsuranceItems::create($payload);
+        }
+
+        $procedures = $this->_get_selected_stack('investigation');
+        foreach ($procedures as $item) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'parent_id' => $parent->id,
+                'investigation_id' => $item,
+                'mode' => 'insurance',
+                'user_id' => $request->user()->id,
+            ];
+            SplitInsuranceItems::create($payload);
         }
         return true;
     }

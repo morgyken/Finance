@@ -349,13 +349,20 @@ class EvaluationController extends AdminBaseController
     public function pendingBills()
     {
         $this->data['pending_mode'] = 1;
+
         if (m_setting('finance.background_manifest')) {
             $this->data['pending'] = $this->evaluationRepository->getPending();
             return view('finance::pending-insurance', ['data' => $this->data]);
         }
+
         $this->data['pending'] = Visit::wherePaymentMode('insurance')
             ->orderBy('created_at', 'DESC')
             ->get();
+
+        $this->data['split'] = Visit::wherePaymentMode('insurance')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+        
         return view('finance::evaluation.partials.pending', ['data' => $this->data]);
     }
 

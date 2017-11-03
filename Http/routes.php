@@ -12,6 +12,7 @@ $router->get('bill/{id}/payment', ['uses' => 'GlController@payBill', 'as' => 'bi
 $router->post('bill/payment', ['uses' => 'GlController@savePaybill', 'as' => 'bill.pay.save']);
 $router->get('bill/print/{id}', ['uses' => 'GlController@print_bill', 'as' => 'bill.print']);
 $router->get('change-mode/{id}/visit', ['as' => 'change_mode', 'uses' => 'FinanceController@changeMode']);
+$router->get('split-bill/{id}/visit', ['as' => 'split_bill', 'uses' => 'FinanceController@splitBill']);
 $router->get('pos/cash/{patient?}/{invoice?}/{deposit?}', ['as' => 'pos_cash', 'uses' => 'EvaluationController@payPOS']);
 
 // general ledger
@@ -70,6 +71,7 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Rout
     $router->get('bill/prepare/{id}', ['as' => 'prepare.bill', 'uses' => 'EvaluationController@preparebill']);
     $router->post('bill/{visit}/panda', ['as' => 'bill', 'uses' => 'FinanceController@bill']);
     $router->post('bill/{visit}/swap', ['as' => 'swap.mode', 'uses' => 'FinanceController@swapModes']);
+    $router->post('bill/{visit}/split', ['as' => 'split', 'uses' => 'FinanceController@saveSplitBill']);
     $router->post('bill/insurances', ['as' => 'bill.many', 'uses' => 'EvaluationController@billMany']);
 
     $router->get('insurance/payment', ['as' => 'insurance.payment', 'uses' => 'EvaluationController@insurancePayment']);

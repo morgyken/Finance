@@ -1,15 +1,24 @@
-<?php extract($data);?>
+<?php
+/**
+ * Created by PhpStorm.
+ * User: bravoh
+ * Date: 11/2/17
+ * Time: 1:45 PM
+ */
+extract($data);
+$patient_schemes = get_patient_schemes($visit->patients->id);
+?>
 @extends('layouts.app')
 @section('content_title','Billing Management')
-@section('content_description','Manage items to invoice')
+@section('content_description','Transfer Bills to Another Insurance Company')
 @section('content')
     <div class="box box-info">
         <div class="box-header with-border">
-            <h3 class="box-title">Manage items to invoice</h3>
+            <h3 class="box-title">Transfer Bills to Another Insurance Company <code>Patient: {{$visit->patients->full_name}}</code></h3>
         </div>
         <div class="box-body">
             <div class="col-md-12">
-                {{Form::open(['route'=>['finance.evaluation.bill',$visit->id,],'id'=>'inv'])}}
+                {{Form::open(['route'=>['finance.evaluation.split',$visit->id],'id'=>'inv'])}}
                 <table class="table table-condensed" id="panda">
                     <tbody>
                     @foreach($visit->investigations as $item)
@@ -17,23 +26,18 @@
                         $is_paid = $item->invoiced;
                         $in_cash = transferred2cash($item->id);
                         $split = split_to_schemex($item->id);
-                        dd($split);
-                        if ($is_paid || $in_cash || $split) {
+                        if ($is_paid || $in_cash ||$split) {
                             continue;
                         }
                         ?>
                         <tr id="p{{$item->id}}">
-                            <td><input type="checkbox" name="procedures.p{{$item->id}}" vprice="{{$item->amount}}"></td>
+                            <td><input type="checkbox" name="investigation{{$item->id}}" vprice="{{$item->amount}}"></td>
                             <td>{{$item->procedures->name}}</td>
                             <td>{{ucfirst($item->type)}}</td>
                             <td>{!! $is_paid?'<span class="label label-success">Invoiced</span>':'<span class="label label-warning">Pending</span>'!!}</td>
                             <td style="text-align: right">{{number_format($item->price,2)}}</td>
                             <td style="text-align: right">{{$item->quantity}}</td>
                             <td style="text-align: right">{{number_format($item->amount,2)}}</td>
-                            <td>
-                                <button class="btn btn-xs btn-danger cancel" type="button" xs="p{{$item->id}}">
-                                    <i class="fa fa-ban" title="Cancel"></i></button>
-                            </td>
                         </tr>
                     @endforeach
 
@@ -42,7 +46,8 @@
                         $is_paid = $item->is_paid;
                         $in_cash = transferred2cash($item->id, true);
                         $split = split_to_schemex($item->id,true);
-                        if ($item->is_paid || $in_cash || !$item->payment->complete ||$split) {
+
+                        if ($item->is_paid || $in_cash || $split || !$item->payment->complete) {
                             continue;
                         }
                         ?>
@@ -56,25 +61,19 @@
                             <td style="text-align: right">{{number_format($item->payment->price,2)}}</td>
                             <td style="text-align: right">{{$item->payment->quantity}}</td>
                             <td style="text-align: right">{{number_format($item->payment->total,2)}}</td>
-                            <td>
-                                <button class="btn btn-xs btn-danger cancel" type="button" xs="d{{$item->id}}">
-                                    <i class="fa fa-ban"
-                                       title="Cancel"></i></button>
-                            </td>
                         </tr>
 
                     @endforeach
                     </tbody>
                     <thead>
                     <tr>
-                        <th>?</th>
+                        <th>#</th>
                         <th>Item</th>
                         <th>Type</th>
                         <th>Status</th>
                         <th style="text-align: right">Price</th>
                         <th style="text-align: right">Units</th>
                         <th style="text-align: right">Amount</th>
-                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tfoot>
@@ -83,13 +82,35 @@
                         <th style="text-align: right"><span id="thesum">0.00</span></th>
                         <th></th>
                     </tr>
+                    <tr>
+                        <th colspan="4"></th>
+                        <th colspan="3">
+                            <div class="pull-right form-group {{ $errors->has('scheme') ? ' has-error' : '' }}" id="schemes">
+                                {!! Form::label('scheme', 'Transfer to:',['class'=>'control-label col-md-4']) !!}
+                                <div class="col-md-8">
+                                    <select class="form-control" id="scheme" name="scheme">
+                                        <option selected="selected" value="">Choose...</option>
+                                        @foreach($patient_schemes as $scheme)
+                                            <option value="{{$scheme->id}}">{{$scheme->schemes->companies->name}}
+                                                - {{$scheme->schemes->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    {!! $errors->first('scheme', '<span class="help-block">:message</span>') !!}
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
                     </tfoot>
                 </table>
+
+                <div class="form-group">
                 <div class="pull-right">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fa fa-money"></i> Bill Selected Items
+                    <button type="submit" class="btn btn-primary" id="swap2cash">
+                        <i class="fa fa-exchange"></i> Split
                     </button>
                 </div>
+                </div>
+
                 <input type="hidden" name="total" id="amount_send"/>
                 {{Form::close()}}
             </div>
