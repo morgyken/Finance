@@ -651,7 +651,6 @@ class EvaluationLibrary implements EvaluationRepository
         $procedures = $this->_get_selected_stack('procedures_p');
         foreach ($procedures as $drug) {
             $p = Procedures::find($drug);
-            if(!empty($p)){
                 $payload = [
                     'visit_id' => $request->visit,
                     'procedure_id' => $drug,
@@ -660,7 +659,6 @@ class EvaluationLibrary implements EvaluationRepository
                     'amount' => $p->price,
                 ];
                 ChangeInsurance::create($payload);
-            }
         }
         reload_payments();
         return true;
