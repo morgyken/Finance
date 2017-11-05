@@ -80,25 +80,6 @@ class EvaluationLibrary implements EvaluationRepository
         $this->prepareInput($this->input);
     }
 
-    /**
-     * Build an index of items dynamically
-     * @param null $needle
-     * @return array
-     */
-    private function _get_selected_stack($needle = null)
-    {
-        $stack = [];
-        $input = \request()->all();
-        if (empty($needle)) {
-            $needle = 'item';
-        }
-        foreach ($input as $key => $one) {
-            if (starts_with($key, $needle)) {
-                $stack[] = substr($key, strlen($needle));
-            }
-        }
-        return $stack;
-    }
 
     private function updatePrescriptions($item)
     {
@@ -213,7 +194,7 @@ class EvaluationLibrary implements EvaluationRepository
             $inv->user_id = $this->user;
             $inv->save();
 
-            $__items = $this->__get_selected_stack();
+            $__items = $this->_get_selected_stack();
             foreach ($__items as $item) {
                 $id = 'item' . $item;
                 $name = 'inv_name' . $item;
@@ -261,7 +242,7 @@ class EvaluationLibrary implements EvaluationRepository
 
     private function payment_details(Request $request, $payment)
     {
-        $items = $this->__get_selected_stack();
+        $items = $this->_get_selected_stack();
         foreach ($items as $item) {
             $invoice = 'invoice' . $item;
             if (isset($request->$invoice)) {
@@ -534,14 +515,19 @@ class EvaluationLibrary implements EvaluationRepository
 
     /**
      * Build an index of items dynamically
+     * @param null $needle
      * @return array
      */
-    private function __get_selected_stack()
+    private function _get_selected_stack($needle = null)
     {
         $stack = [];
-        foreach ($this->input as $key => $one) {
-            if (starts_with($key, 'item')) {
-                $stack[] = substr($key, 4);
+        $input = \request()->all();
+        if (empty($needle)) {
+            $needle = 'item';
+        }
+        foreach ($input as $key => $one) {
+            if (starts_with($key, $needle)) {
+                $stack[] = substr($key, strlen($needle));
             }
         }
         return $stack;
@@ -630,32 +616,6 @@ class EvaluationLibrary implements EvaluationRepository
     {
         $drugs = $this->_get_selected_stack('drugs_d');
         foreach ($drugs as $drug) {
-            $payload = [
-                'visit_id' => $request->visit,
-                'prescription_id' => $drug,
-                'mode' => 'cash',
-                'user_id' => $request->user()->id,
-            ];
-            ChangeInsurance::create($payload);
-        }
-        $procedures = $this->_get_selected_stack('procedures_p');
-        foreach ($procedures as $drug) {
-            $payload = [
-                'visit_id' => $request->visit,
-                'procedure_id' => $drug,
-                'mode' => 'cash',
-                'user_id' => $request->user()->id,
-            ];
-            ChangeInsurance::create($payload);
-        }
-        return true;
-    }
-
-    /*
-    public function swapBill(Request $request)
-    {
-        $drugs = $this->_get_selected_stack('drugs_d');
-        foreach ($drugs as $drug) {
             $p = InventoryProducts::find($drug);
             $payload = [
                 'visit_id' => $request->visit,
@@ -670,19 +630,19 @@ class EvaluationLibrary implements EvaluationRepository
         $procedures = $this->_get_selected_stack('procedures_p');
         foreach ($procedures as $drug) {
             $p = Procedures::find($drug);
-                $payload = [
-                    'visit_id' => $request->visit,
-                    'procedure_id' => $drug,
-                    'mode' => 'cash',
-                    'user_id' => $request->user()->id,
-                    'amount' => $p->price,
-                ];
-                ChangeInsurance::create($payload);
+            $payload = [
+                'visit_id' => $request->visit,
+                'procedure_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+                'amount' => $p->price,
+            ];
+            ChangeInsurance::create($payload);
         }
         reload_payments();
         return true;
     }
-    */
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Collection|static[]
