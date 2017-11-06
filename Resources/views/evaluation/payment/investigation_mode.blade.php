@@ -6,9 +6,10 @@
             <div id="visit{{$visit->id}}">
                 <table class="table table-condensed" id="paymentsTable">
                     <tbody>
-                    @if($visit->payment_mode=='insurance')
+                    @if($visit->payment_mode==='insurance')
                         @include('finance::evaluation.payment.main-insurance')
                         @include('finance::evaluation.payment.pharmacy-insurance')
+                        @include('finance::evaluation.payment.copay')
                     @else
                         @include('finance::evaluation.payment.main')
                         @include('finance::evaluation.payment.pharmacy')
