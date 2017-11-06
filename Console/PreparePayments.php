@@ -62,7 +62,11 @@ class PreparePayments extends Command
                         $query->wherePaid(false);
                     });
                 });
-        })->orderBy('created_at', 'asc')
+        })
+            ->orderBy('created_at')
+            ->orWhereHas('copay', function (Builder $query) {
+                $query->whereNull('payment_id');
+            })
             ->get()
             ->reject(function ($value) {
                 return empty($value->unpaid_cash);

@@ -16,6 +16,7 @@ class CreateCopaysTable extends Migration
         Schema::create('finance_copay', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('visit_id');
+            $table->unsignedInteger('patient_id');
             $table->unsignedInteger('company_id');
             $table->unsignedInteger('scheme_id');
             $table->double('amount', 10, 2);

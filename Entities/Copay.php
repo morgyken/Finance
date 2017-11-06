@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int $visit_id
+ * @property int $patient_id
  * @property int $company_id
  * @property int $scheme_id
  * @property float $amount
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay wherePatientId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay wherePaymentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereSchemeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereUpdatedAt($value)
