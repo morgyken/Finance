@@ -10,6 +10,7 @@ use Ignite\Finance\Entities\PaymentsCard;
 use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\PaymentsMpesa;
+use Ignite\Finance\Entities\SplitInsurance;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Reception\Entities\Patients;
 use Illuminate\Http\Request;
@@ -89,9 +90,12 @@ class FinanceController extends AdminBaseController
         return view('finance::deposit_details', ['data' => $this->data]);
     }
 
-    public function changeMode($visit_id)
+    public function changeMode(Request $request)
     {
-        $this->data['visit'] = Visit::find($visit_id);
+        if(isset($request->split)){
+            $this->data['split'] = SplitInsurance::find($request->split);
+        }
+        $this->data['visit'] = Visit::find($request->id);
         return view('finance::change-mod', ['data' => $this->data]);
     }
 

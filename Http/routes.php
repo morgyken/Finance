@@ -11,8 +11,8 @@ $router->get('bill/{id}/cancel', ['uses' => 'GlController@cancelBill', 'as' => '
 $router->get('bill/{id}/payment', ['uses' => 'GlController@payBill', 'as' => 'bill.pay']);
 $router->post('bill/payment', ['uses' => 'GlController@savePaybill', 'as' => 'bill.pay.save']);
 $router->get('bill/print/{id}', ['uses' => 'GlController@print_bill', 'as' => 'bill.print']);
-$router->get('change-mode/{id}/visit', ['as' => 'change_mode', 'uses' => 'FinanceController@changeMode']);
-$router->get('split-bill/{id}/visit', ['as' => 'split_bill', 'uses' => 'FinanceController@splitBill']);
+$router->get('change-mode/{id}/visit/{split?}', ['as' => 'change_mode', 'uses' => 'FinanceController@changeMode']);
+$router->get('split-bill/{id}/visit/{split?}', ['as' => 'split_bill', 'uses' => 'FinanceController@splitBill']);
 $router->get('pos/cash/{patient?}/{invoice?}/{deposit?}', ['as' => 'pos_cash', 'uses' => 'EvaluationController@payPOS']);
 
 // general ledger
@@ -46,7 +46,7 @@ $router->group(['prefix' => 'self-accounts', 'as' => 'account.'], function (Rout
 $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Router $router) {
     $router->post('pharmacy/dispense', ['uses' => 'EvaluationController@pharmacy_dispense', 'as' => 'pharmacy.dispense']);
     $router->get('pay/{patient?}/{invoice?}/{deposit?}', ['as' => 'pay', 'uses' => 'EvaluationController@pay']);
-    $router->get('pharmacy/{visit?}', ['as' => 'pay.pharmacy', 'uses' => 'EvaluationController@payPharmacy']);
+    $router->get('pharmacy/{patient?}/{insurance?}/{split?}', ['as' => 'pay.pharmacy', 'uses' => 'EvaluationController@payPharmacy']);
     $router->match(['get', 'post'], 'invoice/{patient?}', ['uses' => 'EvaluationController@patient_invoice', 'as' => 'invoice']);
 
     $router->get('patient/invoices/{id?}', ['uses' => 'EvaluationController@manage_patient_invoices', 'as' => 'patient_invoices']);
@@ -68,7 +68,7 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Rout
     $router->get('insurance', ['as' => 'insurance', 'uses' => 'EvaluationController@insurance']);
     $router->get('cash_bills', ['as' => 'cash_bills', 'uses' => 'EvaluationController@cash_bills']);
 
-    $router->get('bill/prepare/{id}', ['as' => 'prepare.bill', 'uses' => 'EvaluationController@preparebill']);
+    $router->get('bill/prepare/{id}/{split?}', ['as' => 'prepare.bill', 'uses' => 'EvaluationController@preparebill']);
     $router->post('bill/{visit}/panda', ['as' => 'bill', 'uses' => 'FinanceController@bill']);
     $router->post('bill/{visit}/swap', ['as' => 'swap.mode', 'uses' => 'FinanceController@swapModes']);
     $router->post('bill/{visit}/split', ['as' => 'split', 'uses' => 'FinanceController@saveSplitBill']);

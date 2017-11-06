@@ -1,4 +1,6 @@
-<?php extract($data);?>
+<?php
+extract($data);
+?>
 @extends('layouts.app')
 @section('content_title','Billing Management')
 @section('content_description','Manage items to invoice')
@@ -12,12 +14,39 @@
                 {{Form::open(['route'=>['finance.evaluation.bill',$visit->id,],'id'=>'inv'])}}
                 <table class="table table-condensed" id="panda">
                     <tbody>
+                    @if(isset($split))
+                        *Invoice derived from another invoice
+                        <input type="hidden" name="split" value="{{$split->id}}">
+                        @foreach($split->children as $child)
+                            <?php
+                            $item = $child->investigations;
+                            $is_paid = $item->invoiced;
+                            $in_cash = transferred2cash($item->id);
+                           // $split = split_to_schemex($item->id);
+                            if ($is_paid || $in_cash) {
+                                continue;
+                            }
+                            ?>
+                            <tr id="p{{$item->id}}">
+                                <td><input type="checkbox" name="procedures.p{{$item->id}}" vprice="{{$item->amount}}"></td>
+                                <td>{{$item->procedures->name}}</td>
+                                <td>{{ucfirst($item->type)}}</td>
+                                <td>{!! $is_paid?'<span class="label label-success">Invoiced</span>':'<span class="label label-warning">Pending</span>'!!}</td>
+                                <td style="text-align: right">{{number_format($item->price,2)}}</td>
+                                <td style="text-align: right">{{$item->quantity}}</td>
+                                <td style="text-align: right">{{number_format($item->amount,2)}}</td>
+                                <td>
+                                    <button class="btn btn-xs btn-danger cancel" type="button" xs="p{{$item->id}}">
+                                        <i class="fa fa-ban" title="Cancel"></i></button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
                     @foreach($visit->investigations as $item)
                         <?php
                         $is_paid = $item->invoiced;
                         $in_cash = transferred2cash($item->id);
                         $split = split_to_schemex($item->id);
-                        dd($split);
                         if ($is_paid || $in_cash || $split) {
                             continue;
                         }
@@ -62,8 +91,8 @@
                                        title="Cancel"></i></button>
                             </td>
                         </tr>
-
                     @endforeach
+                    @endif
                     </tbody>
                     <thead>
                     <tr>

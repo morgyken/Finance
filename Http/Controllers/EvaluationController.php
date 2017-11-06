@@ -15,6 +15,7 @@ use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Finance\Entities\PatientTransaction;
 use Ignite\Finance\Entities\PaymentManifest;
+use Ignite\Finance\Entities\SplitInsurance;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
@@ -189,9 +190,12 @@ class EvaluationController extends AdminBaseController
     }
 
 
-    public function payPharmacy($patient)
+    public function payPharmacy(Request $request)
     {
+        $patient = $request->patient;
+
         $this->data['patient'] = Patients::find($patient);
+
         $this->data['drugs'] = Prescriptions::whereHas('visits', function (Builder $query) use ($patient) {
             $query->wherePatient($patient);
             $query->whereHas('prescriptions.payment', function (Builder $builder) {
@@ -199,6 +203,11 @@ class EvaluationController extends AdminBaseController
                 $builder->whereInvoiced(false);
             });
         })->get();
+
+        if(isset($request->split)){
+            $this->data['split'] = SplitInsurance::find($request->split);
+        }
+
         return view('finance::evaluation.pay-pharmacy', ['data' => $this->data]);
     }
 
@@ -412,9 +421,12 @@ class EvaluationController extends AdminBaseController
     }
 
 
-    public function prepareBill($visit_id)
+    public function prepareBill(Request $request)
     {
-        $this->data['visit'] = Visit::find($visit_id);
+        if(isset($request->split)){
+            $this->data['split'] = SplitInsurance::find($request->split);
+        }
+        $this->data['visit'] = Visit::find($request->id);
         return view('finance::prepare-bill', ['data' => $this->data]);
     }
 

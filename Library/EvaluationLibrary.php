@@ -564,8 +564,12 @@ class EvaluationLibrary implements EvaluationRepository
 
     public function bill_visit(Request $request)
     {
+        $split = null;
         $visit = Visit::find($request->visit);
-        $invoice = $this->createInsuranceInvoice($visit->id, $request->total);
+        if (isset($request->split)){
+            $split = $request->split;
+        }
+        $invoice = $this->createInsuranceInvoice($visit->id, $request->total,$split);
         $this->recordBilledItems($invoice);
         $this->updateVisitStatus($visit->id, 'billed');
         $visit->status = 'billed';
@@ -613,7 +617,7 @@ class EvaluationLibrary implements EvaluationRepository
      * @param $amount
      * @return InsuranceInvoice
      */
-    public function createInsuranceInvoice($visit, $amount)
+    public function createInsuranceInvoice($visit, $amount,$split=null)
     {
         $inv = new InsuranceInvoice;
         $inv->invoice_no = 'INV' . time();
@@ -622,6 +626,7 @@ class EvaluationLibrary implements EvaluationRepository
         $_v = Visit::find($visit);
         $inv->company_id = @$_v->patient_scheme->schemes->company;
         $inv->scheme_id = @$_v->patient_scheme->schemes->id;
+        $inv->split_id = $split;
         $inv->save();
         return $inv;
     }

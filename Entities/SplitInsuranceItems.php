@@ -18,6 +18,6 @@ class SplitInsuranceItems extends Model
 
     public function investigations()
     {
-        return $this->belongsTo(Investigations::class, 'procedure_id');
+        return $this->belongsTo(Investigations::class, 'investigation_id');
     }
 }
