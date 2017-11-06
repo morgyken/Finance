@@ -48,12 +48,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\EvaluationPayments whereVisit($value)
  * @mixin \Eloquent
  */
-class EvaluationPayments extends Model {
+class EvaluationPayments extends Model
+{
 
     protected $fillable = [];
     public $table = 'finance_evaluation_payments';
 
-    public function getTotalAttribute() {
+    public function getTotalAttribute()
+    {
         $total = 0;
         if (!empty($this->cash)) {
             $total += $this->cash->amount;
@@ -70,15 +72,18 @@ class EvaluationPayments extends Model {
         return $total;
     }
 
-    public function getModesAttribute() {
+    public function getModesAttribute()
+    {
         return payment_modes($this);
     }
 
-    public function cash() {
+    public function cash()
+    {
         return $this->hasOne(PaymentsCash::class, 'payment');
     }
 
-    public function getCashAmountAttribute() {
+    public function getCashAmountAttribute()
+    {
         $total = 0;
         if (!empty($this->cash)) {
             $total += $this->cash->amount;
@@ -86,40 +91,54 @@ class EvaluationPayments extends Model {
         return $total;
     }
 
-    public function mpesa() {
+    public function mpesa()
+    {
         return $this->hasOne(PaymentsMpesa::class, 'payment');
     }
 
-    public function cheque() {
+    public function cheque()
+    {
         return $this->hasOne(PaymentsCheque::class, 'payment');
     }
 
-    public function card() {
+    public function card()
+    {
         return $this->hasOne(PaymentsCard::class, 'payment');
     }
 
-    public function patients() {
+    public function patients()
+    {
         return $this->belongsTo(Patients::class, 'patient');
     }
 
-    public function details() {
+    public function details()
+    {
         return $this->hasMany(EvaluationPaymentsDetails::class, 'payment', 'id');
     }
 
-    public function users() {
+    public function users()
+    {
         return $this->belongsTo(User::class, 'user');
     }
 
-    public function visits() {
+    public function visits()
+    {
         return $this->belongsTo(Visit::class, 'visit');
     }
 
-    public function sales() {
+    public function sales()
+    {
         return $this->belongsTo(InventoryBatchProductSales::class, 'sale');
     }
 
-    public function dispensing() {
+    public function dispensing()
+    {
         return $this->hasMany(Dispensing::class, 'dispensing', 'id');
+    }
+
+    public function co_paid()
+    {
+        return $this->hasMany(CopayPayments::class, 'payment_id');
     }
 
 }

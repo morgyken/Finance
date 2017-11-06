@@ -1,3 +1,10 @@
+<?php
+$copaid = false;
+if ($visit->patient_scheme->schemes->type == 3) {
+    $copaid = true;
+    $copay = $visit->patient_scheme->schemes->amount;
+}
+?>
 <div class="modal modal-default fade" id="info{{$visit->id}}">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -75,6 +82,13 @@
                         <th style="text-align: right;" colspan="6" class="grand total">TOTAL:</th>
                         <th style="text-align: right">{{ number_format($TOTAL,2) }}</th>
                     </tr>
+                    @if($copaid)
+                        <tr>
+                            <th style="text-align: right;" colspan="6" class="grand total">Copay:</th>
+                            <th style="text-align: right">{{ number_format($copay,2) }}</th>
+                        </tr>
+                        <?php $PAID -= $copay; ?>
+                    @endif
                     <tr>
                         <th style="text-align: right;" colspan="6" class="grand total">Billed Amount:</th>
                         <th style="text-align: right">{{ number_format($PAID,2) }}</th>

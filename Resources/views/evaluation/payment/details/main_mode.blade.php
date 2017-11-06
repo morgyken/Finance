@@ -57,6 +57,19 @@
             }
             }
             ?>
+            @if(!empty($payment->copaid))
+                @foreach($payment->copaid as $item)
+                    <tr>
+                        <td>{{$n+=1}}</td>
+                        <td>
+                            Copay:-{{$item->copay->scheme->companies->name}}({{$item->copay->scheme->name}})
+                        </td>
+                        <td></td>
+                        <td style="text-align: right">{{$item->copay->amount}}</td>
+                    </tr>
+                    <?php $bill += $item->copay->amount ?>
+                @endforeach
+            @endif
             </tbody>
             <tfoot>
             <tr style="text-align: right">
@@ -76,13 +89,13 @@
             </tr>
             @if(!$payment->deposit)
                 @if($payment->total-$bill>0)
-                <tr>
-                    <td></td>
-                    <td style="text-align: right">Change</td>
-                    <th>
-                        {{$payment->total-$bill}}
-                    </th>
-                </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: right">Change</td>
+                        <th>
+                            {{$payment->total-$bill}}
+                        </th>
+                    </tr>
                 @endif
             @else
                 <tr>
