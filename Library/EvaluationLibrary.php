@@ -732,7 +732,7 @@ class EvaluationLibrary implements EvaluationRepository
             $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
             $pending = $pending->where('date', '<=', $date);
         }
-        return $pending->limit(200)->get();
+        return $pending->get();
     }
 
     /**
