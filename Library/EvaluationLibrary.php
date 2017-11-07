@@ -801,7 +801,7 @@ class EvaluationLibrary implements EvaluationRepository
             $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
             $pending = $pending->where('created_at', '<=', $date);
         }
-        return $pending->get();
+        return $pending->limit(500)->get();
     }
 
     public function getPaidInvoices()
