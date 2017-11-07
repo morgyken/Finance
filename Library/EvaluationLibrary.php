@@ -775,7 +775,7 @@ class EvaluationLibrary implements EvaluationRepository
             $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
             $pending = $pending->where('created_at', '<=', $date);
         }
-        return $pending->get();
+        return $pending->paginate(100);
     }
 
     public function getInvoiceByStatus($status = null, $who = null)
@@ -801,7 +801,7 @@ class EvaluationLibrary implements EvaluationRepository
             $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
             $pending = $pending->where('created_at', '<=', $date);
         }
-        return $pending->limit(500)->get();
+        return $pending->paginate(100);
     }
 
     public function getPaidInvoices()
@@ -824,7 +824,7 @@ class EvaluationLibrary implements EvaluationRepository
             $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
             $pending = $pending->where('created_at', '<=', $date);
         }
-        return $pending->get();
+        return $pending->paginate(100);
     }
 
     public function companyStatements()
@@ -848,6 +848,6 @@ class EvaluationLibrary implements EvaluationRepository
             $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
             $pending = $pending->where('created_at', '<=', $date);
         }
-        return $pending->get();
+        return $pending->paginate(100);
     }
 }
