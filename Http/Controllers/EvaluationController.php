@@ -145,7 +145,7 @@ class EvaluationController extends AdminBaseController
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
         if (m_setting('finance.background_manifest')) {
-            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->limit(500)->get();
+            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->limit(200)->get();
 
             $this->data['invoiced'] = Patients::whereHas('invoices', function ($query) {
                 $query->whereStatus('unpaid')
