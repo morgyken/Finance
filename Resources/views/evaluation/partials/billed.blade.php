@@ -69,7 +69,7 @@
                                        href="{{route('finance.evaluation.ins.inv.print', $item->id)}}">
                                         Print (A4)</a>
                                 </li>
-                                @if($item->prescriptions)
+                                @if($item->prescriptions->isNotEmpty())
                                     <li><a class="btn btn-default btn-xs"
                                            href="{{route('evaluation.print.prescription',[$item->visits->id,true])}}"
                                            target="_blank">
