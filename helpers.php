@@ -422,11 +422,6 @@ function get_unpaid_amount_for(Visit $visit, $mode)
     return $amount + $extra;
 }
 
-function reload_payments()
-{
-    return \Artisan::call('finance:prepare-payments');
-}
-
 if (!function_exists('reload_payments')) {
     /**
      * @return mixed

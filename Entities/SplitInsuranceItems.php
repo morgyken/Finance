@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
 
+/**
+ * Ignite\Finance\Entities\SplitInsuranceItems
+ *
+ * @property-read \Ignite\Evaluation\Entities\Investigations $investigations
+ * @property-read \Ignite\Evaluation\Entities\Prescriptions $prescriptions
+ * @mixin \Eloquent
+ */
 class SplitInsuranceItems extends Model
 {
     protected $guarded = [];
