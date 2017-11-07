@@ -49,6 +49,6 @@ class Copay extends Model
 
     public function getDescAttribute()
     {
-        return 'COPAY -- ' . substr($this->company->name, 0, 3) . '-' . substr($this->scheme->name, 0, 3);
+        return strtoupper('COPAY ' . substr($this->company->name, 0, 4) . '-' . substr($this->scheme->name, 0, 4));
     }
 }

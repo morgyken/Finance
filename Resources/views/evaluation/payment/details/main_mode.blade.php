@@ -57,18 +57,13 @@
             }
             }
             ?>
-            @if(!empty($payment->copaid))
-                @foreach($payment->copaid as $item)
-                    <tr>
-                        <td>{{$n+=1}}</td>
-                        <td>
-                            Copay:-{{$item->copay->scheme->companies->name}}({{$item->copay->scheme->name}})
-                        </td>
-                        <td></td>
-                        <td style="text-align: right">{{$item->copay->amount}}</td>
-                    </tr>
-                    <?php $bill += $item->copay->amount ?>
-                @endforeach
+            @if(!empty($payment->copay))
+                <tr>
+                    <td>{{$n+=1}}</td>
+                    <td>{{$payment->copay->desc}}</td>
+                    <td>{{$payment->copay->amount}}</td>
+                </tr>
+                <?php $bill += $payment->copay->amount ?>
             @endif
             </tbody>
             <tfoot>

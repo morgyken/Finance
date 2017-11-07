@@ -139,7 +139,7 @@ class EvaluationPayments extends Model
 
     public function copay()
     {
-        return $this->hasMany(Copay::class, 'payment_id');
+        return $this->hasOne(Copay::class, 'payment_id');
     }
 
 }

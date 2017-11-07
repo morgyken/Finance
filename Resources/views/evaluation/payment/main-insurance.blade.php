@@ -30,7 +30,7 @@
                 <td>
                     {{$item->procedures->name}}
                     <i class="small">({{ucwords($item->type)}})</i> - Ksh <span
-                            class="topay">{{$item->amount??$item->zzprice}}</span>
+                            class="topay">{{$item->amount??$item->price}}</span>
                     @endif
                 </td>
         </tr>

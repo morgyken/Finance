@@ -17,6 +17,7 @@ use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
 use Ignite\Evaluation\Entities\Procedures;
 use Ignite\Finance\Entities\ChangeInsurance;
+use Ignite\Finance\Entities\Copay;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
 use Ignite\Finance\Entities\PatientAccount;
@@ -28,6 +29,7 @@ use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\PaymentsMpesa;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Inventory\Entities\InventoryProducts;
+use Ignite\Reception\Entities\Patients;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -96,60 +98,42 @@ class EvaluationLibrary implements EvaluationRepository
      */
     public function record_payment()
     {
-        DB::transaction(function () {
-            $stock = $this->_get_selected_stack();
+        \DB::beginTransaction();
+        if (isset($this->request->batch)) {
+            foreach ($this->request->batch as $bitch) {
+                $sale = InventoryBatchProductSales::find($bitch);
+                $sale->paid = 1;
+                $sale->save();
+            }
+        }
+        $payment = new EvaluationPayments;
+        $payment->patient = $this->request->patient;
+        $payment->receipt = generate_receipt_no();
 
-            foreach ($stock as $item) {
-                $this->updatePrescriptions($item);
-            }
-            if (isset($this->request->batch)) {
-                foreach ($this->request->batch as $bitch) {
-                    $sale = InventoryBatchProductSales::find($bitch);
-                    $sale->paid = 1;
-                    $sale->save();
-                }
-            }
+        if (isset($this->request->visit)) {
+            $payment->visit = $this->request->visit;
+        }
+        if (isset($this->request->sale)) {
+            $payment->sale = $this->request->sale;
+        }
+        if (isset($this->request->dispense)) {
+            $dispense = json_encode($this->request->dispense);
+            $payment->dispensing = json_encode(array_unique(json_decode($dispense, true)));
+        }
+        $payment->user = $this->user;
+        $payment->save();
+        $payment->amount = $this->payment_methods($payment);
+        if (isset($this->request->deposit)) {
+            $payment->deposit = true;
+        }
+        $payment->save();
+        $this->payment_details($this->request, $payment);
+        $this->pay_id = $payment->id;
 
-            //Update dispensing details
-            if (isset($this->request->dispense)) {
-                foreach ($this->request->dispense as $disp) {
-                    $sale = DispensingDetails::find($disp);
-                    $sale->status = 1;
-                    $sale->save();
-                }
-            }
-
-            $payment = new EvaluationPayments;
-            $p = \Ignite\Reception\Entities\Patients::find($this->request->patient);
-            if (!is_null($p)) {
-                $payment->patient = $this->request->patient;
-            }
-            $payment->receipt = generate_receipt_no();
-
-            if (isset($this->request->visit)) {
-                $payment->visit = $this->request->visit;
-            }
-            if (isset($this->request->sale)) {
-                $payment->sale = $this->request->sale;
-            }
-            if (isset($this->request->dispense)) {
-                $dispense = json_encode($this->request->dispense);
-                $payment->dispensing = json_encode(array_unique(json_decode($dispense, true)));
-            }
-            $payment->user = $this->user;
-            $payment->save();
-            $payment->amount = $this->payment_methods($payment);
-            if (isset($this->request->deposit)) {
-                $payment->deposit = true;
-            }
-            $payment->save();
-            $this->payment_details($this->request, $payment);
-            $this->pay_id = $payment->id;
-
-            if (isset($this->request->deposit)) {
-                $this->patient_transaction($payment, 'deposit');
-            }
-        });
+        if (isset($this->request->deposit)) {
+            $this->patient_transaction($payment, 'deposit');
+        }
+        \DB::commit();
         return $this->pay_id;
     }
 
@@ -249,7 +233,10 @@ class EvaluationLibrary implements EvaluationRepository
                 $this->invoice_payment_details($item, $payment);
             } else {
                 if ($this->isDrugPayment($item)) {
+                    $this->updatePrescriptions($item);
                     $this->drug_payment_details($request, $item, $payment);
+                } elseif ($this->isPaymentFor($item, 'copay')) {
+                    $this->copayment($item, $payment);
                 } else {
                     $this->investigation_payment_details($request, $item, $payment);
                 }
@@ -257,12 +244,40 @@ class EvaluationLibrary implements EvaluationRepository
         }
     }
 
-    private function isDrugPayment($item)
+    /**
+     * @param string $item
+     * @return bool
+     * @deprecated use <code>isPaymentFor</code>
+     */
+    private function isDrugPayment($item): bool
+    {
+        return $this->isPaymentFor($item, 'pharmacy');
+    }
+
+    /**
+     * Check if payment is
+     * @param string $item
+     * @param string $is
+     * @return bool
+     */
+    private function isPaymentFor($item, $is): bool
     {
         if ($this->request->has('type' . $item)) {
-            return (\request('type' . $item) == 'pharmacy');
+            return (\request('type' . $item) === $is);
         }
         return false;
+    }
+
+    /**
+     * @param string $item
+     * @param EvaluationPayments $payment
+     * @return bool
+     */
+    private function copayment($item, $payment)
+    {
+        $copay = Copay::find($item);
+        $copay->payment_id = $payment->id;
+        return $copay->save();
     }
 
     private function investigation_payment_details(Request $request, $item, $payment)
