@@ -616,7 +616,7 @@ class EvaluationLibrary implements EvaluationRepository
     {
         $drugs = $this->_get_selected_stack('drugs_d');
         foreach ($drugs as $drug) {
-            $p = InventoryProducts::find($drug);
+            $p = Prescriptions::find($drug);
             $payload = [
                 'visit_id' => $request->visit,
                 'prescription_id' => $drug,
@@ -625,6 +625,13 @@ class EvaluationLibrary implements EvaluationRepository
                 'amount' => $p->cash_price,
             ];
             ChangeInsurance::create($payload);
+            $cost = $p->drugs->cash_price;
+            $attributes = [
+                'price' => $cost,
+                'cost' => $cost * (int)$this->input['quantity'],
+                'quantity' => (int)$this->input['quantity'],
+            ];
+            $p->payment()->update($attributes);
         }
 
         $procedures = $this->_get_selected_stack('procedures_p');
