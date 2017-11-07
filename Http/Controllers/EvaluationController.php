@@ -205,7 +205,6 @@ class EvaluationController extends AdminBaseController
                 $builder->whereInvoiced(false);
             });
         })->get();
-
         if (isset($request->split)) {
             $this->data['split'] = SplitInsurance::find($request->split);
         }
