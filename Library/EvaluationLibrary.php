@@ -629,20 +629,22 @@ class EvaluationLibrary implements EvaluationRepository
 
         $procedures = $this->_get_selected_stack('procedures_p');
         foreach ($procedures as $drug) {
-            $p = Procedures::find($drug);
+            $p = Investigations::find($drug);
             $payload = [
                 'visit_id' => $request->visit,
                 'procedure_id' => $drug,
                 'mode' => 'cash',
                 'user_id' => $request->user()->id,
-                'amount' => $p->price,
+                'amount' => $p->procedures->cash_charge,
             ];
             ChangeInsurance::create($payload);
+            $p->price = $p->procedures->cash_charge;
+            $p->amount = $p->price * $p->quantity;
+            $p->save();
         }
         reload_payments();
         return true;
     }
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Collection|static[]
