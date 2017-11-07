@@ -614,42 +614,42 @@ class EvaluationLibrary implements EvaluationRepository
 
     public function swapBill(Request $request)
     {
+        \DB::beginTransaction();
         $drugs = $this->_get_selected_stack('drugs_d');
         foreach ($drugs as $drug) {
             $p = Prescriptions::find($drug);
+            $cost = $p->drugs->cash_price;
+            $attributes = [
+                'price' => $cost,
+                'cost' => $cost * (int)$p->payment->quantity,
+            ];
+            $p->payment()->update($attributes);
             $payload = [
                 'visit_id' => $request->visit,
                 'prescription_id' => $drug,
                 'mode' => 'cash',
                 'user_id' => $request->user()->id,
-                'amount' => $p->cash_price,
+                'amount' => $attributes['cost'],
             ];
             ChangeInsurance::create($payload);
-            $cost = $p->drugs->cash_price;
-            $attributes = [
-                'price' => $cost,
-                'cost' => $cost * (int)$this->input['quantity'],
-                'quantity' => (int)$this->input['quantity'],
-            ];
-            $p->payment()->update($attributes);
         }
-
         $procedures = $this->_get_selected_stack('procedures_p');
         foreach ($procedures as $drug) {
             $p = Investigations::find($drug);
+            $p->price = $p->procedures->cash_charge;
+            $p->amount = $p->price * $p->quantity;
+            $p->save();
             $payload = [
                 'visit_id' => $request->visit,
                 'procedure_id' => $drug,
                 'mode' => 'cash',
                 'user_id' => $request->user()->id,
-                'amount' => $p->procedures->cash_charge,
+                'amount' => $p->amount,
             ];
             ChangeInsurance::create($payload);
-            $p->price = $p->procedures->cash_charge;
-            $p->amount = $p->price * $p->quantity;
-            $p->save();
         }
         reload_payments();
+        \DB::commit();
         return true;
     }
 
