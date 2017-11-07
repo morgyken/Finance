@@ -316,6 +316,33 @@ if (!function_exists('transferred2cash')) {
     }
 }
 
+if (!function_exists('split_to_schemex')) {
+    /**
+     * @param $item_id
+     * @param bool $drug
+     * @return bool
+     */
+    function split_to_schemex($item_id, $drug = false)
+    {
+        $finder = $drug ? 'prescription_id' : 'investigation_id';
+        $count = \Ignite\Finance\Entities\SplitInsuranceItems::where($finder, $item_id)->count();
+        return (bool)$count;
+    }
+}
+
+if (!function_exists('get_split_bills')) {
+    /**
+     * @param $item_id
+     * @param bool $drug
+     * @return bool
+     */
+    function get_split_bills()
+    {
+        return \Ignite\Finance\Entities\SplitInsurance::whereStatus(false)->get();
+    }
+}
+
+
 if (!function_exists('get_clinic')) {
 
     function get_clinic()
@@ -395,6 +422,11 @@ function get_unpaid_amount_for(Visit $visit, $mode)
     return $amount + $extra;
 }
 
+function reload_payments()
+{
+    return \Artisan::call('finance:prepare-payments');
+}
+
 if (!function_exists('reload_payments')) {
     /**
      * @return mixed
@@ -405,7 +437,7 @@ if (!function_exists('reload_payments')) {
     }
 }
 if (!function_exists('patient_has_pharmacy_bill')) {
-    function patient_has_pharmacy_bill(Visit $visit)
+    function patient_has_pharmacy_bill($visit)
     {
         return Visit::whereId($visit->id)->whereHas('prescriptions.payment', function (Builder $query) {
             $query->whereComplete(false);

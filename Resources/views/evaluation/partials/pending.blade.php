@@ -42,20 +42,25 @@
                             <td>
                                 @if(patient_has_pharmacy_bill($visit))
                                     <a class="btn btn-success btn-xs"
-                                       href="{{route('finance.evaluation.pay.pharmacy',[$visit->patients->id,'insurance'=>true])}}">
+                                       href="{{route('finance.evaluation.pay.pharmacy',[$visit->patients->id,'insurance'=>true,'split'=>null])}}">
                                         <i class="fa fa-bolt"></i> Process Meds</a>
                                 @endif
                                 <a href="{{route('finance.evaluation.prepare.bill', $visit->id)}}"
                                    class="btn btn-xs btn-primary">
                                     <i class="fa fa-usd"></i> Bill</a>
+
                                 <a href="{{route('finance.change_mode', $visit->id)}}"
                                    class="btn btn-xs btn-info">
                                     <i class="fa fa-exchange"></i>Change</a>
+
+                                <a href="{{route('finance.split_bill', $visit->id)}}"
+                                       class="btn btn-xs btn-success">
+                                        <i class="fa fa-scissors"></i>Split</a>
                             </td>
                         </tr>
                     @endif
                 @endforeach
-
+                @include('finance::partials.split_bills')
                 </tbody>
             </table>
             {{--<button type="submit" class="btn btn-primary">Bill Selected Insurance</button>--}}

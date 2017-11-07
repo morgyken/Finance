@@ -39,7 +39,6 @@ use Illuminate\Support\Facades\DB;
  */
 class FinanceLibrary implements FinanceRepository
 {
-
     /**
      * @param Request $request
      * @param int|null $id

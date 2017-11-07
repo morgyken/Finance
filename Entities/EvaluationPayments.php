@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Ignite\Finance\Entities\PaymentsCard $card
  * @property-read \Ignite\Finance\Entities\PaymentsCash $cash
  * @property-read \Ignite\Finance\Entities\PaymentsCheque $cheque
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\Copay[] $copay
+ * @property-read \Ignite\Finance\Entities\Copay $copay
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\EvaluationPaymentsDetails[] $details
  * @property-read mixed $cash_amount
  * @property-read mixed $modes

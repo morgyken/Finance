@@ -10,6 +10,7 @@ use Ignite\Finance\Entities\PaymentsCard;
 use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\PaymentsMpesa;
+use Ignite\Finance\Entities\SplitInsurance;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Reception\Entities\Patients;
 use Illuminate\Http\Request;
@@ -49,6 +50,16 @@ class FinanceController extends AdminBaseController
         return back();
     }
 
+    public function saveSplitBill(Request $request)
+    {
+        if ($this->evaluationRepository->saveSplitBill($request)) {
+            flash('That was done');
+            return redirect()->route('finance.evaluation.pending');
+        }
+        flash()->error('Could not do that!');
+        return back();
+    }
+
     public function bill(Request $request)
     {
         if ($this->evaluationRepository->bill_visit($request)) {
@@ -80,10 +91,19 @@ class FinanceController extends AdminBaseController
         return view('finance::deposit_details', ['data' => $this->data]);
     }
 
-    public function changeMode($visit_id)
+    public function changeMode(Request $request)
+    {
+        if(isset($request->split)){
+            $this->data['split'] = SplitInsurance::find($request->split);
+        }
+        $this->data['visit'] = Visit::find($request->id);
+        return view('finance::change-mod', ['data' => $this->data]);
+    }
+
+    public function splitBill($visit_id)
     {
         $this->data['visit'] = Visit::find($visit_id);
-        return view('finance::change-mod', ['data' => $this->data]);
+        return view('finance::split-bill', ['data' => $this->data]);
     }
 
     public function saveDeposit(Request $request, $patient)

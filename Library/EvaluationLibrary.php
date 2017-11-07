@@ -27,6 +27,8 @@ use Ignite\Finance\Entities\PaymentsCard;
 use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\PaymentsMpesa;
+use Ignite\Finance\Entities\SplitInsurance;
+use Ignite\Finance\Entities\SplitInsuranceItems;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Inventory\Entities\InventoryProducts;
 use Ignite\Reception\Entities\Patients;
@@ -565,8 +567,12 @@ class EvaluationLibrary implements EvaluationRepository
 
     public function bill_visit(Request $request)
     {
+        $split = null;
         $visit = Visit::find($request->visit);
-        $invoice = $this->createInsuranceInvoice($visit->id, $request->total);
+        if (isset($request->split)) {
+            $split = $request->split;
+        }
+        $invoice = $this->createInsuranceInvoice($visit->id, $request->total, $split);
         $this->recordBilledItems($invoice);
         $this->updateVisitStatus($visit->id, 'billed');
         $visit->status = 'billed';
@@ -614,7 +620,7 @@ class EvaluationLibrary implements EvaluationRepository
      * @param $amount
      * @return InsuranceInvoice
      */
-    public function createInsuranceInvoice($visit, $amount)
+    public function createInsuranceInvoice($visit, $amount, $split = null)
     {
         $inv = new InsuranceInvoice;
         $inv->invoice_no = 'INV' . time();
@@ -623,6 +629,7 @@ class EvaluationLibrary implements EvaluationRepository
         $_v = Visit::find($visit);
         $inv->company_id = @$_v->patient_scheme->schemes->company;
         $inv->scheme_id = @$_v->patient_scheme->schemes->id;
+        $inv->split_id = $split;
         $inv->save();
         return $inv;
     }
@@ -648,6 +655,7 @@ class EvaluationLibrary implements EvaluationRepository
             ];
             ChangeInsurance::create($payload);
         }
+
         $procedures = $this->_get_selected_stack('procedures_p');
         foreach ($procedures as $drug) {
             $p = Investigations::find($drug);
@@ -665,6 +673,42 @@ class EvaluationLibrary implements EvaluationRepository
         }
         reload_payments();
         \DB::commit();
+        return true;
+    }
+
+
+    public function saveSplitBill(Request $request)
+    {
+
+        $drugs = $this->_get_selected_stack('drugs_d');
+        $parent = new SplitInsurance();
+        $parent->visit_id = $request->visit;
+        $parent->scheme = $request->scheme;
+        $parent->user_id = $request->user()->id;
+        $parent->save();
+
+        foreach ($drugs as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'parent_id' => $parent->id,
+                'prescription_id' => $drug,
+                'mode' => 'insurance',
+                'user_id' => $request->user()->id,
+            ];
+            SplitInsuranceItems::create($payload);
+        }
+
+        $procedures = $this->_get_selected_stack('investigation');
+        foreach ($procedures as $item) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'parent_id' => $parent->id,
+                'investigation_id' => $item,
+                'mode' => 'insurance',
+                'user_id' => $request->user()->id,
+            ];
+            SplitInsuranceItems::create($payload);
+        }
         return true;
     }
 

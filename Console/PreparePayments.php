@@ -89,9 +89,9 @@ class PreparePayments extends Command
                 return empty($value->unpaid_insurance);
             });
         $this->add_visit($visit_list, 'insurance');
-        $this->info("Updated - " . $this->worker);
+        $this->info('Updated - ' . $this->worker);
         $time = microtime(true) - $start;
-        $this->warn("Script took - " . $time);
+        $this->warn('Script took - ' . $time);
     }
 
     private function add_visit($visit_list, $mode)
