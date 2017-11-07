@@ -40,7 +40,7 @@ class EvaluationController extends AdminBaseController
     {
         parent::__construct();
         $this->evaluationRepository = $evaluationRepository;
-        reload_payments();
+//        reload_payments();
     }
 
     public function sale_details(Request $request)
@@ -115,6 +115,7 @@ class EvaluationController extends AdminBaseController
     public function pay_save(PaymentsRequest $request)
     {
         $id = $this->evaluationRepository->record_payment();
+        reload_payments();
         if ($request->invoice_mode) {
             return redirect()->route('finance.evaluation.payment_details', ['id' => $id, 'invoice' => true]);
         } else {
@@ -144,7 +145,7 @@ class EvaluationController extends AdminBaseController
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
         if (m_setting('finance.background_manifest')) {
-            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->get();
+            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->limit(500)->get();
 
             $this->data['invoiced'] = Patients::whereHas('invoices', function ($query) {
                 $query->whereStatus('unpaid')
@@ -205,7 +206,7 @@ class EvaluationController extends AdminBaseController
             });
         })->get();
 
-        if(isset($request->split)){
+        if (isset($request->split)) {
             $this->data['split'] = SplitInsurance::find($request->split);
         }
 
@@ -372,7 +373,7 @@ class EvaluationController extends AdminBaseController
         $this->data['split'] = Visit::wherePaymentMode('insurance')
             ->orderBy('created_at', 'DESC')
             ->get();
-        
+
         return view('finance::evaluation.partials.pending', ['data' => $this->data]);
     }
 
@@ -424,7 +425,7 @@ class EvaluationController extends AdminBaseController
 
     public function prepareBill(Request $request)
     {
-        if(isset($request->split)){
+        if (isset($request->split)) {
             $this->data['split'] = SplitInsurance::find($request->split);
         }
         $this->data['visit'] = Visit::find($request->id);
