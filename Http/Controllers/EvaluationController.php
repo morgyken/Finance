@@ -332,8 +332,7 @@ class EvaluationController extends AdminBaseController
             $this->data['sales'] = InventoryBatchProductSales::find($sale);
             return view('finance::evaluation.sale_pay', ['data' => $this->data]);
         }
-
-        $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
+        $this->data['sales'] = InventoryBatchProductSales::wherePaid(false)
             ->get();
 
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
