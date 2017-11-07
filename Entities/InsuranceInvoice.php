@@ -24,6 +24,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $status
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property int|null $split_id
+ * @property-read \Ignite\Finance\Entities\Copay $copaid
  * @property-read mixed $nice_status
  * @property-read mixed $paid
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Evaluation\Entities\Investigations[] $investigations
@@ -41,6 +43,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice wherePayment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereReceipt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereSchemeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereSplitId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\InsuranceInvoice whereVisit($value)
@@ -54,7 +57,7 @@ class InsuranceInvoice extends Model
 
     public function sales()
     {
-        return $this->belongsTo(InventoryBatchProductSales::class, 'receipt', 'id');
+        return $this->belongsTo(InventoryBatchProductSales::class, 'receipt');
     }
 
     public function scheme()
@@ -90,5 +93,10 @@ class InsuranceInvoice extends Model
     public function getNiceStatusAttribute()
     {
         return get_billing_status($this->status);
+    }
+
+    public function copaid()
+    {
+        return $this->hasOne(Copay::class, 'invoice_id');
     }
 }

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $scheme_id
  * @property float $amount
  * @property int|null $payment_id
+ * @property int|null $invoice_id
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Settings\Entities\Insurance $company
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereInvoiceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay wherePatientId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay wherePaymentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\Copay whereSchemeId($value)

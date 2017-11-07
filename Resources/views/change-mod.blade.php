@@ -5,7 +5,9 @@
 @section('content')
     <div class="box box-info">
         <div class="box-header with-border">
-            <h3 class="box-title">Change Payment Mode <code>Patient: {{$visit->patients->full_name}}</code></h3>
+            <h3 class="box-title">Change Payment Mode <code>Patient: {{$visit->patients->full_name}}</code> -
+                <small>{{$visit->mode}}</small>
+            </h3>
         </div>
         <div class="box-body">
             <div class="col-md-12">
@@ -25,7 +27,8 @@
                             }
                             ?>
                             <tr id="p{{$item->id}}">
-                                <td><input type="checkbox" name="procedures.p{{$item->id}}" vprice="{{$item->amount}}"></td>
+                                <td><input type="checkbox" name="procedures.p{{$item->id}}" vprice="{{$item->amount}}">
+                                </td>
                                 <td>{{$item->procedures->name}}</td>
                                 <td>{{ucfirst($item->type)}}</td>
                                 <td>{!! $is_paid?'<span class="label label-success">Invoiced</span>':'<span class="label label-warning">Pending</span>'!!}</td>
@@ -39,47 +42,49 @@
                             </tr>
                         @endforeach
                     @else
-                    @foreach($visit->investigations as $item)
-                        <?php
-                        $is_paid = $item->invoiced;
-                        $in_cash = transferred2cash($item->id);
-                        $split = split_to_schemex($item->id);
-                        if ($is_paid || $in_cash || $split) {
-                            continue;
-                        }
-                        ?>
-                        <tr id="p{{$item->id}}">
-                            <td><input type="checkbox" name="procedures.p{{$item->id}}" vprice="{{$item->amount}}"></td>
-                            <td>{{$item->procedures->name}}</td>
-                            <td>{{ucfirst($item->type)}}</td>
-                            <td>{!! $is_paid?'<span class="label label-success">Invoiced</span>':'<span class="label label-warning">Pending</span>'!!}</td>
-                            <td style="text-align: right">{{number_format($item->price,2)}}</td>
-                            <td style="text-align: right">{{$item->quantity}}</td>
-                            <td style="text-align: right">{{number_format($item->amount,2)}}</td>
-                        </tr>
-                    @endforeach
+                        @foreach($visit->investigations as $item)
+                            <?php
+                            $is_paid = $item->invoiced;
+                            $in_cash = transferred2cash($item->id);
+                            $split = split_to_schemex($item->id);
+                            if ($is_paid || $in_cash || $split) {
+                                continue;
+                            }
+                            ?>
+                            <tr id="p{{$item->id}}">
+                                <td><input type="checkbox" name="procedures.p{{$item->id}}" vprice="{{$item->amount}}">
+                                </td>
+                                <td>{{$item->procedures->name}}</td>
+                                <td>{{ucfirst($item->type)}}</td>
+                                <td>{!! $is_paid?'<span class="label label-success">Invoiced</span>':'<span class="label label-warning">Pending</span>'!!}</td>
+                                <td style="text-align: right">{{number_format($item->price,2)}}</td>
+                                <td style="text-align: right">{{$item->quantity}}</td>
+                                <td style="text-align: right">{{number_format($item->amount,2)}}</td>
+                            </tr>
+                        @endforeach
 
-                    @foreach($visit->prescriptions as $item)
-                        <?php
-                        $is_paid = $item->is_paid;
-                        $in_cash = transferred2cash($item->id, true);
-                        $split = split_to_schemex($item->id,true);
-                        if ($item->is_paid || $in_cash || !$item->payment->complete || $split) {
-                            continue;
-                        }
-                        ?>
-                        <tr id="d{{$item->id}}">
-                            <td>
-                                <input type="checkbox" name="drugs.d{{$item->id}}" vprice="{{$item->payment->total}}"/>
-                            </td>
-                            <td>{{$item->drugs->name}}</td>
-                            <td>Drug</td>
-                            <td>{!! $is_paid?'<span class="label label-success">Invoiced</span>':'<span class="label label-warning">Pending</span>'!!}</td>
-                            <td style="text-align: right">{{number_format($item->payment->price,2)}}</td>
-                            <td style="text-align: right">{{$item->payment->quantity}}</td>
-                            <td style="text-align: right">{{number_format($item->payment->total,2)}}</td>
-                        </tr>
-                    @endforeach
+                        @foreach($visit->prescriptions as $item)
+                            <?php
+                            $is_paid = $item->is_paid;
+                            $in_cash = transferred2cash($item->id, true);
+                            $split = split_to_schemex($item->id, true);
+                            if ($item->is_paid || $in_cash || !$item->payment->complete || $split) {
+                                continue;
+                            }
+                            ?>
+                            <tr id="d{{$item->id}}">
+                                <td>
+                                    <input type="checkbox" name="drugs.d{{$item->id}}"
+                                           vprice="{{$item->payment->total}}"/>
+                                </td>
+                                <td>{{$item->drugs->name}}</td>
+                                <td>Drug</td>
+                                <td>{!! $is_paid?'<span class="label label-success">Invoiced</span>':'<span class="label label-warning">Pending</span>'!!}</td>
+                                <td style="text-align: right">{{number_format($item->payment->price,2)}}</td>
+                                <td style="text-align: right">{{$item->payment->quantity}}</td>
+                                <td style="text-align: right">{{number_format($item->payment->total,2)}}</td>
+                            </tr>
+                        @endforeach
                     @endif
                     </tbody>
                     <thead>

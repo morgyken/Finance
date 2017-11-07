@@ -18,6 +18,7 @@ $router->get('bill/print/{id}', ['uses' => 'GlController@print_bill', 'as' => 'b
 $router->get('change-mode/{id}/visit/{split?}', ['as' => 'change_mode', 'uses' => 'FinanceController@changeMode']);
 $router->get('split-bill/{id}/visit/{split?}', ['as' => 'split_bill', 'uses' => 'FinanceController@splitBill']);
 $router->get('pos/cash/{patient?}/{invoice?}/{deposit?}', ['as' => 'pos_cash', 'uses' => 'EvaluationController@payPOS']);
+$router->get('invoice/view/{inv}/show', ['as' => 'view_invoice_bill', 'uses' => 'FinanceController@invoiceInfo']);
 
 // general ledger
 // general ledger

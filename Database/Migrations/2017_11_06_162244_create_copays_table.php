@@ -21,6 +21,7 @@ class CreateCopaysTable extends Migration
             $table->unsignedInteger('scheme_id');
             $table->double('amount', 10, 2);
             $table->unsignedInteger('payment_id')->nullable();
+            $table->unsignedInteger('invoice_id')->nullable();
             $table->timestamps();
         });
     }

@@ -46,11 +46,13 @@
                     </td>
                     <td>{!! $item->nice_status !!}</td>
                     <td>
-                        <button type="button" class="btn btn-default btn-xs" data-toggle="modal"
-                                data-target="#info{{$item->visits->id}}">
-                            View
-                        </button>
-                        @include('finance::evaluation.partials.visit_billed_charges',['visit'=>$item->visits,'only'=>'billed'])
+                        <a href="{{route('finance.view_invoice_bill',$item->id)}}" class="btn btn-default btn-xs">
+                            <i class="fa fa-eye"></i> View</a>
+                        {{--<button type="button" class="btn btn-default btn-xs" data-toggle="modal"--}}
+                        {{--data-target="#info{{$item->visits->id}}">--}}
+                        {{--View--}}
+                        {{--</button>--}}
+                        {{--include('finance::evaluation.partials.visit_billed_charges',['visit'=>$item->visits,'only'=>'billed'])--}}
                     </td>
                     <td>
                         <div class="btn-group">
@@ -67,7 +69,7 @@
                                        href="{{route('finance.evaluation.ins.inv.print', $item->id)}}">
                                         Print (A4)</a>
                                 </li>
-                                @if($item->visits->prescriptions->count())
+                                @if($item->prescriptions)
                                     <li><a class="btn btn-default btn-xs"
                                            href="{{route('evaluation.print.prescription',[$item->visits->id,true])}}"
                                            target="_blank">
