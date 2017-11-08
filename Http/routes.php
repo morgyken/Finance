@@ -53,7 +53,7 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Rout
 
     $router->get('accounts/{patient}/show', ['uses' => 'EvaluationController@individual_account', 'as' => 'individual_account']);
 
-    $router->post('payment', ['as' => 'pay.save', 'uses' => 'EvaluationController@pay_save']);
+    $router->post('payment', ['as' => 'pay.save', 'uses' => 'PatientAccountController@store']);
     $router->get('payment_details/{id}/{invoice?}', ['as' => 'payment_details', 'uses' => 'EvaluationController@payment_details']);
     $router->get('summary', ['as' => 'summary', 'uses' => 'EvaluationController@summary']);
     $router->get('insurance', ['as' => 'insurance', 'uses' => 'EvaluationController@insurance']);
@@ -99,3 +99,7 @@ $router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function (Rout
     $router->get('quickbooks/disconnect', ['as' => 'disconnect', 'uses' => 'QuickBooksController@qboDisconnect']);
     $router->get('quickbooks/create-user', ['as' => 'create_user', 'uses' => 'QuickBooksController@createCustomer']);
 });
+
+$router->get('patient/{patient}/account', ['as' => 'patient.account', 'uses' => 'PatientAccountController@index']);
+
+$router->get('payment/{payment}', ['as' => 'payment', 'uses' => 'PaymentController@show']);

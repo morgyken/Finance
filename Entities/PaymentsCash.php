@@ -23,7 +23,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PaymentsCash extends Model {
 
-    protected $guarded = [];
+    protected $fillable = [
+        'amount', 'payment'
+    ];
+    
     public $table = 'finance_payments_cash';
 
     public function payments() {

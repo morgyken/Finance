@@ -47,7 +47,7 @@
                 @if(isset($visit))
                 <input type="hidden" name="visit" value="{{$visit->id}}">
                 @endif
-                {!! Form::text('CashAmount',old('CashAmount'),['class'=>'form-control','placeholder'=>'Cash Amount']) !!}
+                {!! Form::text('cash[amount]',old('cash[amount]'), ['class'=>'form-control','placeholder'=>'Cash Amount']) !!}
             </div>
         </div>
     </div>
@@ -56,13 +56,13 @@
         <div class="form-group">
             <label class="col-md-4 control-label">Mpesa Code</label>
             <div class="col-md-8">
-                {!! Form::text('MpesaCode',old('MpesaCode'),['class'=>'form-control','placeholder'=>'Transaction Number']) !!}
+                {!! Form::text('mpesa[reference]',old('mpesa[reference]'),['class'=>'form-control','placeholder'=>'Transaction Number']) !!}
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-4 control-label">Amount</label>
             <div class="col-md-8">
-                {!! Form::text('MpesaAmount',old('MpesaAmount'),['class'=>'form-control','placeholder'=>'Mpesa Amount']) !!}
+                {!! Form::text('mpesa[amount]',old('mpesa[amount]'),['class'=>'form-control','placeholder'=>'Mpesa Amount']) !!}
             </div>
         </div>
     </div>
@@ -72,19 +72,19 @@
             <div class="form-group">
                 <label class="col-md-4 control-label">Name:</label>
                 <div class="col-md-8">
-                    {!! Form::text('ChequeName',old('ChequeName'),['class'=>'form-control','placeholder'=>'Ac Holder Name']) !!}
+                    {!! Form::text('cheque[name]',old('cheque[name]'),['class'=>'form-control','placeholder'=>'Ac Holder Name']) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label">Date:</label>
                 <div class="col-md-8">
-                    {!! Form::text('ChequeDate',old('ChequeDate'),['class'=>'form-control datepicker','placeholder'=>'Date on Cheque']) !!}
+                    {!! Form::text('cheque[date]',old('cheque[date]'),['class'=>'form-control datepicker','placeholder'=>'Date on Cheque']) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label">Amount:</label>
                 <div class="col-md-8">
-                    {!! Form::text('ChequeAmount',old('ChequeAmount'),['class'=>'form-control','placeholder'=>'Amount']) !!}
+                    {!! Form::text('cheque[amount]',old('cheque[amount]'),['class'=>'form-control','placeholder'=>'Amount']) !!}
                 </div>
             </div>
         </div>
@@ -92,19 +92,19 @@
             <div class="form-group">
                 <label class="col-md-4 control-label">Bank:</label>
                 <div class="col-md-8">
-                    {!! Form::text('ChequeBank',old('ChequeBank'),['class'=>'form-control','placeholder'=>'Bank']) !!}
+                    {!! Form::text('cheque[bank]',old('cheque[bank]'),['class'=>'form-control','placeholder'=>'Bank']) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label">Branch:</label>
                 <div class="col-md-8">
-                    {!! Form::text('ChequeBankBranch',old('ChequeBankBranch'),['class'=>'form-control','placeholder'=>'Branch']) !!}
+                    {!! Form::text('cheque[bank_branch]',old('cheque[bank_branch]'),['class'=>'form-control','placeholder'=>'Branch']) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label">Cheque Number:</label>
                 <div class="col-md-8">
-                    {!! Form::text('ChequeNumber',old('ChequeNumber'),['class'=>'form-control','placeholder'=>'Cheque Number']) !!}
+                    {!! Form::text('cheque[number]',old('cheque[number]'),['class'=>'form-control','placeholder'=>'Cheque Number']) !!}
                 </div>
             </div>
         </div>
@@ -115,19 +115,19 @@
             <div class="form-group">
                 <label class="col-md-4 control-label">Card Type:</label>
                 <div class="col-md-8">
-                    {!! Form::select('CardType',mconfig('evaluation.options.card_types'),null,['class'=>'form-control','placeholder'=>'Select...']) !!}
+                    {!! Form::select('card[type]',mconfig('evaluation.options.card_types'),null,['class'=>'form-control','placeholder'=>'Select...']) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label">Name:</label>
                 <div class="col-md-8">
-                    {!! Form::text('CardNames',old('CardNames'),['placeholder'=>'Name on Card','class'=>'form-control']) !!}
+                    {!! Form::text('card[name]',old('card[name]'),['placeholder'=>'Name on Card','class'=>'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label">Card No:</label>
                 <div class="col-md-8">
-                    {!! Form::text('CardNumber',old('CardNumber'),['class'=>'form-control','placeholder'=>'16 digit card number']) !!}
+                    {!! Form::text('card[number]',old('card[number]'),['class'=>'form-control','placeholder'=>'16 digit card number']) !!}
                 </div>
             </div>
         </div>
@@ -135,13 +135,13 @@
             <div class="form-group">
                 <label class="col-md-4 control-label">Expiry:</label>
                 <div class="col-md-8">
-                    {!! Form::text('CardExpiry',old('expiry'),['placeholder'=>'eg. 04/22','class'=>'form-control']) !!}
+                    {!! Form::text('card[expiry]',old('card[expiry]'),['placeholder'=>'eg. 04/22','class'=>'form-control']) !!}
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-4 control-label">Amount:</label>
                 <div class="col-md-8">
-                    {!! Form::text('CardAmount',old('CardAmount'),['placeholder'=>'Card Amount','class'=>'form-control']) !!}
+                    {!! Form::text('card[amount]',old('card[amount]'),['placeholder'=>'Card Amount','class'=>'form-control']) !!}
                 </div>
             </div>
         </div>
@@ -151,7 +151,7 @@
     <div class="col-md-12">
         <hr/>
         <div class="pull-left">
-            <span id="all"></span><br/>
+            <!-- <span id="all"></span><br/> -->
             <span id="balance"></span>
         </div>
         <div class="pull-right">
