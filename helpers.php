@@ -428,6 +428,7 @@ if (!function_exists('reload_payments')) {
      */
     function reload_payments()
     {
+        return true;
         return \Artisan::call('finance:prepare-payments');
     }
 }
