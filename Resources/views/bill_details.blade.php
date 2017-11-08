@@ -1,33 +1,31 @@
 <?php
-$copaid = false;
-if ($visit->patient_scheme->schemes->type == 3) {
-    $copaid = true;
-    $copay = $visit->patient_scheme->schemes->amount;
-}
+extract($data);
+/** @var \Ignite\Finance\Entities\InsuranceInvoice $invoice */
+$visit = $invoice->visits;
 ?>
-<div class="modal modal-default fade" id="info{{$visit->id}}">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Bill Information</h4>
-            </div>
-            <div class="modal-body">
+@extends('layouts.app')
+@section('content_title','Invoice Details')
+@section('content_description','View billed items in invoice')
+@section('content')
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">Bill Details <code>Patient: {{$invoice->visits->patients->full_name}}</code> -
+                <small>{{$visit->mode}}</small>
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="col-md-12">
                 <?php $TOTAL = 0;$PAID = 0;$UNPAID = 0;?>
                 <table class="table table-condensed">
                     <tbody>
-                    @foreach($visit->investigations as $item)
+                    @foreach($invoice->investigations as $item)
                         <?php
                         $is_paid = $item->invoiced;
                         if ($is_paid) {
                             $TOTAL += $item->amount;
                             $PAID += $item->amount;
                         } else {
-                            if ($only == 'billed') {
-                                continue;
-                            }
-                            $UNPAID += $item->amount;
+                            continue;
                         }
                         ?>
                         <tr>
@@ -41,7 +39,7 @@ if ($visit->patient_scheme->schemes->type == 3) {
                         </tr>
                     @endforeach
 
-                    @foreach($visit->prescriptions as $item)
+                    @foreach($invoice->prescriptions as $item)
                         <?php
                         $is_paid = $item->is_paid;
                         if ($is_paid) {
@@ -82,27 +80,39 @@ if ($visit->patient_scheme->schemes->type == 3) {
                         <th style="text-align: right;" colspan="6" class="grand total">TOTAL:</th>
                         <th style="text-align: right">{{ number_format($TOTAL,2) }}</th>
                     </tr>
-                    @if($copaid)
+                    @if($invoice->copaid)
                         <tr>
                             <th style="text-align: right;" colspan="6" class="grand total">Copay:</th>
-                            <th style="text-align: right">{{ number_format($copay,2) }}</th>
+                            <th style="text-align: right">{{ number_format($invoice->copaid->amount,2) }}</th>
                         </tr>
-                        <?php $PAID -= $copay; ?>
+                        <?php $PAID -= $invoice->copaid->amount; ?>
                     @endif
                     <tr>
-                        <th style="text-align: right;" colspan="6" class="grand total">Billed Amount:</th>
+                        <th style="text-align: right;" colspan="6" class="grand total">Billed Amount:
+                        </th>
                         <th style="text-align: right">{{ number_format($PAID,2) }}</th>
                     </tr>
                     </tfoot>
                 </table>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-outline">Save changes</button>
+            <!-- /.modal-content -->
+        </div>
+        <div class="box-footer">
+            <div class="pull-left">
+                <a class="btn btn-default" href="{{URL::previous()}}"><i class="fa fa-arrow-circle-o-left"></i> Back</a>
+            </div>
+            <div class="pull-right">
+                @if($invoice->prescriptions->count())
+                    <a class="btn btn-default"
+                       href="{{route('evaluation.print.prescription',[$item->visits->id,true])}}"
+                       target="_blank">
+                        Print Prescriptions (thermal)</a>
+                    <a class="btn btn-primary"
+                       href="{{route('evaluation.print.prescription',[$item->visits->id])}}"
+                       target="_blank">
+                        Print Prescriptions (A5)</a>
+                @endif
             </div>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
+@endsection

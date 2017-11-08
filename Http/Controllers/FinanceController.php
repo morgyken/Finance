@@ -65,12 +65,16 @@ class FinanceController extends AdminBaseController
         if ($this->evaluationRepository->bill_visit($request)) {
             flash('Bill placed, thank you');
             return redirect()->route('finance.evaluation.billed');
-        } else {
-            flash()->error('Bill could not be placed');
-            return back();
         }
+        flash()->error('Could not do that!');
+        return back();
     }
 
+    public function invoiceInfo($inv)
+    {
+        $this->data['invoice'] = InsuranceInvoice::find($inv);
+        return view('finance::bill_details', ['data' => $this->data]);
+    }
 
     public function list()
     {
@@ -93,7 +97,7 @@ class FinanceController extends AdminBaseController
 
     public function changeMode(Request $request)
     {
-        if(isset($request->split)){
+        if (isset($request->split)) {
             $this->data['split'] = SplitInsurance::find($request->split);
         }
         $this->data['visit'] = Visit::find($request->id);

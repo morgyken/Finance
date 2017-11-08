@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateInsuranceCopaysTable extends Migration
+class CreateCopaysTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateInsuranceCopaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('finance_insurance_copay', function (Blueprint $table) {
+        Schema::create('finance_copay', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('visit_id');
-            $table->unsignedInteger('scheme_id');
-            $table->unsignedInteger('company_id');
-            $table->unsignedInteger('procedure_id');
             $table->unsignedInteger('patient_id');
+            $table->unsignedInteger('company_id');
+            $table->unsignedInteger('scheme_id');
             $table->double('amount', 10, 2);
-            $table->boolean('paid')->default(false);
+            $table->unsignedInteger('payment_id')->nullable();
+            $table->unsignedInteger('invoice_id')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ class CreateInsuranceCopaysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('finance_insurance_copay');
+        Schema::dropIfExists('finance_copay');
     }
 }

@@ -343,7 +343,6 @@ if (!function_exists('get_split_bills')) {
 }
 
 
-
 if (!function_exists('get_clinic')) {
 
     function get_clinic()
@@ -403,7 +402,7 @@ function get_unpaid_amount_for(Visit $visit, $mode)
 {
     $amount = 0;
     $k = $visit->to_cash;
-    if ($visit->payment_mode == $mode) {
+    if ($visit->payment_mode === $mode) {
         foreach ($visit->investigations as $item) {
             if (!($item->is_paid || $item->invoiced)) {
                 if (!in_array($item->procedure, $k->pluck('procedure_id')->toArray()))
@@ -418,10 +417,15 @@ function get_unpaid_amount_for(Visit $visit, $mode)
         }
     }
     $extra = \Ignite\Finance\Entities\ChangeInsurance::whereMode($mode)->whereVisitId($visit->id)->sum('amount');
+    if ($visit->copay && $mode === 'cash')
+        $extra += $visit->copay->amount;
     return $amount + $extra;
 }
 
 if (!function_exists('reload_payments')) {
+    /**
+     * @return mixed
+     */
     function reload_payments()
     {
         return \Artisan::call('finance:prepare-payments');

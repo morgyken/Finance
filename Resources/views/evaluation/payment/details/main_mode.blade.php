@@ -57,6 +57,14 @@
             }
             }
             ?>
+            @if(!empty($payment->copay))
+                <tr>
+                    <td>{{$n+=1}}</td>
+                    <td>{{$payment->copay->desc}}</td>
+                    <td>{{$payment->copay->amount}}</td>
+                </tr>
+                <?php $bill += $payment->copay->amount ?>
+            @endif
             </tbody>
             <tfoot>
             <tr style="text-align: right">
@@ -76,13 +84,13 @@
             </tr>
             @if(!$payment->deposit)
                 @if($payment->total-$bill>0)
-                <tr>
-                    <td></td>
-                    <td style="text-align: right">Change</td>
-                    <th>
-                        {{$payment->total-$bill}}
-                    </th>
-                </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: right">Change</td>
+                        <th>
+                            {{$payment->total-$bill}}
+                        </th>
+                    </tr>
                 @endif
             @else
                 <tr>
