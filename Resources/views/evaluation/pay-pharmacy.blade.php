@@ -16,8 +16,8 @@ extract($data);
                 @else
                     @if(!$drugs->isEmpty())
                         {!! Form::open(['route'=>'finance.evaluation.pharmacy.dispense','id'=>'presForm']) !!}
-                        @if(request('insurance'))
-                            {{Form::hidden('to_redirect',true)}}
+                        @if(isset($to_redirect_insurance))
+                            {{Form::hidden('to_redirect',$to_redirect_insurance)}}
                         @endif
                         {{Form::hidden('patient',$patient->id)}}
                         <table class="table table-condensed" width="100%">
@@ -64,8 +64,8 @@ extract($data);
                                         </dl>
                                     </td>
                                     <td>
-                                        {{$item->payment->cost}}
-                                        <input type="hidden" value="{{$item->payment->cost}}" name="prc{{$item->id}}"
+                                        Ksh {{number_format($item->payment->price,2)}}
+                                        <input type="hidden" value="{{$item->payment->price}}" name="prc{{$item->id}}"
                                                id="prc{{$item->id}}">
                                     </td>
                                     <td>

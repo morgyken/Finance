@@ -42,7 +42,7 @@
                         <td>
                             @if($item->has_meds)
                                 <a class="btn btn-success btn-xs"
-                                   href="{{route('finance.evaluation.pay.pharmacy',[$visit->patients->id,'insurance'=>true])}}">
+                                   href="{{route('finance.evaluation.pay.pharmacy',[$visit->patients->id,'insurance'=>$visit->id])}}">
                                     <i class="fa fa-bolt"></i> Process Meds</a>
                             @endif
                             <a href="{{route('finance.evaluation.prepare.bill', $visit->id)}}"

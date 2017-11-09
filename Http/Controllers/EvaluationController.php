@@ -145,7 +145,7 @@ class EvaluationController extends AdminBaseController
             return view('finance::evaluation.pay', ['data' => $this->data]);
         }
         if (m_setting('finance.background_manifest')) {
-            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->limit(500)->get();
+            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->get();
 
             $this->data['invoiced'] = Patients::whereHas('invoices', function ($query) {
                 $query->whereStatus('unpaid')
@@ -161,16 +161,18 @@ class EvaluationController extends AdminBaseController
     {
         $stack = $this->_get_selected_stack();
         foreach ($stack as $index) {
+            $prescription = Prescriptions::find($index);
+            $cpp = $prescription->payment->price;
+            $d = (int)\request('qty' . $index);
             $update = [
                 'complete' => true,
-                'quantity' => \request('qty' . $index),
-//                'invoiced' => $request->has('to_redirect'),
+                'quantity' => $d,
+                'cost' => $cpp * $d,
             ];
-            $prescription = Prescriptions::find($index);
             $prescription->payment()->update($update);
         }
         if ($request->has('to_redirect')) {
-            return redirect()->route('finance.evaluation.pending');
+            return redirect()->route('finance.evaluation.prepare.bill', $request->to_redirect);
         }
         return redirect()->route('finance.evaluation.pay', $request->patient);
     }
@@ -205,11 +207,12 @@ class EvaluationController extends AdminBaseController
                 $builder->whereInvoiced(false);
             });
         })->get();
-
         if (isset($request->split)) {
             $this->data['split'] = SplitInsurance::find($request->split);
         }
-
+        if ($request->insurance) {
+            $this->data['to_redirect_insurance'] = $request->insurance;
+        }
         return view('finance::evaluation.pay-pharmacy', ['data' => $this->data]);
     }
 
@@ -332,8 +335,7 @@ class EvaluationController extends AdminBaseController
             $this->data['sales'] = InventoryBatchProductSales::find($sale);
             return view('finance::evaluation.sale_pay', ['data' => $this->data]);
         }
-
-        $this->data['sales'] = InventoryBatchProductSales::wherePaid(0)
+        $this->data['sales'] = InventoryBatchProductSales::wherePaid(false)
             ->get();
 
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
