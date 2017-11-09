@@ -5,7 +5,9 @@
  *  Author: Samuel Okoth <sodhiambo@collabmed.com>
  */
 extract($data);
-$__visits = $patient->visits;
+$__visits = $patient->visits->filter(function ($value) {
+    return $value->unpaid_cash > 0;
+});
 ?>
 @extends('layouts.app')
 @section('content_title','Receive Payment')

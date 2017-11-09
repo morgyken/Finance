@@ -5,10 +5,6 @@ use Illuminate\Routing\Router;
 
 ///Billing finance.billing.dispatch
 /** @var Router $router */
-$router->get('jambo', function (\Ignite\Finance\Repositories\Jambo $jambo) {
-//    $x = $jambo->checkWalletExist('0790551161');
-    dd($jambo->createWallet());
-});
 $router->match(['get', 'post'], 'billing', ['uses' => 'FinanceController@billing', 'as' => 'billing']);
 $router->match(['get', 'post'], 'billing/dispatch', ['uses' => 'GlController@dispatchbills', 'as' => 'billing.dispatch']);
 $router->get('bill/{id}/cancel', ['uses' => 'GlController@cancelBill', 'as' => 'bill.cancel']);
