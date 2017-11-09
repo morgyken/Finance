@@ -133,11 +133,24 @@ $clinic = \Ignite\Settings\Entities\Clinics::find($bill->visits->clinic);?>
                         $TOTAL+=$item->total;
                     @endphp
                 @endforeach
+                </tbody>
+                <tfoot>
                 <tr>
                     <td style="text-align: right;" colspan="4" class="grand total">TOTAL:</td>
-                    <td class="grand total"  style="text-align:right">{{ number_format($TOTAL,2) }}</td>
+                    <td class="grand total" style="text-align:right">{{ number_format($TOTAL,2) }}</td>
                 </tr>
-                </tbody>
+                @if($bill->copaid)
+                    <tr>
+                        <th style="text-align: right;" colspan="4" class="grand total">Copay:</th>
+                        <th style="text-align: right">{{ number_format($bill->copaid->amount,2) }}</th>
+                    </tr>
+                    <?php $TOTAL -= $bill->copaid->amount; ?>
+                    <tr>
+                        <th style="text-align: right;" colspan="4" class="grand total">Billed Amount:
+                        </th>
+                        <th style="text-align: right">{{ number_format($TOTAL,2) }}</th>
+                    </tr> @endif
+                </tfoot>
             </table>
         </div>
         <div class="col-md-6">

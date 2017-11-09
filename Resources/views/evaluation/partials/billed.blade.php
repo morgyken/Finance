@@ -46,7 +46,7 @@
                     </td>
                     <td>{!! $item->nice_status !!}</td>
                     <td>
-                        <a href="{{route('finance.view_invoice_bill',$item->id)}}" class="btn btn-default btn-xs">
+                        <a href="{{route('finance.view_invoice_bill',$item->id)}}" class="btn btn-default btn-xs" target="_blank">
                             <i class="fa fa-eye"></i> View</a>
                         {{--<button type="button" class="btn btn-default btn-xs" data-toggle="modal"--}}
                         {{--data-target="#info{{$item->visits->id}}">--}}

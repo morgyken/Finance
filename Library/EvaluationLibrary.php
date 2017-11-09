@@ -627,11 +627,31 @@ class EvaluationLibrary implements EvaluationRepository
         $inv->visit = $visit;
         $inv->payment = $amount;
         $_v = Visit::find($visit);
-        $inv->company_id = @$_v->patient_scheme->schemes->company;
-        $inv->scheme_id = @$_v->patient_scheme->schemes->id;
+        $scheme = @$_v->patient_scheme->schemes;
+        $inv->company_id = @$scheme->company;
+        $inv->scheme_id = @$scheme->id;
+        $copay = $scheme->type === 3;
         $inv->split_id = $split;
         $inv->save();
+        if ($copay) {
+            $this->matchCopay($inv, $_v);
+        }
         return $inv;
+    }
+
+    /**
+     * @param InsuranceInvoice $inv
+     * @param Visit $visit
+     * @return bool
+     */
+    private function matchCopay(InsuranceInvoice $inv, Visit $visit)
+    {
+        $_c = Copay::whereVisitId($visit->id)->first();
+        if (!empty($_c->invoice_id)) {
+            return true;
+        }
+        $_c->invoice_id = $inv->id;
+        return $_c->save();
     }
 
     public function swapBill(Request $request)
