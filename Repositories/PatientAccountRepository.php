@@ -20,7 +20,7 @@ class PatientAccountRepository
     */
     public function deposit($paymentId)
     {
-        $payments = request()->except(['_token', 'deposit', 'patient']);
+        $payments = request()->except(['_token', 'payment_type', 'patient']);
 
         $patient = $this->find(request()->get('patient'));
 
@@ -39,14 +39,13 @@ class PatientAccountRepository
         {
             $class = $this->getPaymentModeClass($mode);
 
-            !$details['amount'] ?: $account->deposit(
-
-                new $class($details, $paymentId)
-
-            );
+            if(isset($details['amount']) and is_numeric($details['amount']))
+            {
+                $account->deposit(new $class($details, $paymentId));
+            }
         }
 
-        return $account->fund();
+        return $account->balance();
     }
 
     /*

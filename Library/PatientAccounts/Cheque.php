@@ -13,7 +13,7 @@ class Cheque extends Payment implements PaymentMode
     */
     public $mode = "cheque";
 
-    protected $name, $date, $bank, $bank_branch, $number;
+    protected $name, $bank, $number;
 
     /*
     * Constructor receives all the values and sets them accordingly
@@ -24,13 +24,9 @@ class Cheque extends Payment implements PaymentMode
 
         $this->name = $details['name'];
         
-        $this->date = $details['date'];
-        
         $this->bank = $details['bank']; 
         
         $this->number = $details['number'];
-
-        $this->bank_branch = $details['bank_branch'];
     }
 
     /*

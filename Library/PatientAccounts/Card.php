@@ -22,7 +22,7 @@ class Card extends Payment implements PaymentMode
     {
         parent::__construct($details, $paymentId);
 
-        $this->type = $details['type'];
+        // $this->type = $details['type'];
 
         $this->name = $details['name'];
 

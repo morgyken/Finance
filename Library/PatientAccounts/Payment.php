@@ -17,9 +17,14 @@ class Payment
     }
 
     /*
+    * Abstract class that will be used to set the fields that differ in all the children
+    */
+    // abstract protected function setFields();
+
+    /*
     * Gets the various properties belonging to a payment
     */
-    public function getFields()
+    protected function getFields()
     {
         return collect(get_object_vars($this))->forget('mode')->toArray();
     }

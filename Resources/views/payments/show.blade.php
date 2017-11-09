@@ -15,20 +15,11 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Cashier <small class="pull-right">{{ $payment->created_at }}</small></h4>
+                        <!-- <h4>Cashier </h4> -->
                         <div class="row">
-                            <p class="col-md-6">{{ $payment->users->profile->name }}</p>
-                            <!-- <div class="col-md-6"> -->
-                                <div class="drop-down pull-right">
-                                    <button class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-                                        Print Deposit Slip
-                                    <span class="caret"></span></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Thermal</a></li>
-                                        <li><a href="#">A4</a></li>
-                                    </ul>
-                                </div>
-                            <!-- </div> -->
+                            <p class="col-md-12">Cashier: {{ $payment->users->profile->name }}
+                                <small class="pull-right">{{ $payment->created_at }}</small>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -44,9 +35,22 @@
                         </div>
                     @endforeach
                 </div>
+
+                <hr>
+
+                <div class="row"> 
+                    <div class="col-md-5">
+                        <h4><b>DEPOSIT TOTAL kshs. {{ $total }}</b></h4>
+                    </div>
+
+                    <div class="col-md-7">
+                        <button class="col-md-2 col-md-offset-1 btn btn-sm btn-primary pull-right">Print Thermal</button>
+                        <button class="col-md-2  btn btn-sm btn-primary pull-right">Print A4</button>
+                    </dv>
+                </div>
             </div>
 
-            {{ $total }}
+            
         </div>
 
     </div>

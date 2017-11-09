@@ -32,7 +32,11 @@ class PatientAccount
     */
     public function deposit(PaymentMode $mode)
     {
-        $this->balance = $this->balance + $mode->save();
+        $this->account->balance = $this->balance + $mode->save();
+        
+        $this->account->save();
+
+        $this->balance = $this->account->balance;
 
         return $this;
     }
@@ -42,18 +46,6 @@ class PatientAccount
     */
     public function balance()
     {
-        return $this->balance;
-    }
-
-    /*
-    * Saves the balance to the patients accounts table
-    */
-    public function fund()
-    {
-        $this->account->balance = $this->balance;
-
-        $this->account->save();
-
         return $this->balance;
     }
 

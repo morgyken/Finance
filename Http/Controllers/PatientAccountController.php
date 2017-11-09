@@ -45,11 +45,11 @@ class PatientAccountController extends AdminBaseController
     /**
      * Store a newly created resource in storage.
      * @param  Request $request
-     * @return Response
+    * @return Response
      */
     public function store()
     {
-        $paymentDetails = request()->only(['deposit', 'patient']);
+        $paymentDetails = request()->only(['patient']);
 
         $payment = $this->paymentRepository->save($paymentDetails);
 
