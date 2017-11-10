@@ -39,7 +39,20 @@ class PreparePayments extends Command
     public function fire()
     {
         $start = microtime(true);
-        $this->info("Enumerating lists");
+        $this->info('Enumerating lists');
+        $this->enumerateLists();
+        $this->info('Updated - ' . $this->worker);
+        $time = microtime(true) - $start;
+        $x = 1;
+        if ($time < 50) {
+            $this->enumerateLists();
+            $x++;
+        }
+        $this->warn($x . ' script(s) took - ' . $time);
+    }
+
+    private function enumerateLists()
+    {
         /** @var Visit[] $visit_list */
         $visit_list = Visit::where(function (Builder $query) {
             $query->wherePaymentMode('cash')
@@ -89,9 +102,6 @@ class PreparePayments extends Command
                 return empty($value->unpaid_insurance);
             });
         $this->add_visit($visit_list, 'insurance');
-        $this->info('Updated - ' . $this->worker);
-        $time = microtime(true) - $start;
-        $this->warn('Script took - ' . $time);
     }
 
     private function add_visit($visit_list, $mode)
