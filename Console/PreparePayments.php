@@ -76,7 +76,7 @@ class PreparePayments extends Command
                     });
                 });
         })
-            ->orderBy('created_at')
+            ->latest()
             ->orWhereHas('copay', function (Builder $query) {
                 $query->whereNull('payment_id');
             })
@@ -96,7 +96,7 @@ class PreparePayments extends Command
                     $query->wherePaid(false);
                 });
             });
-        })->orderBy('created_at', 'asc')
+        })->latest()
             ->get()
             ->reject(function ($value) {
                 return empty($value->unpaid_insurance);
@@ -104,15 +104,18 @@ class PreparePayments extends Command
         $this->add_visit($visit_list, 'insurance');
     }
 
+    /**
+     * @param Visit[] $visit_list
+     * @param string $mode
+     */
     private function add_visit($visit_list, $mode)
     {
-        PaymentManifest::whereType($mode)->whereNotIn('visit_id', $visit_list->pluck('id'))->delete();
         foreach ($visit_list as $visit) {
             /** @var PaymentManifest $one */
             $one = PaymentManifest::firstOrNew(['visit_id' => $visit->id, 'type' => $mode]);
             $one->patient_id = $visit->patient;
 //            $one->type = $visit->payment_mode;
-            $one->amount = $visit->{"unpaid_" . $mode};
+            $one->amount = $visit->{'unpaid_' . $mode};
             $one->has_meds = patient_has_pharmacy_bill($visit);
             if ($mode === 'insurance') {
                 $one->company_id = @$visit->patient_scheme->schemes->company;
@@ -122,5 +125,6 @@ class PreparePayments extends Command
             $one->save();
             $this->worker++;
         }
+        PaymentManifest::whereType($mode)->whereNotIn('visit_id', $visit_list->pluck('id'))->delete();
     }
 }
