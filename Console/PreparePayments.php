@@ -44,7 +44,7 @@ class PreparePayments extends Command
         $this->info('Updated - ' . $this->worker);
         $time = microtime(true) - $start;
         $x = 1;
-        if ($time < 50) {
+        while ($time < 55) {
             $this->enumerateLists();
             $x++;
         }
