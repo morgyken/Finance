@@ -79,7 +79,7 @@ class PreparePayments extends Command
             ->latest()
             ->orWhereHas('copay', function (Builder $query) {
                 $query->whereNull('payment_id');
-            })
+            })->limit(500)
             ->get()
             ->reject(function ($value) {
                 return empty($value->unpaid_cash);
@@ -96,7 +96,7 @@ class PreparePayments extends Command
                     $query->wherePaid(false);
                 });
             });
-        })->latest()
+        })->latest()->limit(500)
             ->get()
             ->reject(function ($value) {
                 return empty($value->unpaid_insurance);
