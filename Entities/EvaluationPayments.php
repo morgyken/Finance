@@ -52,10 +52,15 @@ use Illuminate\Database\Eloquent\Model;
 class EvaluationPayments extends Model
 {
 
-    protected $fillable = [];
+    protected $fillable = [
+        'receipt', 'patient', 'user', 'amount', 'visit', 'sale', 'dispensing', 'deposit'
+    ];
+    
     public $table = 'finance_evaluation_payments';
 
-    public function getTotalAttribute()
+    protected $with = ['cash', 'card', 'cheque', 'mpesa', 'patients', 'users'];
+
+    public function getTotalAttribute() 
     {
         $total = 0;
         if (!empty($this->cash)) {
