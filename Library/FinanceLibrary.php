@@ -39,7 +39,6 @@ use Illuminate\Support\Facades\DB;
  */
 class FinanceLibrary implements FinanceRepository
 {
-
     /**
      * @param Request $request
      * @param int|null $id
@@ -254,30 +253,25 @@ class FinanceLibrary implements FinanceRepository
 
     public static function dispatchBills(Request $request)
     {
-        DB::beginTransaction();
-        // try {
+        \DB::beginTransaction();
         $dispatch = new Dispatch();
         $dispatch->firm = $request->company;
-        $dispatch->user = \Auth::user()->id;
+        $dispatch->user = $request->user()->id;
         $dispatch->save();
 
         foreach ($request->bill as $index => $invoice) {
             $inv = InsuranceInvoice::find($invoice);
             $inv->status = 1;
+            $inv->dispatch = $dispatch->id;
             $inv->save();
-
             $dispatch_info = new DispatchDetails();
             $dispatch_info->insurance_invoice = $inv->id;
             $dispatch_info->dispatch = $dispatch->id;
             $dispatch_info->amount = $request->amount[$index];
             $dispatch_info->save();
         }
-        DB::commit();
-        //return true;
-        //  } catch (\Exception $e) {
-        DB::rollback();
-        // flash()->warning("Select at least one bill to proceed... thank you");
-        //}//Catch
+        \DB::commit();
+        return true;
     }
 
     /**

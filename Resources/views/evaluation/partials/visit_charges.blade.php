@@ -12,8 +12,12 @@
                     <tbody>
                     @foreach($visit->investigations as $item)
                         <?php
+                        $split = split_to_schemex($item->id);
+                        if ($split){
+                            continue;
+                        }
                         $TOTAL += $item->amount;
-                        $is_paid = $item->invoiced;
+                        $is_paid = $item->invoiced || $item->is_paid;
                         if ($is_paid) {
                             $PAID += $item->amount;
                         } else {
@@ -33,6 +37,10 @@
 
                     @foreach($visit->prescriptions as $item)
                         <?php
+                        $split = split_to_schemex($item->id,true);
+                        if ($split){
+                            continue;
+                        }
                         $TOTAL += $item->payment->total;
                         $is_paid = $item->is_paid;
                         if ($is_paid) {
@@ -68,7 +76,8 @@
                     <tr>
                         <th style="text-align: right;" colspan="6" class="grand total">TOTAL:</th>
                         <th style="text-align: right">{{ number_format($TOTAL,2) }}</th>
-                    </tr>  <tr>
+                    </tr>
+                    <tr>
                         <th style="text-align: right;" colspan="6" class="grand total">Processed Amount:</th>
                         <th style="text-align: right">{{ number_format($PAID,2) }}</th>
                     </tr>

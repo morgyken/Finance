@@ -13,15 +13,11 @@
         <img style="width:100; height:auto; float: right" src=""/>
     @endif
 @else
-    <center>
-        <?php try{ ?>
+    <?php try{ ?>
         <img style="width:100; height:auto; float: right" src="{{URL::to(get_logo_image())}}"/>
         <?php
         }catch(\Exception $e){
-        ?>
-        <img style="width:100; height:auto; float: right" src=""/>
-        <?php
+
         }
         ?>
-    </center>
 @endif

@@ -1,4 +1,8 @@
 <!-- Row start -->
+<?php
+use \Illuminate\Support\Facades\Input;
+$_get = (object)Input::get();
+?>
 <div class="row">
     <div class="col-md-12 col-sm-6 col-xs-12">
         <div class="panel panel-default">
@@ -8,48 +12,64 @@
             </div>
 
             <div class="panel-body">
-                <form class="form-horizontal row-border" action="#">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">
-                            Insurance Company
-                        </label>
-                        <div class="col-md-5">
-                            {!! Form::select('company',get_insurance_companies(), null, ['class' => 'form-control company', 'placeholder' => 'Choose...']) !!}
-                            <span class="help-block">Select an insurance company for action.</span>
+                <form class="form-horizontal" action="#">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4">
+                                    Insurance Company
+                                </label>
+                                <div class="col-md-8">
+                                    {!! Form::select('company',get_insurance_companies(), $_get->company?? null, ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    @if($mode !=='stmt_mode')
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">
-                            Patient
-                        </label>
-                        <div class="col-md-10">
-                            <div class="row">
-                                <div class="col-xs-5">
-                                    <input type='text' id="patient" class="form-control" placeholder="Patient Name" name='patient'>
+                        <div class="col-md-6">
+                            <div class="form-group" id="scheme">
+                                <label class="control-label col-md-4">
+                                    Scheme
+                                </label>
+                                <div class="col-md-8">
+                                    {!! Form::select('scheme',[''=>'Choose insurance company'], null, ['class' => 'form-control', 'placeholder' => 'Choose...']) !!}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    @endif
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">
-                            Time Period
-                        </label>
-                        <div class="col-md-10">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <input type='text' id="date1" placeholder="Date 1" name='date1'>
-                                </div>
-                                <div class="col-xs-4 col-md-3">
-                                    <input type='text' id="date2" style="float: right" placeholder="Date 2" name='date2'>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4">
+                                    Start Date
+                                </label>
+                                <div class="col-md-8">
+                                    <div>
+                                        <input type='text' id="date1" placeholder="Start Date" name='date1'
+                                               class="form-control" value="{{$_get->date1??null}}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4">
+                                    End Date
+                                </label>
+                                <div class="col-md-8">
+                                    <input type='text' id="date2" placeholder="End Date"
+                                           name='date2' class="form-control" value="{{$_get->date2??null}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script>
+    var THE_SCHEME = "{{$_get->scheme?? null}}";
+</script>
 <!-- Row end -->

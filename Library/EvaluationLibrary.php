@@ -12,17 +12,27 @@
 
 namespace Ignite\Finance\Library;
 
+use Carbon\Carbon;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
+use Ignite\Evaluation\Entities\Procedures;
+use Ignite\Finance\Entities\ChangeInsurance;
+use Ignite\Finance\Entities\Copay;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
 use Ignite\Finance\Entities\PatientAccount;
 use Ignite\Finance\Entities\PatientTransaction;
+use Ignite\Finance\Entities\PaymentManifest;
 use Ignite\Finance\Entities\PaymentsCard;
 use Ignite\Finance\Entities\PaymentsCash;
 use Ignite\Finance\Entities\PaymentsCheque;
 use Ignite\Finance\Entities\PaymentsMpesa;
+use Ignite\Finance\Entities\SplitInsurance;
+use Ignite\Finance\Entities\SplitInsuranceItems;
 use Ignite\Finance\Repositories\EvaluationRepository;
+use Ignite\Inventory\Entities\InventoryProducts;
+use Ignite\Reception\Entities\Patients;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -74,30 +84,12 @@ class EvaluationLibrary implements EvaluationRepository
         $this->prepareInput($this->input);
     }
 
-    /**
-     * Build an index of items dynamically
-     * @param null $needle
-     * @return array
-     */
-    private function _get_selected_stack($needle = null)
-    {
-        $stack = [];
-        $input = \request()->all();
-        if (empty($needle)) {
-            $needle = 'item';
-        }
-        foreach ($input as $key => $one) {
-            if (starts_with($key, $needle)) {
-                $stack[] = substr($key, strlen($needle));
-            }
-        }
-        return $stack;
-    }
 
     private function updatePrescriptions($item)
     {
         if ($this->isDrugPayment($item)) {
-
+            $p = Prescriptions::find(\request('item' . $item));
+            $p->payment()->update(['paid' => true]);
         }
         return true;
     }
@@ -108,60 +100,42 @@ class EvaluationLibrary implements EvaluationRepository
      */
     public function record_payment()
     {
-        DB::transaction(function () {
-            $stock = $this->_get_selected_stack();
+        \DB::beginTransaction();
+        if (isset($this->request->batch)) {
+            foreach ($this->request->batch as $bitch) {
+                $sale = InventoryBatchProductSales::find($bitch);
+                $sale->paid = 1;
+                $sale->save();
+            }
+        }
+        $payment = new EvaluationPayments;
+        $payment->patient = $this->request->patient;
+        $payment->receipt = generate_receipt_no();
 
-            foreach ($stock as $item) {
-                $this->updatePrescriptions($item);
-            }
-            if (isset($this->request->batch)) {
-                foreach ($this->request->batch as $bitch) {
-                    $sale = InventoryBatchProductSales::find($bitch);
-                    $sale->paid = 1;
-                    $sale->save();
-                }
-            }
+        if (isset($this->request->visit)) {
+            $payment->visit = $this->request->visit;
+        }
+        if (isset($this->request->sale)) {
+            $payment->sale = $this->request->sale;
+        }
+        if (isset($this->request->dispense)) {
+            $dispense = json_encode($this->request->dispense);
+            $payment->dispensing = json_encode(array_unique(json_decode($dispense, true)));
+        }
+        $payment->user = $this->user;
+        $payment->save();
+        $payment->amount = $this->payment_methods($payment);
+        if (isset($this->request->deposit)) {
+            $payment->deposit = true;
+        }
+        $payment->save();
+        $this->payment_details($this->request, $payment);
+        $this->pay_id = $payment->id;
 
-            //Update dispensing details
-            if (isset($this->request->dispense)) {
-                foreach ($this->request->dispense as $disp) {
-                    $sale = DispensingDetails::find($disp);
-                    $sale->status = 1;
-                    $sale->save();
-                }
-            }
-
-            $payment = new EvaluationPayments;
-            $p = \Ignite\Reception\Entities\Patients::find($this->request->patient);
-            if (!is_null($p)) {
-                $payment->patient = $this->request->patient;
-            }
-            $payment->receipt = generate_receipt_no();
-
-            if (isset($this->request->visit)) {
-                $payment->visit = $this->request->visit;
-            }
-            if (isset($this->request->sale)) {
-                $payment->sale = $this->request->sale;
-            }
-            if (isset($this->request->dispense)) {
-                $dispense = json_encode($this->request->dispense);
-                $payment->dispensing = json_encode(array_unique(json_decode($dispense, true)));
-            }
-            $payment->user = $this->user;
-            $payment->save();
-            $payment->amount = $this->payment_methods($payment);
-            if (isset($this->request->deposit)) {
-                $payment->deposit = true;
-            }
-            $payment->save();
-            $this->payment_details($this->request, $payment);
-            $this->pay_id = $payment->id;
-
-            if (isset($this->request->deposit)) {
-                $this->patient_transaction($payment, 'deposit');
-            }
-        });
+        if (isset($this->request->deposit)) {
+            $this->patient_transaction($payment, 'deposit');
+        }
+        \DB::commit();
         return $this->pay_id;
     }
 
@@ -206,7 +180,7 @@ class EvaluationLibrary implements EvaluationRepository
             $inv->user_id = $this->user;
             $inv->save();
 
-            $__items = $this->__get_selected_stack();
+            $__items = $this->_get_selected_stack();
             foreach ($__items as $item) {
                 $id = 'item' . $item;
                 $name = 'inv_name' . $item;
@@ -254,14 +228,17 @@ class EvaluationLibrary implements EvaluationRepository
 
     private function payment_details(Request $request, $payment)
     {
-        $items = $this->__get_selected_stack();
+        $items = $this->_get_selected_stack();
         foreach ($items as $item) {
             $invoice = 'invoice' . $item;
             if (isset($request->$invoice)) {
                 $this->invoice_payment_details($item, $payment);
             } else {
                 if ($this->isDrugPayment($item)) {
+                    $this->updatePrescriptions($item);
                     $this->drug_payment_details($request, $item, $payment);
+                } elseif ($this->isPaymentFor($item, 'copay')) {
+                    $this->copayment($item, $payment);
                 } else {
                     $this->investigation_payment_details($request, $item, $payment);
                 }
@@ -269,27 +246,54 @@ class EvaluationLibrary implements EvaluationRepository
         }
     }
 
-    private function isDrugPayment($item)
+    /**
+     * @param string $item
+     * @return bool
+     * @deprecated use <code>isPaymentFor</code>
+     */
+    private function isDrugPayment($item): bool
+    {
+        return $this->isPaymentFor($item, 'pharmacy');
+    }
+
+    /**
+     * Check if payment is
+     * @param string $item
+     * @param string $is
+     * @return bool
+     */
+    private function isPaymentFor($item, $is): bool
     {
         if ($this->request->has('type' . $item)) {
-            return (\request('type' . $item) == 'pharmacy');
+            return (\request('type' . $item) === $is);
         }
         return false;
+    }
+
+    /**
+     * @param string $item
+     * @param EvaluationPayments $payment
+     * @return bool
+     */
+    private function copayment($item, $payment)
+    {
+        $copay = Copay::find($item);
+        $copay->payment_id = $payment->id;
+        return $copay->save();
     }
 
     private function investigation_payment_details(Request $request, $item, $payment)
     {
         $visit = 'visits' . $item;
         $investigation = Investigations::find($item);
-        if (isset($investigation)) {
-            $detail = new EvaluationPaymentsDetails;
-            $detail->price = $investigation->price;
-            $detail->investigation = $item;
-            $detail->visit = $request->$visit;
-            $detail->payment = $payment->id;
-            $detail->cost = $investigation->procedures->price;
-            $detail->save();
-        }
+        $detail = new EvaluationPaymentsDetails;
+        $detail->price = $investigation->price;
+        $detail->investigation = $item;
+        $detail->visit = $request->$visit;
+        $detail->payment = $payment->id;
+        $detail->cost = $investigation->procedures->price;
+        $detail->save();
+
     }
 
     private function drug_payment_details(Request $request, $item, $payment)
@@ -329,30 +333,33 @@ class EvaluationLibrary implements EvaluationRepository
      */
     public function record_insurance_payment()
     {
+        \DB::beginTransaction();
         $batch = new FinanceEvaluationInsurancePayments;
         $batch->company = $this->request->company;
         $batch->user = \Auth::user()->id;
         $batch->amount = $this->request->ChequeAmount;
         $batch->save();
 
-        $this->saveCheque($batch);
 
+        $this->saveCheque($batch);
         foreach ($this->request->invoice as $key => $invoice) {
             $amount = 'amount' . $invoice;
+            $this->updateInvoiceStatus($invoice, $this->request->$amount);
             $payment = new InsuranceInvoicePayment;
             $payment->amount = $this->request->$amount;
             $payment->insurance_invoice = $invoice;
             $payment->user = $this->user;
             $payment->batch = $batch->id;
             $payment->save();
-            $this->updateInvoiceStatus($invoice, $this->request->$amount);
         }
+        \DB::commit();
         return true;
     }
 
     /**
      * Update Insurance Invoice Status
-     * @param type invoice_id, amount
+     * @param $invoice
+     * @param $amount
      * @return bool
      */
     public function updateInvoiceStatus($invoice, $amount)
@@ -365,24 +372,20 @@ class EvaluationLibrary implements EvaluationRepository
             $inv->status = 2;
         } elseif ($settled > $bill) {//fully (3)
             $inv->status = 3;
-        }/* elseif ($settled > $bill) {// overpaid (4)
-          $inv->status = 4;
-          } */
+        } elseif ($settled > $bill) {// overpaid (4)
+            $inv->status = 4;
+        }
         $inv->save();
     }
 
+    /**
+     * @param $invoice
+     * @return mixed
+     */
     public function getPriorInvoicePaidAmount($invoice)
     {
-        $payment = InsuranceInvoicePayment::where('insurance_invoice', '=', $invoice)->get(); //find(['insurance_invoice' => $invoice]);
-        if (!$payment->isEmpty()) {
-            $paid = 0;
-            foreach ($payment as $p) {
-                $paid += $p->amount;
-            }
-            return $paid;
-        } else {
-            return 0;
-        }
+        return InsuranceInvoicePayment::where('insurance_invoice', '=', $invoice)
+            ->sum('amount');
     }
 
     private function payment_methods(EvaluationPayments $payment)
@@ -529,14 +532,19 @@ class EvaluationLibrary implements EvaluationRepository
 
     /**
      * Build an index of items dynamically
+     * @param null $needle
      * @return array
      */
-    private function __get_selected_stack()
+    private function _get_selected_stack($needle = null)
     {
         $stack = [];
-        foreach ($this->input as $key => $one) {
-            if (starts_with($key, 'item')) {
-                $stack[] = substr($key, 4);
+        $input = \request()->all();
+        if (empty($needle)) {
+            $needle = 'item';
+        }
+        foreach ($input as $key => $one) {
+            if (starts_with($key, $needle)) {
+                $stack[] = substr($key, strlen($needle));
             }
         }
         return $stack;
@@ -559,13 +567,16 @@ class EvaluationLibrary implements EvaluationRepository
 
     public function bill_visit(Request $request)
     {
-        $visit = Visit::find($request->id);
-        $invoice = $this->createInsuranceInvoice($visit->id, $request->total);
+        $split = null;
+        $visit = Visit::find($request->visit);
+        if (isset($request->split)) {
+            $split = $request->split;
+        }
+        $invoice = $this->createInsuranceInvoice($visit->id, $request->total, $split);
         $this->recordBilledItems($invoice);
-        $this->updateVisitStatus($request->id, 'billed');
+        $this->updateVisitStatus($visit->id, 'billed');
         $visit->status = 'billed';
-        $visit->save();
-        return 'billed';
+        return $visit->save();
     }
 
     public function bill_visit_many(Request $request)
@@ -592,10 +603,9 @@ class EvaluationLibrary implements EvaluationRepository
         return $inv->update();
     }
 
-    public static function dispatchBills(Request $request)
+    public function dispatchBills(Request $request)
     {
-        FinanceLibrary::dispatchBills($request);
-        return TRUE;
+        return FinanceLibrary::dispatchBills($request);
     }
 
     public function updateVisitStatus($visit_id, $new_status)
@@ -610,14 +620,254 @@ class EvaluationLibrary implements EvaluationRepository
      * @param $amount
      * @return InsuranceInvoice
      */
-    public function createInsuranceInvoice($visit, $amount)
+    public function createInsuranceInvoice($visit, $amount, $split = null)
     {
         $inv = new InsuranceInvoice;
-        $inv->invoice_no = 'INV-' . $visit . '-' . date('dmyHis');
+        $inv->invoice_no = 'INV' . time();
         $inv->visit = $visit;
         $inv->payment = $amount;
+        $_v = Visit::find($visit);
+        $scheme = @$_v->patient_scheme->schemes;
+        $inv->company_id = @$scheme->company;
+        $inv->scheme_id = @$scheme->id;
+        $copay = $scheme->type === 3;
+        $inv->split_id = $split;
         $inv->save();
+        if ($copay) {
+            $this->matchCopay($inv, $_v);
+        }
         return $inv;
     }
 
+    /**
+     * @param InsuranceInvoice $inv
+     * @param Visit $visit
+     * @return bool
+     */
+    private function matchCopay(InsuranceInvoice $inv, Visit $visit)
+    {
+        $_c = Copay::whereVisitId($visit->id)->first();
+        if (!empty($_c->invoice_id)) {
+            return true;
+        }
+        $_c->invoice_id = $inv->id;
+        return $_c->save();
+    }
+
+    public function swapBill(Request $request)
+    {
+        \DB::beginTransaction();
+        $drugs = $this->_get_selected_stack('drugs_d');
+        foreach ($drugs as $drug) {
+            $p = Prescriptions::find($drug);
+            $cost = $p->drugs->cash_price;
+            $attributes = [
+                'price' => $cost,
+                'cost' => $cost * (int)$p->payment->quantity,
+            ];
+            $p->payment()->update($attributes);
+            $payload = [
+                'visit_id' => $request->visit,
+                'prescription_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+                'amount' => $attributes['cost'],
+            ];
+            ChangeInsurance::create($payload);
+        }
+
+        $procedures = $this->_get_selected_stack('procedures_p');
+        foreach ($procedures as $drug) {
+            $p = Investigations::find($drug);
+            $p->price = $p->procedures->cash_charge;
+            $p->amount = $p->price * $p->quantity;
+            $p->save();
+            $payload = [
+                'visit_id' => $request->visit,
+                'procedure_id' => $drug,
+                'mode' => 'cash',
+                'user_id' => $request->user()->id,
+                'amount' => $p->amount,
+            ];
+            ChangeInsurance::create($payload);
+        }
+        reload_payments();
+        \DB::commit();
+        return true;
+    }
+
+
+    public function saveSplitBill(Request $request)
+    {
+
+        $drugs = $this->_get_selected_stack('drugs_d');
+        $parent = new SplitInsurance();
+        $parent->visit_id = $request->visit;
+        $parent->scheme = $request->scheme;
+        $parent->user_id = $request->user()->id;
+        $parent->save();
+
+        foreach ($drugs as $drug) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'parent_id' => $parent->id,
+                'prescription_id' => $drug,
+                'mode' => 'insurance',
+                'user_id' => $request->user()->id,
+            ];
+            SplitInsuranceItems::create($payload);
+        }
+
+        $procedures = $this->_get_selected_stack('investigation');
+        foreach ($procedures as $item) {
+            $payload = [
+                'visit_id' => $request->visit,
+                'parent_id' => $parent->id,
+                'investigation_id' => $item,
+                'mode' => 'insurance',
+                'user_id' => $request->user()->id,
+            ];
+            SplitInsuranceItems::create($payload);
+        }
+        return true;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getPending()
+    {
+        $request = \request();
+        $pending = PaymentManifest::whereType('insurance')->orderBy('date', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('date', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('date', '<=', $date);
+        }
+        return $pending->paginate(100);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getBilledInvoices()
+    {
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->paginate(100);
+    }
+
+    public function getDispatchedInvoices()
+    {
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC')->whereStatus(1);
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->paginate(100);
+    }
+
+    public function getInvoiceByStatus($status = null, $who = null)
+    {
+        $request = \request();
+        $pending = InsuranceInvoice::orderBy('created_at', 'DESC');
+        if (!empty($status)) {
+            $pending = $pending->whereStatus($status);
+        }
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($who) {
+            $pending = $pending->where('company_id', $who);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->paginate(100);
+    }
+
+    public function getPaidInvoices()
+    {
+        $request = \request();
+        $pending = PaymentsCheque::where('insurance_payment', '>', 0)
+            ->orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->whereHas('insurance_payments', function (Builder $query) use ($request) {
+                $query->where('company', $request->company);
+            });
+        }
+        if ($request->has('scheme')) {
+//            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->paginate(100);
+    }
+
+    public function companyStatements()
+    {
+        $request = \request();
+        $pending = InsuranceInvoicePayment::orderBy('created_at', 'DESC');
+        if ($request->has('company')) {
+            $pending = $pending->whereHas('invoice.scheme', function (Builder $query) use ($request) {
+                $query->where('company', $request->company);
+            });
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->whereHas('invoice.scheme', function (Builder $query) use ($request) {
+                $query->where('id', $request->scheme);
+            });
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('created_at', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('created_at', '<=', $date);
+        }
+        return $pending->paginate(100);
+    }
 }

@@ -3,15 +3,18 @@
 namespace Ignite\Finance\Providers;
 
 use Ignite\Finance\Console\FixOldPrescriptions;
+use Ignite\Finance\Console\PreparePayments;
 use Ignite\Finance\Library\EvaluationLibrary;
 use Ignite\Finance\Library\FinanceLibrary;
 use Ignite\Finance\Library\InventoryLibrary;
+use Ignite\Finance\Library\JamboPay;
 use Ignite\Finance\Library\Mpesa\Cashier;
 use Ignite\Finance\Library\Mpesa\MpesaInitializer;
 use Ignite\Finance\Library\Mpesa\Repository\MpesaRepository;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Finance\Repositories\FinanceRepository;
 use Ignite\Finance\Repositories\InventoryRepository;
+use Ignite\Finance\Repositories\Jambo;
 use Illuminate\Support\ServiceProvider;
 
 class FinanceServiceProvider extends ServiceProvider
@@ -44,7 +47,10 @@ class FinanceServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerBindings();
-        $this->commands([FixOldPrescriptions::class]);
+        $this->commands([
+            FixOldPrescriptions::class,
+            PreparePayments::class
+        ]);
     }
 
     /**
@@ -114,6 +120,7 @@ class FinanceServiceProvider extends ServiceProvider
         $this->app->bind(FinanceRepository::class, FinanceLibrary::class);
         $this->app->bind(InventoryRepository::class, InventoryLibrary::class);
         $this->app->singleton(MpesaRepository::class, MpesaInitializer::class);
+        $this->app->bind(Jambo::class, JamboPay::class);
         $this->app->bind('pesa', function () {
             return $this->app->make(Cashier::class);
         });

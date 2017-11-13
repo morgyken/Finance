@@ -37,14 +37,6 @@ function amount_after_discount($discount, $amount)
                         </a>
                     </li>
                     <li>
-                        <a href="#sales" data-toggle="tab">
-                            Point Of Sale
-                            <span class="badge alert-info">
-                            {{$sales->count()}}
-                        </span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="#invoice" data-toggle="tab">
                             Payment for Invoice
                             <span class="badge alert-info">
@@ -60,11 +52,12 @@ function amount_after_discount($discount, $amount)
                         <table class="table table-striped table-condensed table-responsive" id="patients">
                             <tbody>
                             @foreach($visits as $visit)
-                                <?php $patient=$visit->patients; ?>
+                                <?php $patient = $visit->patients; ?>
                                 <tr id="patient{{$patient->patient_id}}">
                                     <td>{{$loop->iteration}}</td>
                                     <td>{{$patient->full_name}}</td>
                                     <td>{{$patient->id_no}}</td>
+                                    <td>{{$visit->created_at->format('d/m/y')}} </td>
                                     <td>{{$patient->mobile}}</td>
                                     <td>
                                         @if(patient_has_pharmacy_bill($visit))
@@ -90,49 +83,13 @@ function amount_after_discount($discount, $amount)
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>ID Number</th>
+                                <th>Date</th>
                                 <th>Mobile</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                         </table>
                     </div>
-
-                    <!--Pharmacy Sales Tab -->
-                    <div class="tab-pane" id="sales">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Sale ID</th>
-                                <th>Receipt Number</th>
-                                <th>Client</th>
-                                <th>Sale Date/Time</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($sales as $sale)
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$sale->id}}</td>
-                                    <td>{{$sale->receipt}}</td>
-                                    <td>{{$sale->patients?$sale->patients->full_name:'not set (walk in)'}}</td>
-                                    <td>{{$sale->created_at}}</td>
-                                    <td>
-                                        <a class="btn btn-primary btn-xs"
-                                           href="{{route('finance.evaluation.sale.pay',$sale->id)}}">
-                                            <i class="fa fa-hand-lizard-o"></i> Receive Payments</a>
-                                        <a class="btn btn-success btn-xs"
-                                           href="{{route('finance.evaluation.sale',$sale->id)}}">
-                                            <i class="fa fa-eye-slash"></i> View</a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- -->
-
 
                     <!--For Invoice -->
                     <div class="tab-pane" id="invoice">

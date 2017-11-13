@@ -42,7 +42,7 @@ class PaymentsCheque extends Model {
     public $table = 'finance_payments_cheque';
 
     public function insurance_payments() {
-        return $this->belongsTo(FinanceEvaluationInsurancePayments::class, 'insurance_payment', 'id');
+        return $this->belongsTo(FinanceEvaluationInsurancePayments::class, 'insurance_payment');
     }
 
     public function payments() {
