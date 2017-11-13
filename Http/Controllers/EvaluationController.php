@@ -112,10 +112,6 @@ class EvaluationController extends AdminBaseController
 
     public function pay_save(PaymentsRequest $request)
     {
-        dd($request);
-
-
-        
         $id = $this->evaluationRepository->record_payment();
 
         if ($request->invoice_mode) {
