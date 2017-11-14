@@ -28,7 +28,7 @@ class JamboPay implements Jambo
      */
     private $app_key = 'BBD14E65-5B05-E611-9411-7427EA2F7F59';
     /**
-     * @var string
+     * @var object
      */
     private $token;
 
@@ -39,7 +39,6 @@ class JamboPay implements Jambo
             'timeout' => 60,
             'allow_redirects' => true,
             'expect' => false,
-            'decode_content' => false,
 //            'http_errors' => false,
         ]);
         $this->token = $this->getToken();
@@ -50,7 +49,7 @@ class JamboPay implements Jambo
      * @return string
      * @throws ApiException
      */
-    private function getToken()
+    private function getToken(): string
     {
         $response = $this->client->post($this->base_url . 'token', [
             'form_params' => [
@@ -152,20 +151,37 @@ class JamboPay implements Jambo
     }
 
     /**
+     * Format user phone number
      * @param $number
-     * @return mixed
+     * @param bool $strip_plus
+     * @return string
+     * @throws \Ignite\Finance\Library\Payments\Core\Exceptions\ApiException
      */
-    private function formatPhoneNumber($number)
+    private function formatPhoneNumber($number, $strip_plus = true): string
     {
-        if (strlen($number) === 10) {
-            $needle = '07';
+        $number = preg_replace('/\s+/', '', $number);
+        /**
+         * Replace with nice phone number
+         * @param $needle
+         * @param $replacement
+         */
+        $replace = function ($needle, $replacement) use (&$number) {
             if (starts_with($number, $needle)) {
                 $pos = strpos($number, $needle);
-                $number = substr_replace($number, '2547', $pos, strlen($needle));
+                $number = substr_replace($number, $replacement, $pos, strlen($needle));
             }
+        };
+        $replace('2547', '+2547');
+        $replace('07', '+2547');
+        $valid_phone = strlen($number === 13);
+        if ($strip_plus) {
+            $replace('+254', '254');
+            $valid_phone = strlen($number === 13);
+        }
+        if (!$valid_phone) {
+            throw  new ApiException('Invalid phone number ==> ' . $number);
         }
         return $number;
-
     }
 
     /**
@@ -175,5 +191,42 @@ class JamboPay implements Jambo
     private function guessPin(Patients $patients)
     {
         return substr($patients->mobile, -4);
+    }
+
+    public function postBillForPatient(Patients $patient)
+    {
+        $data = [
+
+        ];
+        return $this->universalBillGenerator($data);
+    }
+
+    private function universalBillGenerator($data)
+    {
+        $streams = $this->getMerchantStreams();
+        dd($streams);
+    }
+
+    private function getMerchantStreams()
+    {
+        $data = [
+            'Stream' => 'merchantbill',
+            'MerchantID' => m_setting('finance.merchant_id', 'Trans')
+        ];
+        $request = \Curl::to($this->base_url . 'api/payments/GetMerchantStreams')
+            ->withHeaders([
+                'app_key: ' . $this->app_key,
+                'authorization: ' . $this->token->token_type . ' ' . $this->token->access_token,
+            ])
+            ->withData($data)
+            ->withContentType('application/x-www-form-urlencoded')
+            ->returnResponseObject()
+            ->get();
+        try {
+            $object = json_decode($request->content);
+            return collect($object)->first();
+        } catch (\Exception $e) {
+            throw  new ApiException($e->getMessage());
+        }
     }
 }

@@ -22,4 +22,10 @@ interface Jambo
      * @return mixed
      */
     public function createWalletForPatient(Patients $patient);
+
+    /**
+     * @param Patients $patient
+     * @return mixed
+     */
+    public function postBillForPatient(Patients $patient);
 }
