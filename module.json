@@ -1,28 +1,31 @@
 {
-    "name": "Finance",
-    "alias": "finance",
-    "description": "Finance module for all payments and transactions including insurance bills",
-    "keywords": [],
-    "active": 1,
-    "order": 5,
-    "providers": [
-        "Ignite\\Finance\\Providers\\FinanceServiceProvider",
-        "Ignite\\Finance\\Providers\\RouteServiceProvider"
-    ],
-    "aliases": [],
-    "files": [
-        "helpers.php"
-    ],
-    "core": 0,
-    "version": "v1.0",
-    "author": [
-        {
-            "name": "Samuel Dervis",
-            "email": "sodhiambo@collabmed.com"
-        },
-        {
-            "name": "Bravo Kiptoo",
-            "email": "bkipto@collabmed.com"
-        }
-    ]
+  "name": "Finance",
+  "alias": "finance",
+  "description": "Finance module for all payments and transactions including insurance bills",
+  "keywords": [],
+  "active": 1,
+  "order": 5,
+  "providers": [
+    "Ignite\\Finance\\Providers\\FinanceServiceProvider",
+    "Ignite\\Finance\\Providers\\RouteServiceProvider",
+    "Ixudra\\Curl\\CurlServiceProvider"
+  ],
+  "aliases": {
+    "Curl": "Ixudra\\Curl\\Facades\\Curl"
+  },
+  "files": [
+    "helpers.php"
+  ],
+  "core": 0,
+  "version": "v1.0",
+  "author": [
+    {
+      "name": "Samuel Dervis",
+      "email": "sodhiambo@collabmed.com"
+    },
+    {
+      "name": "Bravo Kiptoo",
+      "email": "bkipto@collabmed.com"
+    }
+  ]
 }
