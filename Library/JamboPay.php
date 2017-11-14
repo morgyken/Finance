@@ -46,10 +46,10 @@ class JamboPay implements Jambo
 
     /**
      * Generate access token
-     * @return string
+     * @return object
      * @throws ApiException
      */
-    private function getToken(): string
+    private function getToken()
     {
         $response = $this->client->post($this->base_url . 'token', [
             'form_params' => [
@@ -124,6 +124,37 @@ class JamboPay implements Jambo
         return json_decode($response);
     }
 
+    /**
+     * @param string $endpoint
+     * @param array $data
+     * @param callable $callback
+     * @return mixed
+     */
+    private function _curl($endpoint, $data, $callback)
+    {
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $this->base_url . $endpoint,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => http_build_query($data, '', '&'),
+            CURLOPT_HTTPHEADER => [
+                'app_key: ' . $this->app_key,
+                'authorization: ' . $this->token->token_type . ' ' . $this->token->access_token,
+                'cache-control: no-cache',
+                'content-type: application/x-www-form-urlencoded',
+            ],
+        ]);
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        curl_close($curl);
+        return $callback($response, $err);
+    }
+
     public function checkPatientHasWallet(Patients $patient)
     {
         return $this->checkWalletExist($patient->mobile);
@@ -173,10 +204,10 @@ class JamboPay implements Jambo
         };
         $replace('2547', '+2547');
         $replace('07', '+2547');
-        $valid_phone = strlen($number === 13);
+        $valid_phone = strlen($number) === 13;
         if ($strip_plus) {
             $replace('+254', '254');
-            $valid_phone = strlen($number === 13);
+            $valid_phone = strlen($number) === 12;
         }
         if (!$valid_phone) {
             throw  new ApiException('Invalid phone number ==> ' . $number);
@@ -193,25 +224,52 @@ class JamboPay implements Jambo
         return substr($patients->mobile, -4);
     }
 
-    public function postBillForPatient(Patients $patient)
+    /**
+     * @param Patients $patient
+     * @param int $amount
+     * @param string $narrative
+     * @return mixed
+     * @throws \Ignite\Finance\Library\Payments\Core\Exceptions\ApiException
+     */
+    public function postBillForPatient(Patients $patient, $amount, $narrative)
     {
         $data = [
-
+            'narrative' => $narrative,
+            'mobile' => $patient->mobile,
+            'amount' => $amount,
         ];
-        return $this->universalBillGenerator($data);
+        return $this->universalBillGenerator((object)$data);
     }
 
+    /**
+     * @param object $data
+     * @return mixed
+     * @throws \Ignite\Finance\Library\Payments\Core\Exceptions\ApiException
+     */
     private function universalBillGenerator($data)
     {
         $streams = $this->getMerchantStreams();
-        dd($streams);
+        $bill_payload = [
+            'Stream' => 'merchantBill',
+            'RevenueStreamID' => $streams->ID,
+            'MerchantID' => m_setting('finance.merchant_id', 'Trans'),
+            'Narration' => $data->narrative,
+            'PhoneNumber' => $this->formatPhoneNumber($data->mobile),
+            'Amount' => $data->amount,
+        ];
+        return $this->_curl('api/payments/Post', $bill_payload, function ($response, $error) {
+            if ($error) {
+                throw new ApiException($error);
+            }
+            return $response;
+        });
     }
 
     private function getMerchantStreams()
     {
         $data = [
             'Stream' => 'merchantbill',
-            'MerchantID' => m_setting('finance.merchant_id', 'Trans')
+            'MerchantID' => m_setting('finance.merchant_id', 'Trans'),
         ];
         $request = \Curl::to($this->base_url . 'api/payments/GetMerchantStreams')
             ->withHeaders([
