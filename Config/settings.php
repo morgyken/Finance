@@ -15,5 +15,14 @@ return [
     'background_manifest' => [
         'view' => 'checkbox',
         'description' => 'Use a background job to process payment list'
-    ]
+    ],
+    'enable_jambo_pay' => [
+        'view' => 'checkbox',
+        'description' => 'Enable payment via JamboPay https://www.jambopay.com/'
+    ],
+    'merchant_id' => [
+        'view' => 'text',
+        'description' => 'Jambo Pay Merchant ID https://www.jambopay.com/',
+        'hint' => 'Only for JamboPay Payment Integration'
+    ],
 ];
