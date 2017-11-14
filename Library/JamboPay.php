@@ -287,4 +287,34 @@ class JamboPay implements Jambo
             throw  new ApiException($e->getMessage());
         }
     }
+
+    /**
+     * @param Patients $patient
+     * @param string $bill_number
+     * @return mixed
+     * @throws \Ignite\Finance\Library\Payments\Core\Exceptions\ApiException
+     */
+    public function getBillStatus(Patients $patient, $bill_number)
+    {
+        $data = [
+            'Stream' => 'wallet',
+            'PhoneNumber' => $this->formatPhoneNumber($patient->mobile),
+            'BillNumber' => $bill_number,
+            'Year' => '2017',
+            'Month' => 4,
+        ];
+        $p = \Curl::to($this->base_url . 'api/payments/GetBill')
+            ->withHeaders([
+                'app_key: ' . $this->app_key,
+                'authorization: ' . $this->token->token_type . ' ' . $this->token->access_token,
+            ])
+            ->withData($data)
+            ->withContentType('application/x-www-form-urlencoded')->returnResponseObject()->get();
+        try {
+            $r = json_decode($p->content);
+            return (bool)$r->Exists;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

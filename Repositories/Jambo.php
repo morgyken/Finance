@@ -30,4 +30,11 @@ interface Jambo
      * @return mixed
      */
     public function postBillForPatient(Patients $patient, $amount, $narrative);
+
+    /**
+     * @param Patients $patients
+     * @param string $bill_number
+     * @return mixed
+     */
+    public function getBillStatus(Patients $patients, $bill_number);
 }
