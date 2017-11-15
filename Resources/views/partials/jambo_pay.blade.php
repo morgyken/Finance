@@ -57,7 +57,7 @@
                 $.ajax({
                     url: '<?=route('api.finance.wallet.post', $patient->id)?>',
                     dataType: 'JSON',
-                    type: 'GET',
+                    type: 'POST',
                     success: function (response) {
                         if (response.success) {
                             if (response.exist) {
