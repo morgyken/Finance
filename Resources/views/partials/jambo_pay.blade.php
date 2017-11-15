@@ -67,13 +67,18 @@
                 });
             });
             $bill.click(function () {
+                var JPAmount = $('input[name=JPAmount]').val();
+                if (!JPAmount) {
+                    alertify.error("Please enter amount to bill");
+                    return;
+                }
                 $bill.hide();
                 $.ajax({
                     url: '<?=route('api.finance.wallet.post', $patient->id)?>',
                     dataType: 'JSON',
                     type: 'POST',
                     data: {
-                        amount: $('input[name=JPAmount]').val(),
+                        amount: parseInt(JPAmount)
                     },
                     success: function (response) {
                         if (response.success) {
@@ -95,7 +100,8 @@
                                 }
                             );
                         }
-                    },
+                    }
+                    ,
                     error: function (data) {
                         swal(
                             {
@@ -105,7 +111,8 @@
                             }
                         );
                     }
-                });
+                })
+                ;
             });
             $billStatus.click(function () {
                 swal({
