@@ -70,6 +70,20 @@ class APIController extends Controller
         }
     }
 
+    public function getBillStatus(Jambo $jamboPay, Request $request, $patient_id)
+    {
+        $patient = Patients::find($patient_id);
+        try {
+            return \response()->json([
+                //todo real purpose
+                'status' => 'Pending',// $jamboPay->getBillStatus($patient, $request->bill),
+                'success' => true,
+            ]);
+        } catch (\Exception $e) {
+            return \response()->json(['error' => $e->getMessage(), 'success' => false]);
+        }
+    }
+
     public function checkBogusWidthrawal()
     {
         $amount = $this->request->amount;
