@@ -90,6 +90,7 @@ class JamboPay implements Jambo
             'Stream' => 'wallet',
             'PhoneNumber' => $this->formatPhoneNumber($number),
         ];
+        $this->validatePayload($data);
         $p = \Curl::to($this->base_url . 'api/payments/GetWalletExists')
             ->withHeaders([
                 'app_key: ' . $this->app_key,
@@ -178,10 +179,11 @@ class JamboPay implements Jambo
      * @param Patients $patient
      * @param string|null $pin
      * @return mixed
+     * @throws \Ignite\Finance\Library\Payments\Core\Exceptions\ApiException
      */
     public function createWalletForPatient(Patients $patient, $pin = null)
     {
-        $payload =
+        $data =
             [
                 'Stream' => 'wallet',
                 'FirstName' => $patient->first_name,
@@ -192,7 +194,8 @@ class JamboPay implements Jambo
                 'PhoneNumber' => $this->formatPhoneNumber($patient->mobile),
                 'Pin' => $pin ?? $this->guessPin($patient),
             ];
-        return $this->createWallet($payload);
+        $this->validatePayload(array_except($data, ['MiddleName']));
+        return $this->createWallet($data);
     }
 
     /**
@@ -255,6 +258,7 @@ class JamboPay implements Jambo
             'mobile' => $patient->mobile,
             'amount' => $amount,
         ];
+        $this->validatePayload($data);
         return $this->universalBillGenerator((object)$data);
     }
 
@@ -266,7 +270,7 @@ class JamboPay implements Jambo
     private function universalBillGenerator($data)
     {
         $streams = $this->getMerchantStreams();
-        $bill_payload = [
+        $data = [
             'Stream' => 'merchantbill',
             'RevenueStreamID' => $streams->ID,
             'MerchantID' => m_setting('finance.merchant_id', 'Trans'),
@@ -274,7 +278,8 @@ class JamboPay implements Jambo
             'PhoneNumber' => $this->formatPhoneNumber($data->mobile),
             'Amount' => $data->amount,
         ];
-        return $this->_curl('api/payments/Post', $bill_payload, function ($response, $error) {
+        $this->validatePayload($data);
+        return $this->_curl('api/payments/Post', $data, function ($response, $error) {
             if ($error) {
                 throw new ApiException($error);
             }
@@ -288,6 +293,7 @@ class JamboPay implements Jambo
             'Stream' => 'merchantbill',
             'MerchantID' => m_setting('finance.merchant_id', 'Trans'),
         ];
+        $this->validatePayload($data);
         $request = \Curl::to($this->base_url . 'api/payments/GetMerchantStreams')
             ->withHeaders([
                 'app_key: ' . $this->app_key,
@@ -320,6 +326,7 @@ class JamboPay implements Jambo
             'Year' => '2017',
             'Month' => 4,
         ];
+        $this->validatePayload($data);
         $p = \Curl::to($this->base_url . 'api/payments/GetBill')
             ->withHeaders([
                 'app_key: ' . $this->app_key,
@@ -332,6 +339,15 @@ class JamboPay implements Jambo
             return (bool)$r->Exists;
         } catch (\Exception $e) {
             return false;
+        }
+    }
+
+    private function validatePayload($arrays)
+    {
+        foreach ($arrays as $key => $value) {
+            if (empty($value)) {
+                throw new ApiException('Missing value for required field ' . $key);
+            }
         }
     }
 }
