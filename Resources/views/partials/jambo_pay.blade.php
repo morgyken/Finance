@@ -9,17 +9,31 @@
     <div class="pull-right">
         <button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>
         <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
+        <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
     </div>
+    <style>
+        .swal-overlay {
+            background-color: rgba(30, 30, 30, 0.9);
+            /*background-color: red;*/
+        }
+    </style>
     <script>
         $(function () {
             var $create = $('button#JPWcreate');
             var $bill = $('button#JPWbill');
+            var $billStatus = $('button#JPWstatus');
             var PIN = null;
             $create.click(function () {
                 $create.prop('disabled', true);
                 swal({
                     text: 'Enter the desired Jambopay wallet PIN',
-                    content: "input",
+                    content: {
+                        element: "input",
+                        attributes: {
+                            placeholder: "Enter the walllet PIN",
+                            type: "text"
+                        }
+                    },
                     button: {
                         text: "Create Wallet",
                         closeModal: false
@@ -52,12 +66,57 @@
                     }
                 });
             });
-
             $bill.click(function () {
+                $bill.hide();
                 $.ajax({
                     url: '<?=route('api.finance.wallet.post', $patient->id)?>',
                     dataType: 'JSON',
                     type: 'POST',
+                    data: {
+                        amount: $('input[name=JPAmount]').val(),
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $billStatus.show();
+                            $bill.hide();
+                            swal({
+                                title: "Bill Posted to Jambopay!",
+                                text: "Please request the customer to complete transaction via USSD or app",
+                                button: "Nice",
+                                icon: "info",
+                                timer: 10000
+                            });
+                        } else {
+                            swal(
+                                {
+                                    title: 'Oh No!',
+                                    text: "Cannot reach Jambopay server, please check connection",
+                                    icon: 'error'
+                                }
+                            );
+                        }
+                    },
+                    error: function (data) {
+                        swal(
+                            {
+                                title: 'Oh No!',
+                                text: data,
+                                icon: 'error'
+                            }
+                        );
+                    }
+                });
+            });
+            $billStatus.click(function () {
+                swal({
+                    icon: 'warning',
+                    text: 'Bill is still pending',
+                    title: "Pending Still"
+                });
+                /*  $.ajax({
+                      url: '<?=route('api.finance.wallet.check', $patient->id)?>',
+                    dataType: 'JSON',
+                    type: 'GET',
                     success: function (response) {
                         if (response.success) {
                             if (response.exist) {
@@ -78,10 +137,11 @@
                             }
                         );
                     }
-                });
+                });*/
             });
             $create.hide();
             $bill.hide();
+            $billStatus.hide();
             $.ajax({
                 url: '<?=route('api.finance.wallet.check', $patient->id)?>',
                 dataType: 'JSON',

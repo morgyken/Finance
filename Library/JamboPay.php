@@ -323,8 +323,8 @@ class JamboPay implements Jambo
             'Stream' => 'wallet',
             'PhoneNumber' => $this->formatPhoneNumber($patient->mobile),
             'BillNumber' => $bill_number,
-            'Year' => '2017',
-            'Month' => 4,
+            'Year' => Carbon::now()->year,
+            'Month' => Carbon::now()->month,
         ];
         $this->validatePayload($data);
         $p = \Curl::to($this->base_url . 'api/payments/GetBill')

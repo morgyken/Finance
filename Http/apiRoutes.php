@@ -18,6 +18,7 @@ $router->get('accounts', ['uses' => 'APIController@bankAccounts', 'as' => 'accou
 $router->get('check/bogus/widthrawal', ['uses' => 'APIController@checkBogusWidthrawal', 'as' => 'widthraw.bogus']);
 $router->get('check_wallet_exist/{patient_id}/jambopay', ['as' => 'wallet.check', 'uses' => 'APIController@checkWalletExist']);
 $router->get('create_wallet/{patient_id}/jambopay', ['as' => 'wallet.create', 'uses' => 'APIController@createWallet']);
+$router->get('create_status/{patient_id}/jambopay', ['as' => 'wallet.status', 'uses' => 'APIController@getBillStatus']);
 $router->post('wallet/post/{patient_id}/jambopay', ['as' => 'wallet.post', 'uses' => 'APIController@postBill']);
 //financials
 $router->group(['prefix' => 'evaluation.billing', 'as' => 'evaluation.'], function (Illuminate\Routing\Router $router) {
