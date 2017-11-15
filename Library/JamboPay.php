@@ -52,8 +52,8 @@ class JamboPay implements Jambo
      */
     private function is_connected(): bool
     {
-        $connected = @fsockopen($this->base_url, 80);
-        fclose($connected);
+        $connected = @fsockopen('www.dervisgroup.com', 80);
+        @fclose($connected);
         return (bool)$connected;
     }
 
@@ -175,10 +175,10 @@ class JamboPay implements Jambo
 
     /**
      * @param Patients $patient
+     * @param string|null $pin
      * @return mixed
-     * @throws \Ignite\Finance\Library\Payments\Core\Exceptions\ApiException
      */
-    public function createWalletForPatient(Patients $patient)
+    public function createWalletForPatient(Patients $patient, $pin = null)
     {
         $payload =
             [
@@ -189,7 +189,7 @@ class JamboPay implements Jambo
                 'IDNumber' => $patient->id_no,
                 'Email' => $patient->email,
                 'PhoneNumber' => $this->formatPhoneNumber($patient->mobile),
-                'Pin' => $this->guessPin($patient),
+                'Pin' => $pin ?? $this->guessPin($patient),
             ];
         return $this->createWallet($payload);
     }

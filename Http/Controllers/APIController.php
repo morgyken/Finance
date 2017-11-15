@@ -2,14 +2,15 @@
 
 namespace Ignite\Finance\Http\Controllers;
 
-use Ignite\Finance\Entities\PettyCash;
 use Ignite\Finance\Entities\BankAccount;
+use Ignite\Finance\Entities\PettyCash;
+use Ignite\Finance\Entities\RemovedBills;
+use Ignite\Finance\Library\Payments\Core\Exceptions\ApiException;
 use Ignite\Finance\Repositories\Jambo;
 use Ignite\Reception\Entities\Patients;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
-use Ignite\Finance\Entities\RemovedBills;
-use Illuminate\Http\Request;
 
 class APIController extends Controller
 {
@@ -36,11 +37,22 @@ class APIController extends Controller
     {
         $patient = Patients::find($patient_id);
         try {
-            $has = $jamboPay->checkPatientHasWallet($patient);
-        } catch (\Exception $exception) {
+            return \response()->json(['exist' => $jamboPay->checkPatientHasWallet($patient), 'success' => true,]);
+        } catch (ApiException $e) {
+            return \response()->json(['error' => $e->getMessage(), 'success' => false]);
         }
     }
 
+    public function createWallet(Jambo $jamboPay, $patient_id)
+    {
+        $patient = Patients::find($patient_id);
+        $pin = \request('pin') ?? null;
+        try {
+            return \response()->json(['wallet' => $jamboPay->createWalletForPatient($patient, $pin), 'success' => true,]);
+        } catch (\Exception $e) {
+            return \response()->json(['error' => $e->getMessage(), 'success' => false]);
+        }
+    }
 
 
     public function checkBogusWidthrawal()

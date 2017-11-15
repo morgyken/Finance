@@ -19,9 +19,10 @@ interface Jambo
 
     /**
      * @param Patients $patient
+     * @param string|null $pin
      * @return mixed
      */
-    public function createWalletForPatient(Patients $patient);
+    public function createWalletForPatient(Patients $patient, $pin = null);
 
     /**
      * @param Patients $patient
