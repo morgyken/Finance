@@ -41,7 +41,20 @@ class JamboPay implements Jambo
             'expect' => false,
 //            'http_errors' => false,
         ]);
+        if (!$this->is_connected()) {
+            throw new ApiException('No internet connection');
+        }
         $this->token = $this->getToken();
+    }
+
+    /**
+     * @return bool
+     */
+    private function is_connected(): bool
+    {
+        $connected = @fsockopen($this->base_url, 80);
+        fclose($connected);
+        return (bool)$connected;
     }
 
     /**

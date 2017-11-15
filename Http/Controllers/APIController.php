@@ -4,29 +4,47 @@ namespace Ignite\Finance\Http\Controllers;
 
 use Ignite\Finance\Entities\PettyCash;
 use Ignite\Finance\Entities\BankAccount;
+use Ignite\Finance\Repositories\Jambo;
+use Ignite\Reception\Entities\Patients;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Response;
 use Ignite\Finance\Entities\RemovedBills;
 use Illuminate\Http\Request;
 
-class APIController extends Controller {
+class APIController extends Controller
+{
 
     protected $request;
 
-    public function __construct(Request $request) {
+    public function __construct(Request $request)
+    {
         $this->request = $request;
     }
 
-    public function bankAccounts(Request $request) {
+    public function bankAccounts(Request $request)
+    {
         $bank_accounts = BankAccount::where('bank', '=', $request->bank)->pluck('number', 'id');
         return Response::json($bank_accounts);
     }
 
-    public function cancelBill() {
+    public function cancelBill()
+    {
 
     }
 
-    public function checkBogusWidthrawal() {
+    public function checkWalletExist(Jambo $jamboPay, $patient_id)
+    {
+        $patient = Patients::find($patient_id);
+        try {
+            $has = $jamboPay->checkPatientHasWallet($patient);
+        } catch (\Exception $exception) {
+        }
+    }
+
+
+
+    public function checkBogusWidthrawal()
+    {
         $amount = $this->request->amount;
         $account_type = $this->request->account_type;
 
@@ -57,7 +75,8 @@ class APIController extends Controller {
         }
     }
 
-    public function RemoveBill(Request $request) {
+    public function RemoveBill(Request $request)
+    {
         try {
             $removal = new RemovedBills();
             $removal->user = \Auth::user()->id;
@@ -79,7 +98,8 @@ class APIController extends Controller {
         }
     }
 
-    public function UndoRemoveBill(Request $request) {
+    public function UndoRemoveBill(Request $request)
+    {
         try {
             if ($request->type == 'investigation') {
                 $r = RemovedBills::whereInvestigation($request->id)->get();

@@ -18,6 +18,7 @@ use Ignite\Finance\Entities\PaymentManifest;
 use Ignite\Finance\Entities\SplitInsurance;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
+use Ignite\Finance\Repositories\Jambo;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Reception\Entities\Patients;
 use Ignite\Settings\Entities\Insurance;
@@ -137,6 +138,7 @@ class EvaluationController extends AdminBaseController
     {
         $patient = $request->patient;
         $invoice = $request->invoice;
+
         if (!empty($patient)) {
             $this->data['invoice_mode'] = $invoice;
             $this->data['deposit'] = $request->deposit;

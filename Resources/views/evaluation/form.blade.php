@@ -146,6 +146,9 @@
             </div>
         </div>
     </div>
+    @if(m_setting('finance.enable_jambo_pay'))
+        @include('finance::partials.jambo_pay')
+    @endif
 </div>
 <div class="row">
     <div class="col-md-12">
