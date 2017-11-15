@@ -3,9 +3,6 @@
 //old web routes
 use Illuminate\Routing\Router;
 
-$router->get('jambo', function (\Ignite\Finance\Repositories\Jambo $jambo) {
-    dd($jambo->createWalletForPatient(\Ignite\Reception\Entities\Patients::find(3)));
-});
 ///Billing finance.billing.dispatch
 /** @var Router $router */
 $router->match(['get', 'post'], 'billing', ['uses' => 'FinanceController@billing', 'as' => 'billing']);

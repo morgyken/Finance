@@ -250,7 +250,7 @@ class JamboPay implements Jambo
     {
         $streams = $this->getMerchantStreams();
         $bill_payload = [
-            'Stream' => 'merchantBill',
+            'Stream' => 'merchantbill',
             'RevenueStreamID' => $streams->ID,
             'MerchantID' => m_setting('finance.merchant_id', 'Trans'),
             'Narration' => $data->narrative,
