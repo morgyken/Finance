@@ -22,15 +22,18 @@
                 <tbody class="response">
                 <?php $n = 0; ?>
                 @foreach($pending as $item)
-                    <?php $visit = $item->visit;?>
+                    <?php
+                    $visit = $item->visit;
+                    $scheme = $visit->patient_scheme->schemes;
+                    ?>
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td>{{$visit->id}}</td>
+                        <td>{{$visit->patients->number}}</td>
                         <td>{{$visit->patients->full_name}}</td>
                         <td>{{$visit->created_at->format('d/m/y')}} </td>
                         <td>{{$visit->clinics->name}}</td>
-                        <td>{{$visit->patient_scheme?$visit->patient_scheme->schemes->companies->name:''}}</td>
-                        <td>{{$visit->patient_scheme?$visit->patient_scheme->schemes->name:''}}</td>
+                        <td>{{@$scheme->companies->name}}</td>
+                        <td>{{@$scheme->name}}</td>
                         <td>{{$item->amount}}</td>
                         <td>
                             <button type="button" class="btn btn-default btn-xs" data-toggle="modal"
