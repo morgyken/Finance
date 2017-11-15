@@ -30,7 +30,7 @@ interface Jambo
      * @param string $narrative
      * @return mixed
      */
-    public function postBillForPatient(Patients $patient, $amount, $narrative);
+    public function postBillForPatient(Patients $patient, $amount, $narrative = null);
 
     /**
      * @param Patients $patients

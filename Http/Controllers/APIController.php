@@ -48,12 +48,27 @@ class APIController extends Controller
         $patient = Patients::find($patient_id);
         $pin = \request('pin') ?? null;
         try {
-            return \response()->json(['wallet' => $jamboPay->createWalletForPatient($patient, $pin), 'success' => true,]);
+            return \response()->json([
+                'wallet' => $jamboPay->createWalletForPatient($patient, $pin),
+                'success' => true,
+            ]);
         } catch (\Exception $e) {
             return \response()->json(['error' => $e->getMessage(), 'success' => false]);
         }
     }
 
+    public function postBill(Jambo $jamboPay, Request $request, $patient_id)
+    {
+        $patient = Patients::find($patient_id);
+        try {
+            return \response()->json([
+                'wallet' => $jamboPay->postBillForPatient($patient, $request->amount),
+                'success' => true,
+            ]);
+        } catch (\Exception $e) {
+            return \response()->json(['error' => $e->getMessage(), 'success' => false]);
+        }
+    }
 
     public function checkBogusWidthrawal()
     {

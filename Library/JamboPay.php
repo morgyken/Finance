@@ -2,6 +2,7 @@
 
 namespace Ignite\Finance\Library;
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Ignite\Finance\Library\Payments\Core\Exceptions\ApiException;
 use Ignite\Finance\Repositories\Jambo;
@@ -244,8 +245,11 @@ class JamboPay implements Jambo
      * @return mixed
      * @throws \Ignite\Finance\Library\Payments\Core\Exceptions\ApiException
      */
-    public function postBillForPatient(Patients $patient, $amount, $narrative)
+    public function postBillForPatient(Patients $patient, $amount, $narrative = null)
     {
+        if (empty($narrative)) {
+            $narrative = 'Patient Billing for ' . m_setting('core.site-name') . ' on ' . Carbon::now()->toDateTimeString();
+        }
         $data = [
             'narrative' => $narrative,
             'mobile' => $patient->mobile,

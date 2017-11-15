@@ -14,7 +14,7 @@
         $(function () {
             var $create = $('button#JPWcreate');
             var $bill = $('button#JPWbill');
-
+            var PIN = null;
             $create.click(function () {
                 $create.prop('disabled', true);
                 swal({
@@ -26,6 +26,7 @@
                     }
                 }).then(function (name) {
                     if (!name) throw null;
+                    PIN = name;
                     return fetch("<?=route('api.finance.wallet.create', $patient->id)?>?pin=" + name);
                 }).then(function (results) {
                     return results.json();
@@ -33,9 +34,11 @@
                     if (result.success) {
                         swal({
                             title: "Wallet created",
-                            text: "Jambopay wallet has been create, go ahead to post bill",
+                            text: "Jambopay wallet has been created with pin " + PIN + ", go ahead to post bill",
                             icon: "success"
                         });
+                        $create.hide();
+                        $bill.show();
                     }
                     else {
                         swal("Oh no!", "There is an issue with your network", "error");
