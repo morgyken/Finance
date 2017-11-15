@@ -1,15 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bravoh
- * Date: 11/2/17
- * Time: 2:11 PM
- */
 namespace Ignite\Finance\Entities;
 
-use Ignite\Inpatient\Entities\Visit;
+use Ignite\Evaluation\Entities\Visit;
 use Ignite\Reception\Entities\PatientInsurance;
-use Ignite\Settings\Entities\Schemes;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -24,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Reception\Entities\PatientInsurance|null $_scheme
  * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\SplitInsuranceItems[] $children
- * @property-read \Ignite\Inpatient\Entities\Visit $visit
+ * @property-read \Ignite\Evaluation\Entities\Visit $visit
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\SplitInsurance whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\SplitInsurance whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\SplitInsurance whereScheme($value)
