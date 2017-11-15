@@ -52,6 +52,34 @@
                     }
                 });
             });
+
+            $bill.click(function () {
+                $.ajax({
+                    url: '<?=route('api.finance.wallet.post', $patient->id)?>',
+                    dataType: 'JSON',
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.success) {
+                            if (response.exist) {
+                                $bill.show();
+                            } else {
+                                $create.show();
+                            }
+                        } else {
+                            alertify.log('Cannot communicate with Jambopay. Check network');
+                        }
+                    },
+                    error: function (data) {
+                        swal(
+                            {
+                                title: 'Oh No!',
+                                text: data,
+                                icon: 'error'
+                            }
+                        );
+                    }
+                });
+            });
             $create.hide();
             $bill.hide();
             $.ajax({
@@ -68,6 +96,15 @@
                     } else {
                         alertify.log('Cannot communicate with Jambopay. Check network');
                     }
+                },
+                error: function (data) {
+                    swal(
+                        {
+                            title: 'Oh No!',
+                            text: data,
+                            icon: 'error'
+                        }
+                    );
                 }
             });
         });

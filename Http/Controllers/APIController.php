@@ -62,7 +62,7 @@ class APIController extends Controller
         $patient = Patients::find($patient_id);
         try {
             return \response()->json([
-                'wallet' => $jamboPay->postBillForPatient($patient, $request->amount),
+                'bill' => $jamboPay->postBillForPatient($patient, $request->amount),
                 'success' => true,
             ]);
         } catch (\Exception $e) {
