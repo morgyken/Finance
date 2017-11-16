@@ -16,6 +16,10 @@ return [
         'view' => 'checkbox',
         'description' => 'Use a background job to process payment list'
     ],
+    'post_pay_insurance' => [
+        'view' => 'checkbox',
+        'description' => 'Allow patients with insurance to be billed later'
+    ],
     'enable_jambo_pay' => [
         'view' => 'checkbox',
         'description' => 'Enable payment via JamboPay https://www.jambopay.com/'
