@@ -49,6 +49,13 @@ class PatientAccountController extends AdminBaseController
      */
     public function store()
     {
+        if(request()->has('insurance') && is_module_enabled('Inpatient'))
+        {
+            \Ignite\Inpatient\Entities\InsuranceMaximumAmount::create(
+                request()->get('insurance')
+            );
+        }
+
         $paymentDetails = request()->only(['patient']);
 
         $payment = $this->paymentRepository->save($paymentDetails);
