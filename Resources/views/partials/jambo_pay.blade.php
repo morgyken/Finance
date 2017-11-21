@@ -1,15 +1,17 @@
 <h4>Jambopay</h4>
 <div>
-    <div class="form-group">
-        <label class="col-md-4 control-label">Amount</label>
-        <div class="col-md-8">
-            {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
+    <div id="wallet_op">
+        <div class="form-group">
+            <label class="col-md-4 control-label">Amount</label>
+            <div class="col-md-8">
+                {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
+            </div>
         </div>
-    </div>
-    <div class="pull-right">
-        <button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>
-        <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
-        <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
+        <div class="pull-right">
+            {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
+            <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
+            <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
+        </div>
     </div>
     <style>
         .swal-overlay {
@@ -158,7 +160,8 @@
                         if (response.exist) {
                             $bill.show();
                         } else {
-                            $create.show();
+                            $('#wallet_op').html("<span class='text-warning'>Patient has no jambopay wallet</span>");
+//                            $create.show();
                         }
                     } else {
                         alertify.log('Cannot communicate with Jambopay. Check network');
