@@ -115,4 +115,4 @@ $router->group(['prefix' => 'quickbooks', 'as' => 'quickbooks.'], function (Rout
 
 $router->get('patient/{patient}/account', ['as' => 'patient.account', 'uses' => 'PatientAccountController@index']);
 
-$router->get('payment/{payment}', ['as' => 'payment', 'uses' => 'PaymentController@show']);
+$router->get('payment/{payment}', ['uses' => 'PaymentController@show']);

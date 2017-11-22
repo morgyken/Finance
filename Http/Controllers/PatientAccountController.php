@@ -55,6 +55,6 @@ class PatientAccountController extends AdminBaseController
 
         $payment->save();
 
-        return redirect()->route('finance.payment', ['payment' => $payment->id]);
+        return redirect("/payment/".$payment->id);
     }
 }
