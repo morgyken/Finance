@@ -9,11 +9,14 @@
         </div>
 
     </div>
+
     <div class="pull-right">
         {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
         <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
         <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
+        <div class="loader" id="jpLoader"></div>
     </div>
+
     <style>
         .swal-overlay {
             background-color: rgba(30, 30, 30, 0.9);
@@ -22,6 +25,7 @@
     </style>
     <script>
         $(function () {
+            var $loader = $('#jpLoader');
             var ACTIVE_BILL = null;
             var $create = $('button#JPWcreate');
             var $bill = $('button#JPWbill');
@@ -84,7 +88,11 @@
                     data: {
                         amount: parseInt(JPAmount)
                     },
+                    beforeSend: function () {
+                        $loader.show();
+                    },
                     success: function (response) {
+                        $loader.hide();
                         if (response.success) {
                             $billStatus.show();
                             $bill.hide();
@@ -129,7 +137,13 @@
                     data: {
                         bill: ACTIVE_BILL
                     },
+                    beforeSend: function () {
+                        $billStatus.hide();
+                        $loader.show();
+                    },
                     success: function (response) {
+                        $billStatus.show();
+                        $loader.hide();
                         if (response.success) {
                             alertify.success("Bill stated: " + response.status.PaymentStatusName);
                         } else {
@@ -154,7 +168,11 @@
                 url: '<?=route('api.finance.wallet.check', $patient->id)?>',
                 dataType: 'JSON',
                 type: 'GET',
+                beforeSend: function () {
+                    $loader.show();
+                },
                 success: function (response) {
+                    $loader.hide();
                     if (response.success) {
                         if (response.exist) {
                             $bill.show();
