@@ -320,7 +320,7 @@ class JamboPay implements Jambo
     public function getBillStatus(Patients $patient, $bill_number)
     {
         $data = [
-            'Stream' => 'wallet',
+            'Stream' => 'merchantbill',
             'PhoneNumber' => $this->formatPhoneNumber($patient->mobile),
             'BillNumber' => $bill_number,
             'Year' => Carbon::now()->year,
@@ -335,7 +335,7 @@ class JamboPay implements Jambo
             ->withData($data)
             ->withContentType('application/x-www-form-urlencoded')->returnResponseObject()->get();
         try {
-            $r = json_decode($p->content);
+            return json_decode($p->content);
             return (bool)$r->Exists;
         } catch (\Exception $e) {
             return false;

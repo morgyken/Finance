@@ -22,6 +22,7 @@
     </style>
     <script>
         $(function () {
+            var ACTIVE_BILL = null;
             var $create = $('button#JPWcreate');
             var $bill = $('button#JPWbill');
             var $billStatus = $('button#JPWstatus');
@@ -88,6 +89,7 @@
                             $billStatus.show();
                             $bill.hide();
                             var obj = JSON.parse(response.bill);
+                            ACTIVE_BILL = obj.BillNumber;
                             swal({
                                 title: "Bill Posted!",
                                 text: "Request the customer to complete transaction. " +
@@ -107,11 +109,11 @@
                         }
                     }
                     ,
-                    error: function (data) {
+                    error: function () {
                         swal(
                             {
                                 title: 'Oh No!',
-                                text: data,
+                                text: "Network issue",
                                 icon: 'error'
                             }
                         );
@@ -120,25 +122,23 @@
                 ;
             });
             $billStatus.click(function () {
-                swal({
-                    icon: 'warning',
-                    text: 'Bill is still pending',
-                    title: "Pending Still"
-                });
-                /*  $.ajax({
-                      url: '<?=route('api.finance.wallet.check', $patient->id)?>',
+                $.ajax({
+                    url: '<?=route('api.finance.wallet.status', $patient->id)?>',
                     dataType: 'JSON',
-                    type: 'GET',
+                    type: 'POST',
+                    data: {
+                        bill: ACTIVE_BILL
+                    },
                     success: function (response) {
-                        if (response.success) {
-                            if (response.exist) {
-                                $bill.show();
-                            } else {
-                                $create.show();
-                            }
-                        } else {
-                            alertify.log('Cannot communicate with Jambopay. Check network');
-                        }
+//                        if (response.success) {
+//                            if (response.exist) {
+//                                $bill.show();
+//                            } else {
+////                                $create.show();
+//                            }
+//                        } else {
+//                            alertify.log(response.error);
+//                        }
                     },
                     error: function (data) {
                         swal(
@@ -149,7 +149,7 @@
                             }
                         );
                     }
-                });*/
+                });
             });
             $create.hide();
             $bill.hide();
