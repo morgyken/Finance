@@ -39,7 +39,7 @@ class APIController extends Controller
         try {
             return \response()->json(['exist' => $jamboPay->checkPatientHasWallet($patient), 'success' => true,]);
         } catch (ApiException $e) {
-            return \response()->json(['error' => $e->getMessage(), 'success' => false]);
+            return \response()->json(['error' => 'Jambopay Error : ' . $e->getMessage(), 'success' => false]);
         }
     }
 
@@ -75,8 +75,7 @@ class APIController extends Controller
         $patient = Patients::find($patient_id);
         try {
             return \response()->json([
-                //todo real purpose
-                'status' => 'Pending',// $jamboPay->getBillStatus($patient, $request->bill),
+                'status' => $jamboPay->getBillStatus($patient, $request->bill),
                 'success' => true,
             ]);
         } catch (\Exception $e) {

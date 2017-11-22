@@ -7,12 +7,16 @@
                 {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
             </div>
         </div>
-        <div class="pull-right">
-            {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
-            <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
-            <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
-        </div>
+
     </div>
+
+    <div class="pull-right">
+        {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
+        <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
+        <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
+        <div class="loader" id="jpLoader"></div>
+    </div>
+
     <style>
         .swal-overlay {
             background-color: rgba(30, 30, 30, 0.9);
@@ -21,6 +25,8 @@
     </style>
     <script>
         $(function () {
+            var $loader = $('#jpLoader');
+            var ACTIVE_BILL = null;
             var $create = $('button#JPWcreate');
             var $bill = $('button#JPWbill');
             var $billStatus = $('button#JPWstatus');
@@ -82,13 +88,20 @@
                     data: {
                         amount: parseInt(JPAmount)
                     },
+                    beforeSend: function () {
+                        $loader.show();
+                    },
                     success: function (response) {
+                        $loader.hide();
                         if (response.success) {
                             $billStatus.show();
                             $bill.hide();
+                            var obj = JSON.parse(response.bill);
+                            ACTIVE_BILL = obj.BillNumber;
                             swal({
-                                title: "Bill Posted to Jambopay!",
-                                text: "Please request the customer to complete transaction via USSD or app",
+                                title: "Bill Posted!",
+                                text: "Request the customer to complete transaction. " +
+                                "Bill ID is " + obj.BillNumber,
                                 button: "Nice",
                                 icon: "info",
                                 timer: 10000
@@ -97,18 +110,18 @@
                             swal(
                                 {
                                     title: 'Oh No!',
-                                    text: "Cannot reach Jambopay server, please check connection",
+                                    text: response.error,
                                     icon: 'error'
                                 }
                             );
                         }
                     }
                     ,
-                    error: function (data) {
+                    error: function () {
                         swal(
                             {
                                 title: 'Oh No!',
-                                text: data,
+                                text: "Network issue",
                                 icon: 'error'
                             }
                         );
@@ -117,36 +130,36 @@
                 ;
             });
             $billStatus.click(function () {
-                swal({
-                    icon: 'warning',
-                    text: 'Bill is still pending',
-                    title: "Pending Still"
-                });
-                /*  $.ajax({
-                      url: '<?=route('api.finance.wallet.check', $patient->id)?>',
+                $.ajax({
+                    url: '<?=route('api.finance.wallet.status', $patient->id)?>',
                     dataType: 'JSON',
-                    type: 'GET',
+                    type: 'POST',
+                    data: {
+                        bill: ACTIVE_BILL
+                    },
+                    beforeSend: function () {
+                        $billStatus.hide();
+                        $loader.show();
+                    },
                     success: function (response) {
+                        $billStatus.show();
+                        $loader.hide();
                         if (response.success) {
-                            if (response.exist) {
-                                $bill.show();
-                            } else {
-                                $create.show();
-                            }
+                            alertify.success("Bill stated: " + response.status.PaymentStatusName);
                         } else {
-                            alertify.log('Cannot communicate with Jambopay. Check network');
+                            alertify.log(response.error);
                         }
                     },
-                    error: function (data) {
+                    error: function () {
                         swal(
                             {
                                 title: 'Oh No!',
-                                text: data,
+                                text: "Network issues",
                                 icon: 'error'
                             }
                         );
                     }
-                });*/
+                });
             });
             $create.hide();
             $bill.hide();
@@ -155,23 +168,28 @@
                 url: '<?=route('api.finance.wallet.check', $patient->id)?>',
                 dataType: 'JSON',
                 type: 'GET',
+                beforeSend: function () {
+                    $loader.show();
+                },
                 success: function (response) {
+                    $loader.hide();
                     if (response.success) {
                         if (response.exist) {
                             $bill.show();
                         } else {
                             $('#wallet_op').html("<span class='text-warning'>Patient has no jambopay wallet</span>");
-//                            $create.show();
+                            $create.show();
                         }
                     } else {
-                        alertify.log('Cannot communicate with Jambopay. Check network');
+                        alertify.log(response.error);
                     }
                 },
                 error: function (data) {
+                    $('#wallet_op').html("<span class='text-warning'>Cannot contact jambopay for wallet information</span>");
                     swal(
                         {
                             title: 'Oh No!',
-                            text: data,
+                            text: "Network error",
                             icon: 'error'
                         }
                     );
