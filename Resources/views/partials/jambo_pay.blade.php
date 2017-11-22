@@ -130,21 +130,17 @@
                         bill: ACTIVE_BILL
                     },
                     success: function (response) {
-//                        if (response.success) {
-//                            if (response.exist) {
-//                                $bill.show();
-//                            } else {
-////                                $create.show();
-//                            }
-//                        } else {
-//                            alertify.log(response.error);
-//                        }
+                        if (response.success) {
+                            alertify.success("Bill stated: " + response.status.PaymentStatusName);
+                        } else {
+                            alertify.log(response.error);
+                        }
                     },
-                    error: function (data) {
+                    error: function () {
                         swal(
                             {
                                 title: 'Oh No!',
-                                text: data,
+                                text: "Network issues",
                                 icon: 'error'
                             }
                         );
