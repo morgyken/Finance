@@ -39,7 +39,7 @@ class APIController extends Controller
         try {
             return \response()->json(['exist' => $jamboPay->checkPatientHasWallet($patient), 'success' => true,]);
         } catch (ApiException $e) {
-            return \response()->json(['error' => $e->getMessage(), 'success' => false]);
+            return \response()->json(['error' => 'Jambopay Error : ' . $e->getMessage(), 'success' => false]);
         }
     }
 

@@ -7,11 +7,12 @@
                 {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
             </div>
         </div>
-        <div class="pull-right">
-            {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
-            <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
-            <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
-        </div>
+
+    </div>
+    <div class="pull-right">
+        {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
+        <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
+        <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
     </div>
     <style>
         .swal-overlay {
@@ -161,17 +162,18 @@
                             $bill.show();
                         } else {
                             $('#wallet_op').html("<span class='text-warning'>Patient has no jambopay wallet</span>");
-//                            $create.show();
+                            $create.show();
                         }
                     } else {
-                        alertify.log('Cannot communicate with Jambopay. Check network');
+                        alertify.log(response.error);
                     }
                 },
                 error: function (data) {
+                    $('#wallet_op').html("<span class='text-warning'>Cannot contact jambopay for wallet information</span>");
                     swal(
                         {
                             title: 'Oh No!',
-                            text: data,
+                            text: "Network error",
                             icon: 'error'
                         }
                     );
