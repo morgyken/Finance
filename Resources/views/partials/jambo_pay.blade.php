@@ -87,9 +87,11 @@
                         if (response.success) {
                             $billStatus.show();
                             $bill.hide();
+                            var obj = JSON.parse(response.bill);
                             swal({
-                                title: "Bill Posted to Jambopay!",
-                                text: "Please request the customer to complete transaction via USSD or app",
+                                title: "Bill Posted!",
+                                text: "Request the customer to complete transaction. " +
+                                "Bill ID is " + obj.BillNumber,
                                 button: "Nice",
                                 icon: "info",
                                 timer: 10000
@@ -98,7 +100,7 @@
                             swal(
                                 {
                                     title: 'Oh No!',
-                                    text: "Cannot reach Jambopay server, please check connection",
+                                    text: response.error,
                                     icon: 'error'
                                 }
                             );
