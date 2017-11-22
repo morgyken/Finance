@@ -52,8 +52,8 @@
                             <h4><b>DEPOSIT TOTAL kshs. {{ $total }}</b></h4>
                         </div>
                         <div class="col-md-7">
-                            <button class="col-md-2 col-md-offset-1 btn btn-sm btn-primary">Print Thermal</button>
-                            <button class="col-md-2 col-md-offset-1 btn btn-sm btn-primary">Print A4</button>
+                            <button class="col-md-2 col-md-offset-1 btn btn-sm btn-primary pull-right">Print Thermal</button>
+                            <button class="col-md-2 btn btn-sm btn-primary pull-right">Print A4</button>
                         </div>
                     </div>
                     <hr>
