@@ -63,6 +63,8 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Rout
 
     $router->get('accounts/{patient}/show', ['uses' => 'EvaluationController@individual_account', 'as' => 'individual_account']);
 
+
+//    $router->post('payment', ['as' => 'pay.save', 'uses' => 'PatientAccountController@store']);
     $router->post('payment', ['as' => 'pay.save', 'uses' => 'EvaluationController@pay_save']);
     $router->get('payment_details/{id}/{invoice?}', ['as' => 'payment_details', 'uses' => 'EvaluationController@payment_details']);
     $router->get('summary', ['as' => 'summary', 'uses' => 'EvaluationController@summary']);
