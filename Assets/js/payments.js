@@ -12,7 +12,8 @@ $(function () {
         var mpesa = parser($('input[name=MpesaAmount]').val());
         var cheque = parser($('input[name=ChequeAmount]').val());
         var card = parser($('input[name=CardAmount]').val());
-        return (cash + mpesa + cheque + card);
+        var jp = parser($('input[name=JPAmount]').val());
+        return (cash + mpesa + cheque + card + jp);
     }
 
     $('input').on('ifChanged', function (e) {

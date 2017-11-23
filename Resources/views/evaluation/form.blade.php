@@ -37,6 +37,7 @@
             in their account.
         </h3>
 @endif
+
         -->
 <div class="accordion form-horizontal" id="someForm">
     @if(m_setting('finance.enable_jambo_pay'))
@@ -159,7 +160,8 @@
             <span id="balance"></span>
         </div>
         <div class="pull-right">
-            <button class="btn btn-success" type="submit" @if(!empty($invoice_mode)) id="saver" @endif><i
+            {{--<button class="btn btn-success" type="submit" @if(!empty($invoice_mode)) id="saver" @endif><i--}}
+            <button class="btn btn-success" type="submit" id="saver"><i
                         class="fa fa-save"></i> Save
             </button>
         </div>
