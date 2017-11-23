@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $complete
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Ignite\Finance\Entities\EvaluationPayments $payments
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereBillNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereCode($value)
@@ -43,4 +44,9 @@ class JambopayPayment extends Model
 {
     protected $guarded = [];
     protected $table = 'finance_jambo_pay_payments';
+
+    public function payments()
+    {
+        return $this->belongsTo(EvaluationPayments::class, 'payment');
+    }
 }
