@@ -259,7 +259,9 @@ class JamboPay implements Jambo
             'amount' => $amount,
         ];
         $this->validatePayload($data);
-        return $this->universalBillGenerator((object)$data);
+        $bill = $this->universalBillGenerator((object)$data);
+        \Log::info($bill);
+        return $bill;
     }
 
     /**
