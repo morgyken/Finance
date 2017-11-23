@@ -5,6 +5,7 @@
         <label class="col-md-4 control-label">Amount</label>
         <div class="col-md-8">
             {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
+            {!! Form::hidden('JPid') !!}
         </div>
     </div>
     <div class="pull-right">
@@ -146,6 +147,7 @@
                                 JP_PAID = true;
                                 $billStatus.hide();
                                 $('input[name=JPAmount]').prop('readonly', true);
+                                $('input[name=JPid]').val(ACTIVE_BILL);
                             }
                             show_information();
                         } else {
