@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $cash_amount
  * @property-read mixed $modes
  * @property-read mixed $total
+ * @property-read \Ignite\Finance\Entities\JambopayPayment $jp
  * @property-read \Ignite\Finance\Entities\PaymentsMpesa $mpesa
  * @property-read \Ignite\Reception\Entities\Patients|null $patients
  * @property-read \Ignite\Inventory\Entities\InventoryBatchProductSales|null $sales
@@ -55,12 +56,12 @@ class EvaluationPayments extends Model
     protected $fillable = [
         'receipt', 'patient', 'user', 'amount', 'visit', 'sale', 'dispensing', 'deposit'
     ];
-    
+
     public $table = 'finance_evaluation_payments';
 
     protected $with = ['cash', 'card', 'cheque', 'mpesa', 'patients', 'users'];
 
-    public function getTotalAttribute() 
+    public function getTotalAttribute()
     {
         $total = 0;
         if (!empty($this->cash)) {
@@ -110,6 +111,11 @@ class EvaluationPayments extends Model
     public function card()
     {
         return $this->hasOne(PaymentsCard::class, 'payment');
+    }
+
+    public function jp()
+    {
+        return $this->hasOne(JambopayPayment::class, 'payment');
     }
 
     public function patients()

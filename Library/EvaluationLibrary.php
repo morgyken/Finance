@@ -24,6 +24,7 @@ use Ignite\Finance\Entities\EvaluationPaymentsDetails;
 use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Finance\Entities\InsuranceInvoicePayment;
+use Ignite\Finance\Entities\JambopayPayment;
 use Ignite\Finance\Entities\PatientAccount;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Finance\Entities\PatientInvoiceDetails;
@@ -395,10 +396,9 @@ class EvaluationLibrary implements EvaluationRepository
         }
         if ($this->request->has('JPAmount')) {
             $paid_amount += $this->input['JPAmount'];
-            PaymentsCash::create([
-                'amount' => $this->input['CashAmount'],
-                'payment' => $payment->id
-            ]);
+            $jp = JambopayPayment::find($this->input['JPid']);
+            $jp->payment_id = $payment->id;
+            $jp->save();
         }
         if ($this->request->has('MpesaAmount')) {
             $paid_amount += $this->input['MpesaAmount'];
