@@ -138,7 +138,6 @@ class EvaluationController extends AdminBaseController
     {
         $patient = $request->patient;
         $invoice = $request->invoice;
-
         if (!empty($patient)) {
             $this->data['invoice_mode'] = $invoice;
             $this->data['deposit'] = $request->deposit;
