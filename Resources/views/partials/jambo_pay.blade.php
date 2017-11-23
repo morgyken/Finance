@@ -142,14 +142,17 @@
                         $billStatus.show();
                         $loader.hide();
                         if (response.success) {
+                            JP_PAID = true;
                             alertify.success("Bill stated: " + response.status.PaymentStatusName);
                             if (response.status.PaymentStatus == '1') {
                                 JP_PAID = true;
+                            }
+                            if (JP_PAID) {
                                 $billStatus.hide();
                                 $('input[name=JPAmount]').prop('readonly', true);
                                 $('input[name=JPid]').val(ACTIVE_BILL);
+                                show_information();
                             }
-                            show_information();
                         } else {
                             alertify.log(response.error);
                         }

@@ -13,14 +13,20 @@
 namespace Ignite\Finance\Library;
 
 use Carbon\Carbon;
+use Ignite\Evaluation\Entities\DispensingDetails;
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
-use Ignite\Evaluation\Entities\Procedures;
+use Ignite\Evaluation\Entities\Visit;
 use Ignite\Finance\Entities\ChangeInsurance;
 use Ignite\Finance\Entities\Copay;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\EvaluationPaymentsDetails;
+use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
+use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Finance\Entities\InsuranceInvoicePayment;
 use Ignite\Finance\Entities\PatientAccount;
+use Ignite\Finance\Entities\PatientInvoice;
+use Ignite\Finance\Entities\PatientInvoiceDetails;
 use Ignite\Finance\Entities\PatientTransaction;
 use Ignite\Finance\Entities\PaymentManifest;
 use Ignite\Finance\Entities\PaymentsCard;
@@ -30,22 +36,11 @@ use Ignite\Finance\Entities\PaymentsMpesa;
 use Ignite\Finance\Entities\SplitInsurance;
 use Ignite\Finance\Entities\SplitInsuranceItems;
 use Ignite\Finance\Repositories\EvaluationRepository;
-use Ignite\Inventory\Entities\InventoryProducts;
-use Ignite\Reception\Entities\Patients;
+use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Ignite\Evaluation\Entities\Visit;
-use Ignite\Finance\Library\FinanceLibrary;
-use Ignite\Finance\Entities\InsuranceInvoice;
-use Ignite\Finance\Entities\InsuranceInvoicePayment;
-use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
-use Ignite\Evaluation\Entities\Dispensing;
-use Ignite\Evaluation\Entities\DispensingDetails;
-use Ignite\Inventory\Entities\InventoryBatchProductSales;
-use Ignite\Finance\Entities\PatientInvoice;
-use Ignite\Finance\Entities\PatientInvoiceDetails;
 
 /**
  * Description of EvaluationFinanceFunctions
@@ -393,6 +388,13 @@ class EvaluationLibrary implements EvaluationRepository
         $paid_amount = 0;
         if ($this->request->has('CashAmount')) {
             $paid_amount += $this->input['CashAmount'];
+            PaymentsCash::create([
+                'amount' => $this->input['CashAmount'],
+                'payment' => $payment->id
+            ]);
+        }
+        if ($this->request->has('JPAmount')) {
+            $paid_amount += $this->input['JPAmount'];
             PaymentsCash::create([
                 'amount' => $this->input['CashAmount'],
                 'payment' => $payment->id

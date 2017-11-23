@@ -30,7 +30,6 @@ function show_information() {
     var selected_payments = calculate_cost_array();
     var to_pay = sumPayments();
     var needed = selected_payments - to_pay;
-    console.log(selected_payments, to_pay, needed);
     $('#total').html("Total: Ksh " + selected_payments);
     $('#all').html("Total Payments: <strong>Ksh " + to_pay + "</strong>");
     $('#balance').html('');
