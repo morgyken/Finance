@@ -1,22 +1,18 @@
 <h4>Jambopay</h4>
 <div>
-    <div id="wallet_op">
-        <div class="form-group">
-            <label class="col-md-4 control-label">Amount</label>
-            <div class="col-md-8">
-                {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
-            </div>
+    <div id="wallet_op"></div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Amount</label>
+        <div class="col-md-8">
+            {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
         </div>
-
     </div>
-
     <div class="pull-right">
         {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
         <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
         <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
         <div class="loader" id="jpLoader"></div>
     </div>
-
     <style>
         .swal-overlay {
             background-color: rgba(30, 30, 30, 0.9);
