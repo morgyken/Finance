@@ -142,6 +142,12 @@
                         $loader.hide();
                         if (response.success) {
                             alertify.success("Bill stated: " + response.status.PaymentStatusName);
+                            if (response.status.PaymentStatus == '1') {
+                                JP_PAID = true;
+                                $billStatus.hide();
+                                $('input[name=JPAmount]').prop('readonly', true);
+                            }
+                            show_information();
                         } else {
                             alertify.log(response.error);
                         }
@@ -170,17 +176,16 @@
                 success: function (response) {
                     $loader.hide();
                     if (response.success) {
-                        if (response.exist) {
-                            $bill.show();
-                        } else {
-                            $('#wallet_op').html("<span class='text-warning'>Patient has no jambopay wallet</span>");
-                            $create.show();
+                        if (!response.exist) {
+                            $('#wallet_op').html("<p class='text-warning'><i class='fa fa-info'></i> Patient has no jambopay wallet</p>");
+//                            $create.show();
                         }
+                        $bill.show();
                     } else {
                         alertify.log(response.error);
                     }
                 },
-                error: function (data) {
+                error: function () {
                     $('#wallet_op').html("<span class='text-warning'>Cannot contact jambopay for wallet information</span>");
                     swal(
                         {
