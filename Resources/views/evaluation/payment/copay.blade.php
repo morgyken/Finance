@@ -13,8 +13,8 @@
             <td><input type="checkbox" disabled/></td>
             <td>
                 <div class="label label-success">Paid</div>
-                {{$item->drugs->name}} <i class="small">(Drug) {{$item->payment->quantity}} units</i>
-                Ksh {{$item->payment->total}}
+                {{$visit->copay->desc}}
+                Ksh {{$visit->copay->amount}}
             </td>
         @endif
     </tr>
