@@ -76,6 +76,9 @@ class EvaluationPayments extends Model
         if (!empty($this->cheque)) {
             $total += $this->cheque->amount;
         }
+        if (!empty($this->jambopay)) {
+            $total += $this->jambopay->Amount;
+        }
         return $total;
     }
 
