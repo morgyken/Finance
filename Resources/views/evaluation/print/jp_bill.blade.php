@@ -70,7 +70,7 @@
 $clinic = \Ignite\Settings\Entities\Clinics::find(session('clinic'));
 ?>
 <div class="box box-info">
-    <h1 class="box-title">{{$clinic->practices->name}}</h1>
+    <h3 class="box-title">{{$clinic->practices->name}}</h3>
     <?php
     $logo = get_logo();
     ?>
@@ -97,7 +97,7 @@ $clinic = \Ignite\Settings\Entities\Clinics::find(session('clinic'));
                 <tbody>
                 <tr>
                     <td>Date</td>
-                    <td>{{smart_date($bill->created_at)}}</td>
+                    <td>{{smart_date_time($bill->created_at)}}</td>
                 </tr>
                 <tr>
                     <td>Customer Name</td>
@@ -105,7 +105,7 @@ $clinic = \Ignite\Settings\Entities\Clinics::find(session('clinic'));
                 </tr>
                 <tr>
                     <td>Bill Number</td>
-                    <td>#{{$bill->BillNumber}}</td>
+                    <td>{{$bill->BillNumber}}</td>
                 </tr>
                 <tr>
                     <td>Amount</td>
