@@ -55,6 +55,8 @@ class PatientAccountController extends AdminBaseController
 
         $payment->save();
 
-        return redirect("/payment/".$payment->id);
+        $redirect = is_module_enabled('Inpatient') ? "finance/payment/".$payment->id : 'finance/evaluation/payment';
+
+        return redirect($redirect);
     }
 }
