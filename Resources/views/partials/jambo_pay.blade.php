@@ -141,7 +141,7 @@
                         $billStatus.show();
                         $loader.hide();
                         if (response.success) {
-                            JP_PAID = true;
+//                            JP_PAID = true;
                             alertify.success("Bill stated: " + response.status.PaymentStatusName);
                             if (response.status.PaymentStatus == '1') {
                                 JP_PAID = true;
