@@ -537,14 +537,11 @@ class EvaluationController extends AdminBaseController
     public function printJamboReceipt(Request $request)
     {
         $payment = JambopayPayment::where('BillNumber', $request->bill)->first();
-        dd($payment);
-        $bill = InsuranceInvoice::find($request->id);
-        $k = 10;
-        $height = 600 + ($bill->investigations->count() * $k) + ($bill->prescriptions->count() * $k);
-        $pdf = \PDF::loadView('finance::evaluation.print.invoice', ['bill' => $bill]);
+        $height = 450;
+        $pdf = \PDF::loadView('finance::evaluation.print.jp_bill', ['bill' => $payment]);
         $customPaper = [0, 0, 300, $height];
         $pdf->setPaper($customPaper);
-        return @$pdf->stream('Bill' . $request->id . '.pdf');
+        return @$pdf->stream('JP Bill' . $request->id . '.pdf');
     }
 
     public function billToCash(Request $request)

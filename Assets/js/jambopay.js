@@ -9,7 +9,8 @@ $(function () {
     var JamboPay = {
         init: function () {
             $create.hide();
-            $bill.hide();
+            // $bill.hide();
+            $loader.hide();
             $print.hide();
             $billStatus.hide();
             $create.click(function () {
@@ -21,7 +22,7 @@ $(function () {
             $billStatus.click(function () {
                 JamboPay.checkBillStatus();
             });
-            this.checkWalletExists();
+            // this.checkWalletExists();
         },
         createWallet: function () {
             $create.prop('disabled', true);
