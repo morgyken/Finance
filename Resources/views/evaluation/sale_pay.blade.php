@@ -34,7 +34,7 @@ extract($data);
 </div>
 
 {!! Form::close()!!}
-<script src="{{m_asset('evaluation:js/payments.min.js')}}"></script>
+<script src="{{m_asset('evaluation:js/payments.js')}}"></script>
 <style type="text/css">
     #visits tbody tr.highlight {
         background-color: #B0BED9;
