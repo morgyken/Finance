@@ -96,6 +96,7 @@ $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Rout
     $router->get('print/insurance/invoice/{id}/dharma', ['as' => 'ins.inv.print_thermal', 'uses' => 'FinanceController@printThermalInvoice']);
     $router->get('print/insurance/invoice/{id}/print', ['as' => 'ins.inv.print', 'uses' => 'EvaluationController@printInvoice']);
     $router->get('print/insurance/receipt/{id}', ['as' => 'ins.rcpt.print', 'uses' => 'EvaluationController@printReceipt']);
+    $router->get('print/jambopay/receipt', ['as' => 'ins.rcpt.print_jp', 'uses' => 'EvaluationController@printJamboReceipt']);
 
     $router->post('print/receipt/thermal', ['as' => 'normal.rcpt.print', 'uses' => 'EvaluationController@printNormalReceipt']);
     $router->post('print/receipt/a4/', ['as' => 'a4.rcpt.print', 'uses' => 'EvaluationController@printA4Receipt']);
