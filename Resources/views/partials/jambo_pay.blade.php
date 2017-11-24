@@ -93,12 +93,11 @@
                         if (response.success) {
                             $billStatus.show();
                             $bill.hide();
-                            var obj = JSON.parse(response.bill);
-                            ACTIVE_BILL = obj.BillNumber;
+                            ACTIVE_BILL = response.bill.BillNumber;
                             swal({
                                 title: "Bill Posted!",
                                 text: "Request the customer to complete transaction. " +
-                                "Bill ID is " + obj.BillNumber,
+                                "Bill ID is " + ACTIVE_BILL,
                                 button: "Nice",
                                 icon: "info",
                                 timer: 10000

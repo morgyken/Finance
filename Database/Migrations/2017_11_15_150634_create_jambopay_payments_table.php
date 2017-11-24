@@ -15,7 +15,7 @@ class CreateJambopayPaymentsTable extends Migration
     {
         Schema::create('finance_jambo_pay_payments', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('payment_id');
+            $table->unsignedInteger('payment_id')->nullable();
             $table->string('Code');
             $table->string('RevenueStreamID');
             $table->string('BillNumber');
