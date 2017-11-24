@@ -396,8 +396,10 @@ class EvaluationLibrary implements EvaluationRepository
         }
         if ($this->request->has('JPAmount')) {
             $paid_amount += $this->input['JPAmount'];
-            $jp = JambopayPayment::find($this->input['JPid']);
+            $jp = JambopayPayment::where('BillNumber', $this->input['JPid'])->first();
             $jp->payment_id = $payment->id;
+            $jp->processed = true;
+            $jp->complete = true;
             $jp->save();
         }
         if ($this->request->has('MpesaAmount')) {
