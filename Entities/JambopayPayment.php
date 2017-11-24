@@ -2,6 +2,7 @@
 
 namespace Ignite\Finance\Entities;
 
+use Ignite\Reception\Entities\Patients;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int $id
  * @property int|null $payment_id
+ * @property int|null $patient_id
  * @property string $Code
  * @property string $RevenueStreamID
  * @property string $BillNumber
@@ -22,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $complete
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
+ * @property-read \Ignite\Reception\Entities\Patients|null $patient
  * @property-read \Ignite\Finance\Entities\EvaluationPayments $payments
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereBillNumber($value)
@@ -31,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereCustomerNames($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereNarration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment wherePatientId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment wherePaymentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment wherePaymentStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment wherePaymentStatusName($value)
@@ -48,5 +52,10 @@ class JambopayPayment extends Model
     public function payments()
     {
         return $this->belongsTo(EvaluationPayments::class, 'payment');
+    }
+
+    public function patient()
+    {
+        return $this->belongsTo(Patients::class, 'patient_id');
     }
 }
