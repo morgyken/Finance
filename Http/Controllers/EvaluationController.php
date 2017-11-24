@@ -542,7 +542,7 @@ class EvaluationController extends AdminBaseController
         $pdf = \PDF::loadView('finance::evaluation.print.jp_bill', ['bill' => $payment]);
         $customPaper = [0, 0, 300, $height];
         $pdf->setPaper($customPaper);
-        return @$pdf->stream('JP Bill' . $request->id . '.pdf');
+        return @$pdf->download('JP Bill ' . $request->bill . '.pdf');
     }
 
     public function billToCash(Request $request)
