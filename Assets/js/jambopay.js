@@ -90,7 +90,7 @@ $(function () {
                         $billStatus.show();
                         $bill.hide();
                         ACTIVE_BILL = response.bill.BillNumber;
-                        $print.attr('href', "{{route('finance.evaluation.ins.rcpt.print_jp')}}?bill=" + ACTIVE_BILL);
+                        $print.attr('href', JP_BILL_PRINT_URL + "?bill=" + ACTIVE_BILL);
                         swal({
                             title: "Bill Posted!",
                             text: "Request the customer to complete transaction. " +
