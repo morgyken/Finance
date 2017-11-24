@@ -12,6 +12,7 @@ use Ignite\Finance\Entities\DispatchDetails;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Finance\Entities\JambopayPayment;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Finance\Entities\PatientTransaction;
 use Ignite\Finance\Entities\PaymentManifest;
@@ -529,6 +530,15 @@ class EvaluationController extends AdminBaseController
     public function printReceipt(Request $request)
     {
         $payment = FinanceEvaluationInsurancePayments::find($request->id);
+        $pdf = \PDF::loadView('finance::evaluation.print.rcpt', ['payment' => $payment]);
+        $pdf->setPaper('a4', 'potrait');
+        return @$pdf->stream('Bill' . $request->id . '.pdf');
+    }
+
+    public function printJamboReceipt(Request $request)
+    {
+        $payment = JambopayPayment::where('BillNumber',$request->bill)->first();
+        dd(get_defined_vars());
         $pdf = \PDF::loadView('finance::evaluation.print.rcpt', ['payment' => $payment]);
         $pdf->setPaper('a4', 'potrait');
         return @$pdf->stream('Bill' . $request->id . '.pdf');
