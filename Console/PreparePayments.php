@@ -112,6 +112,7 @@ class PreparePayments extends Command
     {
         foreach ($visit_list as $visit) {
             /** @var PaymentManifest $one */
+            PaymentManifest::whereVisitId($visit->id)->whereType($mode)->delete();
             $one = PaymentManifest::firstOrNew(['visit_id' => $visit->id, 'type' => $mode]);
             $one->patient_id = $visit->patient;
 //            $one->type = $visit->payment_mode;
