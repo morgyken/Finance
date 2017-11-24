@@ -28,6 +28,7 @@
         var JP_CREATE_WALLET_URL = '<?=route('api.finance.wallet.create', $patient->id)?>';
         var JP_WALLET_EXIST_URL = '<?=route('api.finance.wallet.check', $patient->id)?>';
         var JP_BILL_STATUS_URL = '<?=route('api.finance.wallet.status', $patient->id)?>';
+        var JP_BILL_PRINT_URL = '<?=route('finance.evaluation.ins.rcpt.print_jp')?>';
     </script>
-    <script src="{{m_asset('finance:js/jambopay.js')}}"></script>
+    <script src="{{m_asset('finance:js/jambopay.min.js')}}"></script>
 </div>
