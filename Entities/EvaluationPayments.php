@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read mixed $cash_amount
  * @property-read mixed $modes
  * @property-read mixed $total
- * @property-read \Ignite\Finance\Entities\JambopayPayment $jp
+ * @property-read \Ignite\Finance\Entities\JambopayPayment $jambopay
  * @property-read \Ignite\Finance\Entities\PaymentsMpesa $mpesa
  * @property-read \Ignite\Reception\Entities\Patients|null $patients
  * @property-read \Ignite\Inventory\Entities\InventoryBatchProductSales|null $sales
@@ -59,7 +59,7 @@ class EvaluationPayments extends Model
 
     public $table = 'finance_evaluation_payments';
 
-    protected $with = ['cash', 'card', 'cheque', 'mpesa', 'patients', 'users'];
+    protected $with = ['cash', 'card', 'cheque', 'mpesa', 'patients', 'users', 'jambopay'];
 
     public function getTotalAttribute()
     {
@@ -113,9 +113,9 @@ class EvaluationPayments extends Model
         return $this->hasOne(PaymentsCard::class, 'payment');
     }
 
-    public function jp()
+    public function jambopay()
     {
-        return $this->hasOne(JambopayPayment::class, 'payment');
+        return $this->hasOne(JambopayPayment::class, 'payment_id');
     }
 
     public function patients()

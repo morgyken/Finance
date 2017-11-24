@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * Ignite\Finance\Entities\JambopayPayment
  *
  * @property int $id
- * @property int $payment_id
+ * @property int|null $payment_id
  * @property string $Code
  * @property string $RevenueStreamID
  * @property string $BillNumber
