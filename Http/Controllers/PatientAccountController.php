@@ -51,10 +51,17 @@ class PatientAccountController extends AdminBaseController
 
         $payment = $this->paymentRepository->save($paymentDetails);
 
-        $payment->amount = $this->patientAccountRepository->deposit($payment->id);
+        $account = $this->patientAccountRepository->deposit($payment->id);
 
-        $payment->save();
-
-        return redirect("/payment/".$payment->id);
+        if(request()->ajax())
+        {
+            return response()->json([
+                'data' => $account
+            ]);
+        }
+        else
+        {
+            return redirect()->back()->with('success', 'Patient account top up successful');
+        }
     }
 }

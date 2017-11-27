@@ -45,7 +45,7 @@ class PatientAccountRepository
             }
         }
 
-        return $account->balance();
+        return $account;
     }
 
     /*
