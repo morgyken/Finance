@@ -19,23 +19,23 @@
     </div>
     <div class="clearfix"></div>
     <br/><br/>
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h4>Pending bills</h4>
-        </div>
-        <div class="panel-body">
-            <table class="table table-responsive table-stripped" id="JPbills">
-                <thead>
-                <tr>
-                    <th>Bill ID</th>
-                    <th>Bill Amount</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
+    {{--<div class="panel panel-info">--}}
+        {{--<div class="panel-heading">--}}
+            {{--<h4>Pending bills</h4>--}}
+        {{--</div>--}}
+        {{--<div class="panel-body">--}}
+            {{--<table class="table table-responsive table-stripped" id="JPbills">--}}
+                {{--<thead>--}}
+                {{--<tr>--}}
+                    {{--<th>Bill ID</th>--}}
+                    {{--<th>Bill Amount</th>--}}
+                    {{--<th>Action</th>--}}
+                {{--</tr>--}}
+                {{--</thead>--}}
+                {{--<tbody></tbody>--}}
+            {{--</table>--}}
+        {{--</div>--}}
+    {{--</div>--}}
     <style>
         .swal-overlay {
             background-color: rgba(30, 30, 30, 0.9);

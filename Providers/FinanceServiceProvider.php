@@ -3,6 +3,7 @@
 namespace Ignite\Finance\Providers;
 
 use Ignite\Finance\Console\FixOldPrescriptions;
+use Ignite\Finance\Console\JambopayCron;
 use Ignite\Finance\Console\PreparePayments;
 use Ignite\Finance\Library\EvaluationLibrary;
 use Ignite\Finance\Library\FinanceLibrary;
@@ -49,7 +50,8 @@ class FinanceServiceProvider extends ServiceProvider
         $this->registerBindings();
         $this->commands([
             FixOldPrescriptions::class,
-            PreparePayments::class
+            PreparePayments::class,
+            JambopayCron::class,
         ]);
     }
 
