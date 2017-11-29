@@ -2,6 +2,7 @@
 
 namespace Ignite\Finance\Http\Controllers;
 
+use Carbon\Carbon;
 use Ignite\Finance\Entities\BankAccount;
 use Ignite\Finance\Entities\JambopayPayment;
 use Ignite\Finance\Entities\PettyCash;
@@ -74,9 +75,14 @@ class APIController extends Controller
     public function getPendingBills($patient_id)
     {
         $bills = [];
-        $_bills = JambopayPayment::wherePatientId($patient_id)->whereComplete(false)->get();
+        $_bills = JambopayPayment::where('created_at', '>=', Carbon::yesterday())
+            ->wherePatientId($patient_id)->whereComplete(false)->get();
         foreach ($_bills as $bill) {
-            $bills[] = [$bill->BillNumber, $bill->Amount, '<button class="btn btn-xs btn-default" type="button" class="finalizer">Finalize</button>'];
+            $bills[] = [
+                $bill->BillNumber,
+                $bill->Amount,
+                '<button class="btn btn-xs btn-default finalizer" type="button"  bf="' . $bill->BillNumber . '"  ba="' . $bill->Amount . '">Finalize</button>'
+            ];
         }
         return \response()->json(['data' => $bills]);
     }

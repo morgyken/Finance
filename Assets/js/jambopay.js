@@ -5,6 +5,7 @@ $(function () {
     var $bill = $('button#JPWbill');
     var $print = $('a#JPWprint');
     var $billStatus = $('button#JPWstatus');
+    var $JPbills = $('#JPbills');
     var PIN = null;
     var JamboPay = {
         init: function () {
@@ -22,11 +23,17 @@ $(function () {
             $billStatus.click(function () {
                 JamboPay.checkBillStatus();
             });
-            $('#JPbills').dataTable({
+            $JPbills.dataTable({
                 "ajax": JP_PENDING_BILLS_URL,
                 searching: false,
                 paging: false,
                 ordering: false
+            });
+            $(document).on('click', '.finalizer', function () {
+                ACTIVE_BILL = $(this).attr('bf');
+                $bill.hide();
+                $('input[name=JPAmount]').val($(this).attr('ba'));
+                JamboPay.checkBillStatus();
             });
             // this.checkWalletExists();
         },
@@ -98,6 +105,7 @@ $(function () {
                         $bill.hide();
                         ACTIVE_BILL = response.bill.BillNumber;
                         $print.attr('href', JP_BILL_PRINT_URL + "?bill=" + ACTIVE_BILL);
+                        $JPbills.dataTable().api().ajax.reload();
                         swal({
                             title: "Bill Posted!",
                             text: "Request the customer to complete transaction. " +
@@ -146,6 +154,7 @@ $(function () {
                     if (response.success) {
 //                            JP_PAID = true;
                         alertify.success("Bill stated: " + response.status.PaymentStatusName);
+                        $JPbills.dataTable().api().ajax.reload();
                         if (response.status.PaymentStatus == '1') {
                             JP_PAID = true;
                         }
@@ -180,6 +189,7 @@ $(function () {
                 },
                 success: function (response) {
                     $loader.hide();
+
                     if (response.success) {
                         if (!response.exist) {
                             $('#wallet_op').html("<p class='text-warning'><i class='fa fa-info'></i> Patient has no jambopay wallet</p>");
