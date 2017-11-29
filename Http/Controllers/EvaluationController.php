@@ -173,6 +173,7 @@ class EvaluationController extends AdminBaseController
             ];
             $prescription->payment()->update($update);
         }
+        reload_payments();
         if ($request->has('to_redirect')) {
             return redirect()->route('finance.evaluation.prepare.bill', $request->to_redirect);
         }
