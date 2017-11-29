@@ -11,7 +11,7 @@
     <div class="pull-right">
         {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
         <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
-        <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
+        <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Finalize Bill</button>
         <a href="#" class="btn btn-xs btn-default" id="JPWprint"
            target="_blank"><i class="fa fa-print"></i> Print Bill
         </a>

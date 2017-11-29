@@ -26,6 +26,7 @@ class CreateJambopayPaymentsTable extends Migration
             $table->string('PaymentStatusName')->nullable();
             $table->double('Amount', 10, 2)->default(0);
             $table->string('Narration')->nullable();
+            $table->longText('selected_items')->nullable();
             $table->boolean('processed')->default(false);
             $table->boolean('complete')->default(false);
             $table->timestamps();

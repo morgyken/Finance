@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $PaymentStatusName
  * @property float $Amount
  * @property string|null $Narration
+ * @property string|null $selected_items
  * @property int $processed
  * @property int $complete
  * @property \Carbon\Carbon|null $created_at
@@ -41,6 +42,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment wherePhoneNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereProcessed($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereRevenueStreamID($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereSelectedItems($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereUpdatedAt($value)
  * @mixin \Eloquent
  */
