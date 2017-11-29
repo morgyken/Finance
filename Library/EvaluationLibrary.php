@@ -391,6 +391,7 @@ class EvaluationLibrary implements EvaluationRepository
     private function payment_methods(EvaluationPayments $payment)
     {
         $paid_amount = 0;
+        dd($this->request);
         if ($this->request->has('CashAmount')) {
             $paid_amount += $this->input['CashAmount'];
             PaymentsCash::create([
