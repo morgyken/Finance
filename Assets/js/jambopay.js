@@ -22,6 +22,12 @@ $(function () {
             $billStatus.click(function () {
                 JamboPay.checkBillStatus();
             });
+            $('#JPbills').dataTable({
+                "ajax": JP_PENDING_BILLS_URL,
+                searching: false,
+                paging: false,
+                ordering: false
+            });
             // this.checkWalletExists();
         },
         createWallet: function () {

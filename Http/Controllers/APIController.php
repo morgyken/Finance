@@ -3,6 +3,7 @@
 namespace Ignite\Finance\Http\Controllers;
 
 use Ignite\Finance\Entities\BankAccount;
+use Ignite\Finance\Entities\JambopayPayment;
 use Ignite\Finance\Entities\PettyCash;
 use Ignite\Finance\Entities\RemovedBills;
 use Ignite\Finance\Library\Payments\Core\Exceptions\ApiException;
@@ -68,6 +69,16 @@ class APIController extends Controller
         } catch (\Exception $e) {
             return \response()->json(['error' => $e->getMessage(), 'success' => false]);
         }
+    }
+
+    public function getPendingBills($patient_id)
+    {
+        $bills = [];
+        $_bills = JambopayPayment::wherePatientId($patient_id)->whereComplete(false)->get();
+        foreach ($_bills as $bill) {
+            $bills[] = [$bill->BillNumber, $bill->Amount, '<button class="btn btn-xs btn-default" type="button" class="finalizer">Finalize</button>'];
+        }
+        return \response()->json(['data' => $bills]);
     }
 
     public function getBillStatus(Jambo $jamboPay, Request $request, $patient_id)
