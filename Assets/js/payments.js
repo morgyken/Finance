@@ -5,7 +5,7 @@ function show_information() {
         var total = 0;
         $('#bloodyMoves').find('tr').each(function () {
             if ($(this).find('input:checkbox').is(':checked')) {
-                total += parseInt($(this).find('span').html());
+                total += parseInt($(this).find('span.topay').html());
             }
         });
         return total;

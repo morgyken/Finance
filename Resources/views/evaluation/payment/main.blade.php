@@ -28,8 +28,8 @@
                 <input type="hidden" value="investigations" name="type{{$item->id}}"/>
             <td>
                 {{$item->procedures->name}}
-                <i class="small">({!! $item->nice_type!!})</i> - Ksh <span
-                        class="topay">{{$item->amount??$item->price}}</span>
+                <i class="small">({!! $item->nice_type!!})</i> - Ksh
+                <span class="topay">{{$item->amount??$item->price}}</span>
                 @endif
             </td>
     </tr>
