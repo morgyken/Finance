@@ -59,7 +59,7 @@
                     </tr>
                     <?php
                     }catch (\Exception $e) {
-                    }
+                    }?>
                 @endforeach
 
                 </tbody>
