@@ -343,7 +343,6 @@ class JamboPay implements Jambo
             ->withContentType('application/x-www-form-urlencoded')->returnResponseObject()->get();
         try {
             return json_decode($p->content);
-            return (bool)$r->Exists;
         } catch (\Exception $e) {
             return false;
         }
@@ -364,7 +363,7 @@ class JamboPay implements Jambo
 
     /**
      * @param int|null $patient_id
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * @return JambopayPayment[]
      */
     public function pendingBills($patient_id = null)
     {
@@ -382,6 +381,20 @@ class JamboPay implements Jambo
     public function checkPayments()
     {
         $pending = $this->pendingBills();
-        dd($pending);
+        foreach ($pending as $bill) {
+            $patient = Patients::find($bill->patient_id);
+            $status = $this->getBillStatus($patient, $bill->BillNumber);
+            if ($status->PaymentStatus) {
+                $this->processPayment($status);
+            }
+        }
+    }
+
+    /**
+     * @param object $status
+     */
+    private function processPayment($status)
+    {
+        dd($status);
     }
 }
