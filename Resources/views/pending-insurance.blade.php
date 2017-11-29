@@ -23,6 +23,7 @@
                 <?php $n = 0; ?>
                 @foreach($pending as $item)
                     <?php
+                    try{
                     $visit = $item->visit;
                     $scheme = $visit->patient_scheme->schemes;
                     ?>
@@ -56,6 +57,9 @@
                                 <i class="fa fa-exchange"></i>Change</a>
                         </td>
                     </tr>
+                    <?php
+                    }catch (\Exception $e) {
+                    }
                 @endforeach
 
                 </tbody>
