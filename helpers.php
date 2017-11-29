@@ -82,6 +82,9 @@ if (!function_exists('payment_modes')) {
         if (!empty($payment->cash)) {
             $modes[] = 'Cash';
         }
+        if (!empty($payment->jambopay)) {
+            $modes[] = 'Jambopay';
+        }
         if (!empty($payment->card)) {
             $modes[] = 'Credit Card';
         }

@@ -53,7 +53,7 @@ class JambopayPayment extends Model
 
     public function payments()
     {
-        return $this->belongsTo(EvaluationPayments::class, 'payment');
+        return $this->belongsTo(EvaluationPayments::class, 'payment_id');
     }
 
     public function patient()

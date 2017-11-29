@@ -1,9 +1,10 @@
 <?php
 extract($data);
-$clinic =get_clinic();
+$clinic = get_clinic();
 $t = 0;
 $thermal = null;
-function amount_after_discount($discount, $amount) {
+function amount_after_discount($discount, $amount)
+{
     try {
         $discounted = $amount - (($discount / 100) * $amount);
         return ceil($discounted);
@@ -12,7 +13,8 @@ function amount_after_discount($discount, $amount) {
     }
 }
 
-function getAmount($sales) {
+function getAmount($sales)
+{
     $total = 0;
     foreach ($sales->goodies as $g) {
         $total += amount_after_discount($g->discount, $g->unit_cost * $g->quantity);
@@ -24,17 +26,18 @@ function getAmount($sales) {
 <title>RECEIPT</title>
 <body onload="window.print()">
 <style>
-    body{
+    body {
         /*font-weight: bold;*/
         font-family: Arial, Helvetica, sans-serif;
     }
-    table{
+
+    table {
         font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
         border-collapse: collapse;
         width: 100%;
     }
 
-    table th{
+    table th {
         border: 1px solid #eee;
         text-align: left;
         padding: 1px;
@@ -43,38 +46,41 @@ function getAmount($sales) {
 
     /*table tr:nth-child(even){background-color: #f2f2f2}*/
 
-    table tr:hover {background-color: #ddd;}
+    table tr:hover {
+        background-color: #ddd;
+    }
 
-    table th{
+    table th {
         padding-top: 1px;
         padding-bottom: 1px;
         background-color: #eee;
         color: black;
         /*font-size: 90%;*/
     }
+
     /*.left{*/
-        /*width: 60%;*/
-        /*float: left;*/
+    /*width: 60%;*/
+    /*float: left;*/
     /*}*/
     /*.right{*/
-        /*float: left;*/
-        /*width: 40%;*/
+    /*float: left;*/
+    /*width: 40%;*/
     /*}*/
     /*.clear{*/
-        /*clear: both;*/
+    /*clear: both;*/
     /*}*/
     /*img{*/
-        /*width:100%;*/
-        /*height: auto;*/
+    /*width:100%;*/
+    /*height: auto;*/
     /*}*/
     /*td{*/
-        /*font-size: 90%;*/
+    /*font-size: 90%;*/
     /*}*/
     /*div #footer{*/
-        /*font-size: 90%;*/
+    /*font-size: 90%;*/
     /*}*/
     /*th{*/
-        /*font-size: 90%;*/
+    /*font-size: 90%;*/
     /*}*/
 </style>
 <div class="box box-info">
@@ -108,7 +114,12 @@ function getAmount($sales) {
                         <td>{{number_format($payment->cash->amount,2)}}</td>
                     </tr>
                 @endif
-
+                @if(!empty($payment->jambopay))
+                    <tr>
+                        <td>Jambopay:</td>
+                        <td>{{number_format($payment->jambopay->Amount,2)}}</td>
+                    </tr>
+                @endif
                 @if(!empty($payment->mpesa))
                     <tr>
                         <td>Mpesa {{$payment->mpesa->reference?'('.$payment->mpesa->reference.')':''}}:</td>
