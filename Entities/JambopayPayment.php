@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Reception\Entities\Patients|null $patient
- * @property-read \Ignite\Finance\Entities\EvaluationPayments $payments
+ * @property-read \Ignite\Finance\Entities\EvaluationPayments|null $payments
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereAmount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereBillNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\JambopayPayment whereCode($value)

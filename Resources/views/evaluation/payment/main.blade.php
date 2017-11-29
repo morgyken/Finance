@@ -10,7 +10,7 @@
                 @elseif($item->invoiced)
                     <div class="label label-warning">Invoiced</div>
                 @endif
-                {{$item->procedures->name}} <i class="small">({{ucwords($item->type)}})</i> -
+                {{$item->procedures->name}} <i class="small">({!! $item->nice_type!!})</i> -
                 Ksh {{$item->amount??$item->price}}
             </td>
         @else
@@ -28,7 +28,7 @@
                 <input type="hidden" value="investigations" name="type{{$item->id}}"/>
             <td>
                 {{$item->procedures->name}}
-                <i class="small">({{ucwords($item->type)}})</i> - Ksh <span
+                <i class="small">({!! $item->nice_type!!})</i> - Ksh <span
                         class="topay">{{$item->amount??$item->price}}</span>
                 @endif
             </td>
