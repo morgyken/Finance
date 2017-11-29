@@ -349,6 +349,10 @@ class JamboPay implements Jambo
         }
     }
 
+    /**
+     * @param $arrays
+     * @throws ApiException
+     */
     private function validatePayload($arrays)
     {
         foreach ($arrays as $key => $value) {
@@ -356,5 +360,28 @@ class JamboPay implements Jambo
                 throw new ApiException('Missing value for required field ' . $key);
             }
         }
+    }
+
+    /**
+     * @param int|null $patient_id
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function pendingBills($patient_id = null)
+    {
+        $query = JambopayPayment::where('created_at', '>=', Carbon::yesterday())
+            ->whereComplete(false);
+        if ($patient_id) {
+            $query = $query->wherePatientId($patient_id);
+        }
+        return $query->get();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function checkPayments()
+    {
+        $pending = $this->pendingBills();
+        dd($pending);
     }
 }

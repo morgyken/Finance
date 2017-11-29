@@ -38,4 +38,15 @@ interface Jambo
      * @return mixed
      */
     public function getBillStatus(Patients $patients, $bill_number);
+
+    /**
+     * @return mixed
+     */
+    public function checkPayments();
+
+    /**
+     * @param int|null $patient_id
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function pendingBills($patient_id = null);
 }

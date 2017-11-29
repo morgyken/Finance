@@ -18,5 +18,6 @@ class Kernel extends ConsoleKernel
         parent::schedule($schedule);
         $schedule->command('finance:fix-prescription')->everyFiveMinutes()->withoutOverlapping();
         $schedule->command('finance:prepare-payments')->everyMinute()->withoutOverlapping();
+        $schedule->command('finance:jambopay')->everyMinute()->withoutOverlapping();
     }
 }

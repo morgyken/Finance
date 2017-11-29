@@ -72,11 +72,10 @@ class APIController extends Controller
         }
     }
 
-    public function getPendingBills($patient_id)
+    public function getPendingBills(Jambo $jambo, $patient_id)
     {
         $bills = [];
-        $_bills = JambopayPayment::where('created_at', '>=', Carbon::yesterday())
-            ->wherePatientId($patient_id)->whereComplete(false)->get();
+        $_bills = $jambo->pendingBills($patient_id);
         foreach ($_bills as $bill) {
             $bills[] = [
                 $bill->BillNumber,
