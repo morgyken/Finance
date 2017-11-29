@@ -16,10 +16,14 @@ function show_information() {
             return parseInt(j) || 0;
         }
 
-        var cash = parser($('input[name=CashAmount]').val());
-        var mpesa = parser($('input[name=MpesaAmount]').val());
-        var cheque = parser($('input[name=ChequeAmount]').val());
-        var card = parser($('input[name=CardAmount]').val());
+        // var cash = parser($('input[name=CashAmount]').val());
+        // var mpesa = parser($('input[name=MpesaAmount]').val());
+        // var cheque = parser($('input[name=ChequeAmount]').val());
+        // var card = parser($('input[name=CardAmount]').val());
+        var cash = parser($('#cash_amount').val());
+        var mpesa = parser($('#mpesa_mount').val());
+        var cheque = parser($('#cheque_amount').val());
+        var card = parser($('#card_amount').val());
         var jp = 0;
         if (JP_PAID)
             jp = parser($('input[name=JPAmount]').val());

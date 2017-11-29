@@ -51,7 +51,7 @@
                     @if(isset($visit))
                         <input type="hidden" name="visit" value="{{$visit->id}}">
                     @endif
-                    {!! Form::text('cash[amount]',old('cash[amount]'), ['class'=>'form-control','placeholder'=>'Cash Amount']) !!}
+                    {!! Form::text('cash[amount]',old('cash[amount]'), ['class'=>'form-control','placeholder'=>'Cash Amount','id'=>'cash_amount']) !!}
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
             <div class="form-group">
                 <label class="col-md-4 control-label">Amount</label>
                 <div class="col-md-8">
-                    {!! Form::text('mpesa[amount]',old('mpesa[amount]'),['class'=>'form-control','placeholder'=>'Mpesa Amount']) !!}
+                    {!! Form::text('mpesa[amount]',old('mpesa[amount]'),['class'=>'form-control','placeholder'=>'Mpesa Amount','id'=>'mpesa_amount']) !!}
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label">Amount:</label>
                     <div class="col-md-8">
-                        {!! Form::text('cheque[amount]',old('cheque[amount]'),['class'=>'form-control','placeholder'=>'Amount']) !!}
+                        {!! Form::text('cheque[amount]',old('cheque[amount]'),['class'=>'form-control','placeholder'=>'Amount','id'=>'cheque_amount']) !!}
                     </div>
                 </div>
             </div>
@@ -145,7 +145,7 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label">Amount:</label>
                     <div class="col-md-8">
-                        {!! Form::text('card[amount]',old('card[amount]'),['placeholder'=>'Card Amount','class'=>'form-control']) !!}
+                        {!! Form::text('card[amount]',old('card[amount]'),['placeholder'=>'Card Amount','class'=>'form-control','id'=>'card_amount']) !!}
                     </div>
                 </div>
             </div>
