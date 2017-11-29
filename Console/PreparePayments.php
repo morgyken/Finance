@@ -47,6 +47,7 @@ class PreparePayments extends Command
         while ($time < 55) {
             $this->enumerateLists();
             $x++;
+            $time = microtime(true) - $start;
         }
         $this->warn($x . ' script(s) took - ' . $time);
     }

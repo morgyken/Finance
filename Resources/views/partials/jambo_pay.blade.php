@@ -1,22 +1,41 @@
 <h4>Jambopay</h4>
 <div>
-    <div id="wallet_op">
-        <div class="form-group">
-            <label class="col-md-4 control-label">Amount</label>
-            <div class="col-md-8">
-                {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
-            </div>
+    <div id="wallet_op"></div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Amount</label>
+        <div class="col-md-8">
+            {!! Form::text('JPAmount',old('JPAmount'),['class'=>'form-control','placeholder'=>'Jambopay Amount']) !!}
+            {!! Form::hidden('JPid') !!}
         </div>
-
     </div>
-
     <div class="pull-right">
         {{--<button type="button" class="btn btn-xs btn-primary" id="JPWcreate">Create Wallet</button>--}}
         <button type="button" class="btn btn-xs btn-primary" id="JPWbill">Post Bill</button>
-        <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Check Bill Status</button>
+        <button type="button" class="btn btn-xs btn-primary" id="JPWstatus">Finalize Bill</button>
+        <a href="#" class="btn btn-xs btn-default" id="JPWprint"
+           target="_blank"><i class="fa fa-print"></i> Print Bill
+        </a>
         <div class="loader" id="jpLoader"></div>
     </div>
-
+    <div class="clearfix"></div>
+    <br/><br/>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>Pending bills</h4>
+        </div>
+        <div class="panel-body">
+            <table class="table table-responsive table-stripped" id="JPbills">
+                <thead>
+                <tr>
+                    <th>Bill ID</th>
+                    <th>Bill Amount</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
     <style>
         .swal-overlay {
             background-color: rgba(30, 30, 30, 0.9);
@@ -24,177 +43,12 @@
         }
     </style>
     <script>
-        $(function () {
-            var $loader = $('#jpLoader');
-            var ACTIVE_BILL = null;
-            var $create = $('button#JPWcreate');
-            var $bill = $('button#JPWbill');
-            var $billStatus = $('button#JPWstatus');
-            var PIN = null;
-            $create.click(function () {
-                $create.prop('disabled', true);
-                swal({
-                    text: 'Enter the desired Jambopay wallet PIN',
-                    content: {
-                        element: "input",
-                        attributes: {
-                            placeholder: "Enter the walllet PIN",
-                            type: "text"
-                        }
-                    },
-                    button: {
-                        text: "Create Wallet",
-                        closeModal: false
-                    }
-                }).then(function (name) {
-                    if (!name) throw null;
-                    PIN = name;
-                    return fetch("<?=route('api.finance.wallet.create', $patient->id)?>?pin=" + name);
-                }).then(function (results) {
-                    return results.json();
-                }).then(function (result) {
-                    if (result.success) {
-                        swal({
-                            title: "Wallet created",
-                            text: "Jambopay wallet has been created with pin " + PIN + ", go ahead to post bill",
-                            icon: "success"
-                        });
-                        $create.hide();
-                        $bill.show();
-                    }
-                    else {
-                        swal("Oh no!", "There is an issue with your network", "error");
-                    }
-                }).catch(function (err) {
-                    if (err) {
-                        swal("Oh no!", "There is an issue with your network", "error");
-                    } else {
-                        swal.stopLoading();
-                        swal.close();
-                    }
-                });
-            });
-            $bill.click(function () {
-                var JPAmount = $('input[name=JPAmount]').val();
-                if (!JPAmount) {
-                    alertify.error("Please enter amount to bill");
-                    return;
-                }
-                $bill.hide();
-                $.ajax({
-                    url: '<?=route('api.finance.wallet.post', $patient->id)?>',
-                    dataType: 'JSON',
-                    type: 'POST',
-                    data: {
-                        amount: parseInt(JPAmount)
-                    },
-                    beforeSend: function () {
-                        $loader.show();
-                    },
-                    success: function (response) {
-                        $loader.hide();
-                        if (response.success) {
-                            $billStatus.show();
-                            $bill.hide();
-                            var obj = JSON.parse(response.bill);
-                            ACTIVE_BILL = obj.BillNumber;
-                            swal({
-                                title: "Bill Posted!",
-                                text: "Request the customer to complete transaction. " +
-                                "Bill ID is " + obj.BillNumber,
-                                button: "Nice",
-                                icon: "info",
-                                timer: 10000
-                            });
-                        } else {
-                            swal(
-                                {
-                                    title: 'Oh No!',
-                                    text: response.error,
-                                    icon: 'error'
-                                }
-                            );
-                        }
-                    }
-                    ,
-                    error: function () {
-                        swal(
-                            {
-                                title: 'Oh No!',
-                                text: "Network issue",
-                                icon: 'error'
-                            }
-                        );
-                    }
-                })
-                ;
-            });
-            $billStatus.click(function () {
-                $.ajax({
-                    url: '<?=route('api.finance.wallet.status', $patient->id)?>',
-                    dataType: 'JSON',
-                    type: 'POST',
-                    data: {
-                        bill: ACTIVE_BILL
-                    },
-                    beforeSend: function () {
-                        $billStatus.hide();
-                        $loader.show();
-                    },
-                    success: function (response) {
-                        $billStatus.show();
-                        $loader.hide();
-                        if (response.success) {
-                            alertify.success("Bill stated: " + response.status.PaymentStatusName);
-                        } else {
-                            alertify.log(response.error);
-                        }
-                    },
-                    error: function () {
-                        swal(
-                            {
-                                title: 'Oh No!',
-                                text: "Network issues",
-                                icon: 'error'
-                            }
-                        );
-                    }
-                });
-            });
-            $create.hide();
-            $bill.hide();
-            $billStatus.hide();
-            $.ajax({
-                url: '<?=route('api.finance.wallet.check', $patient->id)?>',
-                dataType: 'JSON',
-                type: 'GET',
-                beforeSend: function () {
-                    $loader.show();
-                },
-                success: function (response) {
-                    $loader.hide();
-                    if (response.success) {
-                        if (response.exist) {
-                            $bill.show();
-                        } else {
-                            $('#wallet_op').html("<span class='text-warning'>Patient has no jambopay wallet</span>");
-                            $create.show();
-                        }
-                    } else {
-                        alertify.log(response.error);
-                    }
-                },
-                error: function (data) {
-                    $('#wallet_op').html("<span class='text-warning'>Cannot contact jambopay for wallet information</span>");
-                    swal(
-                        {
-                            title: 'Oh No!',
-                            text: "Network error",
-                            icon: 'error'
-                        }
-                    );
-                }
-            });
-        });
+        var JP_POST_BILL_URL = '<?=route('api.finance.wallet.post', $patient->id)?>';
+        var JP_CREATE_WALLET_URL = '<?=route('api.finance.wallet.create', $patient->id)?>';
+        var JP_WALLET_EXIST_URL = '<?=route('api.finance.wallet.check', $patient->id)?>';
+        var JP_BILL_STATUS_URL = '<?=route('api.finance.wallet.status', $patient->id)?>';
+        var JP_PENDING_BILLS_URL = '<?=route('api.finance.wallet.pending', $patient->id)?>';
+        var JP_BILL_PRINT_URL = '<?=route('finance.evaluation.ins.rcpt.print_jp')?>';
     </script>
+    <script src="{{m_asset('finance:js/jambopay.js')}}"></script>
 </div>

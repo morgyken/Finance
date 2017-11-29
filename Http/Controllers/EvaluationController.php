@@ -12,6 +12,7 @@ use Ignite\Finance\Entities\DispatchDetails;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\FinanceEvaluationInsurancePayments;
 use Ignite\Finance\Entities\InsuranceInvoice;
+use Ignite\Finance\Entities\JambopayPayment;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Finance\Entities\PatientTransaction;
 use Ignite\Finance\Entities\PaymentManifest;
@@ -138,7 +139,6 @@ class EvaluationController extends AdminBaseController
     {
         $patient = $request->patient;
         $invoice = $request->invoice;
-
         if (!empty($patient)) {
             $this->data['invoice_mode'] = $invoice;
             $this->data['deposit'] = $request->deposit;
@@ -533,6 +533,16 @@ class EvaluationController extends AdminBaseController
         $pdf = \PDF::loadView('finance::evaluation.print.rcpt', ['payment' => $payment]);
         $pdf->setPaper('a4', 'potrait');
         return @$pdf->stream('Bill' . $request->id . '.pdf');
+    }
+
+    public function printJamboReceipt(Request $request)
+    {
+        $payment = JambopayPayment::where('BillNumber', $request->bill)->first();
+        $height = 450;
+        $pdf = \PDF::loadView('finance::evaluation.print.jp_bill', ['bill' => $payment]);
+        $customPaper = [0, 0, 300, $height];
+        $pdf->setPaper($customPaper);
+        return @$pdf->download('JP Bill ' . $request->bill . '.pdf');
     }
 
     public function billToCash(Request $request)

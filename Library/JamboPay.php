@@ -4,6 +4,7 @@ namespace Ignite\Finance\Library;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Ignite\Finance\Entities\JambopayPayment;
 use Ignite\Finance\Library\Payments\Core\Exceptions\ApiException;
 use Ignite\Finance\Repositories\Jambo;
 use Ignite\Reception\Entities\Patients;
@@ -259,7 +260,9 @@ class JamboPay implements Jambo
             'amount' => $amount,
         ];
         $this->validatePayload($data);
-        return $this->universalBillGenerator((object)$data);
+        $bill = $this->universalBillGenerator((object)$data);
+        $attributes = array_merge(json_decode($bill, true), ['patient_id' => $patient->id]);
+        return JambopayPayment::create($attributes);
     }
 
     /**
