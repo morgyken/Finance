@@ -29,7 +29,7 @@ $__visits = $patient->visits->filter(function ($value) {
                     @include('finance::evaluation.form')
                 </div>
             @else
-                <div class="col-md-6">
+                <div class="col-md-6" id="bloodyMoves">
                     Patient Name: <strong>{{$patient->full_name}}</strong>
                     <hr/>
                     <h4>Select items for payment<span class="pull-right" id="total"></span></h4>

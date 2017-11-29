@@ -3,7 +3,7 @@ var JP_PAID = false;
 function show_information() {
     function calculate_cost_array() {
         var total = 0;
-        $('#paymentsTable').find('> tbody > tr').each(function () {
+        $('#bloodyMoves').find('> tbody > tr').each(function () {
             if ($(this).find('input:checkbox').is(':checked')) {
                 total += parseInt($(this).find('span').html());
             }
