@@ -92,7 +92,8 @@ $(function () {
                 dataType: 'JSON',
                 type: 'POST',
                 data: {
-                    amount: parseInt(JPAmount)
+                    amount: parseInt(JPAmount),
+                    payload: $('#payForm').serialize()
                 },
                 beforeSend: function () {
                     $loader.show();
