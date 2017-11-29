@@ -391,35 +391,35 @@ class EvaluationLibrary implements EvaluationRepository
     private function payment_methods(EvaluationPayments $payment)
     {
         $paid_amount = 0;
-        if ($this->request->has('CashAmount')) {
-            $paid_amount += $this->input['CashAmount'];
+        if ($this->request->has('cash.amount')) {
+            $paid_amount += request('cash.amount');
             PaymentsCash::create([
-                'amount' => $this->input['CashAmount'],
+                'amount' => \request('cash.amount'),
                 'payment' => $payment->id
             ]);
         }
         if ($this->request->has('JPAmount')) {
-            $paid_amount += $this->input['JPAmount'];
-            $jp = JambopayPayment::where('BillNumber', $this->input['JPid'])->first();
+            $paid_amount += request('JPAmount');
+            $jp = JambopayPayment::where('BillNumber', request('JPid'))->first();
             $jp->payment_id = $payment->id;
             $jp->processed = true;
             $jp->complete = true;
             $jp->save();
         }
-        if ($this->request->has('MpesaAmount')) {
-            $paid_amount += $this->input['MpesaAmount'];
+        if ($this->request->has('mpesa.amount')) {
+            $paid_amount += request('mpesa.amount');
             $code = null;
-            if (isset($this->input['MpesaCode'])) {
-                $code = $this->input['MpesaCode'];
+            if ($this->request->has('mpesa.code')) {
+                $code = request('mpesa.code');
             }
             PaymentsMpesa::create([
-                'amount' => $this->input['MpesaAmount'],
+                'amount' => request('mpesa.amount'),
                 'reference' => $code,
                 'payment' => $payment->id,
             ]);
         }
-        if ($this->request->has('CardAmount')) {
-            $paid_amount += $this->input['CardAmount'];
+        if ($this->request->has('card.amount')) {
+            $paid_amount += request('card.amount');
 
             $type = null;
             $name = null;
@@ -427,10 +427,10 @@ class EvaluationLibrary implements EvaluationRepository
             $expiry = null;
 
             try {
-                $type = $this->input['CardType'];
-                $name = $this->input['CardNames'];
-                $number = $this->input['CardNumber'];
-                $expiry = $this->input['CardExpiry'];
+                $type = request('card.type');
+                $name = request('card.names');
+                $number = request('card.number');
+                $expiry = request('card.expiry');
             } catch (\Exception $ex) {
                 //
             }
@@ -441,13 +441,13 @@ class EvaluationLibrary implements EvaluationRepository
                 'name' => $name,
                 'number' => $number,
                 'expiry' => $expiry,
-                'amount' => $this->input['CardAmount'],
+                'amount' => request('card.amount'),
                 'security' => '000',
                 'payment' => $payment->id
             ]);
         }
-        if ($this->request->has('ChequeAmount')) {
-            $paid_amount += $this->input['ChequeAmount'];
+        if ($this->request->has('cheque.Amount')) {
+            $paid_amount += request('cheque.Amount');
 
             $ChequeName = null;
             $ChequeDate = null;
@@ -456,11 +456,11 @@ class EvaluationLibrary implements EvaluationRepository
             $ChequeNumber = null;
 
             try {
-                $ChequeName = $this->input['ChequeName'];
-                $ChequeDate = $this->input['ChequeDate'];
-                $ChequeBank = $this->input['ChequeBank'];
-                $ChequeBankBranch = $this->input['ChequeBankBranch'];
-                $ChequeNumber = $this->input['ChequeNumber'];
+                $ChequeName = request('cheque.name');
+                $ChequeDate = request('cheque.date');
+                $ChequeBank = request('cheque.bank');
+                $ChequeBankBranch = request('cheque.bankBranch');
+                $ChequeNumber = request('cheque.number');
             } catch (\Exception $ex) {
 
             }
@@ -468,7 +468,7 @@ class EvaluationLibrary implements EvaluationRepository
             PaymentsCheque::create([
                 'name' => $ChequeName,
                 'date' => $ChequeDate,
-                'amount' => $this->input['ChequeAmount'],
+                'amount' => request('cheque.amount'),
                 'bank' => $ChequeBank,
                 'bank_branch' => $ChequeBankBranch,
                 'number' => $ChequeNumber,
@@ -493,12 +493,12 @@ class EvaluationLibrary implements EvaluationRepository
     public function saveCheque($payment)
     {
         $cheque = new PaymentsCheque;
-        $cheque->name = $this->input['ChequeName'] ? strtoupper($this->input['ChequeName']) : '';
-        $cheque->date = $this->input['ChequeDate'] ? new \Date($this->input['ChequeDate']) : '';
-        $cheque->amount = $this->input['ChequeAmount'];
-        $cheque->bank = $this->input['ChequeBank'] ? $this->input['ChequeBank'] : '';
-        $cheque->bank_branch = $this->input['ChequeBankBranch'] ? $this->input['ChequeBankBranch'] : '';
-        $cheque->number = $this->input['ChequeNumber'] ? $this->input['ChequeNumber'] : '';
+        $cheque->name = $this->input['cheque.Name'] ? strtoupper($this->input['cheque.Name']) : '';
+        $cheque->date = $this->input['cheque.Date'] ? new \Date($this->input['cheque.Date']) : '';
+        $cheque->amount = $this->input['cheque.Amount'];
+        $cheque->bank = $this->input['cheque.Bank'] ? $this->input['cheque.Bank'] : '';
+        $cheque->bank_branch = $this->input['cheque.BankBranch'] ? $this->input['cheque.BankBranch'] : '';
+        $cheque->number = $this->input['cheque.Number'] ? $this->input['cheque.Number'] : '';
         $cheque->insurance_payment = $payment->id;
         $cheque->save();
     }
