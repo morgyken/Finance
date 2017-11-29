@@ -80,7 +80,11 @@ class EvaluationLibrary implements EvaluationRepository
         $this->prepareInput($this->input);
     }
 
-
+    /**
+     * @param $item
+     * @return bool
+     * @deprecated
+     */
     private function updatePrescriptions($item)
     {
         if ($this->isDrugPayment($item)) {

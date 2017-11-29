@@ -15,6 +15,7 @@ $__visits = $patient->visits->filter(function ($value) {
 
 @section('content')
     {!! Form::open(['id'=>'payForm','route'=>'finance.evaluation.pay.save','autocomplete'=>'off'])!!}
+    {!! Form::hidden('user_id',Auth::user()->id) !!}
     <div class="box box-info">
         <div class="box-body">
             @if(!empty($deposit))

@@ -4,14 +4,21 @@ namespace Ignite\Finance\Library;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Ignite\Evaluation\Entities\Investigations;
+use Ignite\Evaluation\Entities\Prescriptions;
+use Ignite\Finance\Entities\Copay;
+use Ignite\Finance\Entities\EvaluationPayments;
+use Ignite\Finance\Entities\EvaluationPaymentsDetails;
 use Ignite\Finance\Entities\JambopayPayment;
 use Ignite\Finance\Library\Payments\Core\Exceptions\ApiException;
+use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Finance\Repositories\Jambo;
 use Ignite\Reception\Entities\Patients;
 use Ixudra\Curl\Facades\Curl;
 
 /**
  * Class JamboPay
+ * @property object $old_request
  * @package Ignite\Finance\Library
  */
 class JamboPay implements Jambo
@@ -384,17 +391,131 @@ class JamboPay implements Jambo
         foreach ($pending as $bill) {
             $patient = Patients::find($bill->patient_id);
             $status = $this->getBillStatus($patient, $bill->BillNumber);
-            if ($status->PaymentStatus) {
-                $this->processPayment($status);
+            if (!empty($status->PaymentStatus)) {
+                $this->processPayment($bill, $status);
+            }
+        }
+        reload_payments();
+    }
+
+    /**
+     * @param JambopayPayment $bill
+     * @param $status
+     * @return int
+     */
+    private function processPayment($bill, $status)
+    {
+        $this->old_request = json_decode($bill->selected_items);
+        \DB::beginTransaction();
+        $payment = new EvaluationPayments;
+        $payment->patient = $bill->patient_id;
+        $payment->receipt = generate_receipt_no();
+        $payment->user = $this->old_request->user_id;
+        $payment->save();
+        $payment->amount = $this->saveJpRecord($payment, $status, $bill);
+        $payment->save();
+        $this->payment_details($payment);
+        $this->pay_id = $payment->id;
+        \DB::commit();
+        return $this->pay_id;
+    }
+
+    private function payment_details($payment)
+    {
+        $stack = function ($needle = null) {
+            $stack = [];
+            if (empty($needle)) {
+                $needle = 'item';
+            }
+            foreach ($this->old_request as $key => $one) {
+                if (starts_with($key, $needle)) {
+                    $stack[] = substr($key, strlen($needle));
+                }
+            }
+            return $stack;
+        };
+        $isPaymentFor = function ($item, $is): bool {
+            if ($this->old_request->{'type' . $item}) {
+                return ($this->old_request->{'type' . $item} === $is);
+            }
+            return false;
+        };
+        foreach ($stack() as $item) {
+            if ($isPaymentFor($item, 'pharmacy')) {
+                $this->updatePrescriptions($item, $payment);
+//                $this->drug_payment_details($request, $item, $payment);
+            } elseif ($isPaymentFor($item, 'copay')) {
+                $this->copayment($item, $payment);
+            } else {
+                $this->investigation_payment_details($item, $payment);
             }
         }
     }
 
     /**
-     * @param object $status
+     * @param $item
+     * @param $payment
+     * @return bool
      */
-    private function processPayment($status)
+
+    private function investigation_payment_details($item, $payment)
     {
-        dd($status);
+        $visit = 'visits' . $item;
+        $investigation = Investigations::find($item);
+        $detail = new EvaluationPaymentsDetails;
+        $detail->price = $investigation->price;
+        $detail->investigation = $item;
+        $detail->visit = $this->old_request->$visit;
+        $detail->payment = $payment->id;
+        $detail->cost = $investigation->procedures->price;
+        return $detail->save();
+    }
+
+    /**
+     * @param $item
+     * @param $payment
+     * @return bool
+     */
+    private function copayment($item, $payment)
+    {
+        $copay = Copay::find($item);
+        $copay->payment_id = $payment->id;
+        return $copay->save();
+    }
+
+    /**
+     * @param $item
+     * @param EvaluationPayments $payment
+     * @return bool
+     */
+    private function updatePrescriptions($item, $payment)
+    {
+        $p = Prescriptions::find($this->old_request->{'item' . $item});
+        $p->payment()->update(['paid' => true]);
+        $visit = 'visits' . $item;
+        $detail = new EvaluationPaymentsDetails;
+        $detail->price = $p->payment->total;
+        $detail->prescription_id = $p->id;
+        $detail->visit = $this->old_request->$visit;
+        $detail->payment = $payment->id;
+        $detail->cost = $p->payment->total;
+        return $detail->save();
+    }
+
+    /**
+     * @param $payment
+     * @param $status
+     * @param JambopayPayment $jp
+     * @return int
+     */
+    public function saveJpRecord($payment, $status, $jp)
+    {
+        $jp->payment_id = $payment->id;
+        $jp->PaymentStatus = $status->PaymentStatus;
+        $jp->PaymentStatusName = $status->PaymentStatusName;
+        $jp->processed = true;
+        $jp->complete = true;
+        $jp->save();
+        return $status->Amount;
     }
 }
