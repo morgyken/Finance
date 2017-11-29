@@ -263,7 +263,7 @@ class JamboPay implements Jambo
         $bill = $this->universalBillGenerator((object)$data);
         $mine = null;
         parse_str(request('payload'), $mine);
-        $payload = ['selected_items' => array_except($mine, '_token')];
+        $payload = ['selected_items' => json_encode(array_except($mine, '_token'))];
         $bill_info = json_decode($bill, true);
         $attributes = array_merge($bill_info, ['patient_id' => $patient->id], $payload);
         return JambopayPayment::create($attributes);
