@@ -110,20 +110,20 @@ class FinanceController extends AdminBaseController
         return view('finance::split-bill', ['data' => $this->data]);
     }
 
-    public function saveDeposit(Request $request, $patient)
-    {
-        \DB::beginTransaction();
-        $payment = new EvaluationPayments;
-        $payment->patient = $patient;
-        $payment->receipt = generate_receipt_no();
-        $payment->user = $request->user()->id;
-        $payment->deposit = true;
-        $payment->save();
-        $payment->amount = $this->payment_methods($request, $payment);
-        $payment->save();
-        \DB::commit();
-        return redirect()->route('finance.account.deposit.done', $payment->id);
-    }
+    // public function saveDeposit(Request $request, $patient)
+    // {
+    //     \DB::beginTransaction();
+    //     $payment = new EvaluationPayments;
+    //     $payment->patient = $patient;
+    //     $payment->receipt = generate_receipt_no();
+    //     $payment->user = $request->user()->id;
+    //     $payment->deposit = true;
+    //     $payment->save();
+    //     $payment->amount = $this->payment_methods($request, $payment);
+    //     $payment->save();
+    //     \DB::commit();
+    //     return redirect()->route('finance.account.deposit.done', $payment->id);
+    // }
 
     public function printThermalInvoice(Request $request)
     {
@@ -137,85 +137,85 @@ class FinanceController extends AdminBaseController
     }
 
 
-    private function payment_methods(Request $request, EvaluationPayments $payment)
-    {
-        $paid_amount = 0;
-        if ($request->has('CashAmount')) {
-            $paid_amount += $this->input['CashAmount'];
-            PaymentsCash::create([
-                'amount' => $this->input['CashAmount'],
-                'payment' => $payment->id
-            ]);
-        }
-        if ($request->has('MpesaAmount')) {
-            $paid_amount += $this->input['MpesaAmount'];
-            $code = null;
-            if (isset($this->input['MpesaCode'])) {
-                $code = $this->input['MpesaCode'];
-            }
-            PaymentsMpesa::create([
-                'amount' => $this->input['MpesaAmount'],
-                'reference' => $code,
-                'payment' => $payment->id,
-            ]);
-        }
-        if ($request->has('CardAmount')) {
-            $paid_amount += $this->input['CardAmount'];
+    // private function payment_methods(Request $request, EvaluationPayments $payment)
+    // {
+    //     $paid_amount = 0;
+    //     if ($request->has('CashAmount')) {
+    //         $paid_amount += $this->input['CashAmount'];
+    //         PaymentsCash::create([
+    //             'amount' => $this->input['CashAmount'],
+    //             'payment' => $payment->id
+    //         ]);
+    //     }
+    //     if ($request->has('MpesaAmount')) {
+    //         $paid_amount += $this->input['MpesaAmount'];
+    //         $code = null;
+    //         if (isset($this->input['MpesaCode'])) {
+    //             $code = $this->input['MpesaCode'];
+    //         }
+    //         PaymentsMpesa::create([
+    //             'amount' => $this->input['MpesaAmount'],
+    //             'reference' => $code,
+    //             'payment' => $payment->id,
+    //         ]);
+    //     }
+    //     if ($request->has('CardAmount')) {
+    //         $paid_amount += $this->input['CardAmount'];
 
-            $type = null;
-            $name = null;
-            $number = null;
-            $expiry = null;
+    //         $type = null;
+    //         $name = null;
+    //         $number = null;
+    //         $expiry = null;
 
-            try {
-                $type = $this->input['CardType'];
-                $name = $this->input['CardNames'];
-                $number = $this->input['CardNumber'];
-                $expiry = $this->input['CardExpiry'];
-            } catch (\Exception $ex) {
-                //
-            }
+    //         try {
+    //             $type = $this->input['CardType'];
+    //             $name = $this->input['CardNames'];
+    //             $number = $this->input['CardNumber'];
+    //             $expiry = $this->input['CardExpiry'];
+    //         } catch (\Exception $ex) {
+    //             //
+    //         }
 
 
-            PaymentsCard::create([
-                'type' => $type,
-                'name' => $name,
-                'number' => $number,
-                'expiry' => $expiry,
-                'amount' => $this->input['CardAmount'],
-                'security' => '000',
-                'payment' => $payment->id
-            ]);
-        }
-        if ($request->has('ChequeAmount')) {
-            $paid_amount += $this->input['ChequeAmount'];
+    //         PaymentsCard::create([
+    //             'type' => $type,
+    //             'name' => $name,
+    //             'number' => $number,
+    //             'expiry' => $expiry,
+    //             'amount' => $this->input['CardAmount'],
+    //             'security' => '000',
+    //             'payment' => $payment->id
+    //         ]);
+    //     }
+    //     if ($request->has('ChequeAmount')) {
+    //         $paid_amount += $this->input['ChequeAmount'];
 
-            $ChequeName = null;
-            $ChequeDate = null;
-            $ChequeBank = null;
-            $ChequeBankBranch = null;
-            $ChequeNumber = null;
+    //         $ChequeName = null;
+    //         $ChequeDate = null;
+    //         $ChequeBank = null;
+    //         $ChequeBankBranch = null;
+    //         $ChequeNumber = null;
 
-            try {
-                $ChequeName = $this->input['ChequeName'];
-                $ChequeDate = $this->input['ChequeDate'];
-                $ChequeBank = $this->input['ChequeBank'];
-                $ChequeBankBranch = $this->input['ChequeBankBranch'];
-                $ChequeNumber = $this->input['ChequeNumber'];
-            } catch (\Exception $ex) {
+    //         try {
+    //             $ChequeName = $this->input['ChequeName'];
+    //             $ChequeDate = $this->input['ChequeDate'];
+    //             $ChequeBank = $this->input['ChequeBank'];
+    //             $ChequeBankBranch = $this->input['ChequeBankBranch'];
+    //             $ChequeNumber = $this->input['ChequeNumber'];
+    //         } catch (\Exception $ex) {
 
-            }
+    //         }
 
-            PaymentsCheque::create([
-                'name' => $ChequeName,
-                'date' => $ChequeDate,
-                'amount' => $this->input['ChequeAmount'],
-                'bank' => $ChequeBank,
-                'bank_branch' => $ChequeBankBranch,
-                'number' => $ChequeNumber,
-                'payment' => $payment->id
-            ]);
-        }
-        return $paid_amount;
-    }
+    //         PaymentsCheque::create([
+    //             'name' => $ChequeName,
+    //             'date' => $ChequeDate,
+    //             'amount' => $this->input['ChequeAmount'],
+    //             'bank' => $ChequeBank,
+    //             'bank_branch' => $ChequeBankBranch,
+    //             'number' => $ChequeNumber,
+    //             'payment' => $payment->id
+    //         ]);
+    //     }
+    //     return $paid_amount;
+    // }
 }

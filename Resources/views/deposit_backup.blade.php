@@ -11,9 +11,7 @@ extract($data);
 @section('content_description','Receive payment from patient')
 
 @section('content')
-    
-{!! Form::open(['id'=>'payment-details-form', 'url'=>"finance/patient/$patient->id/account/deposit", 'autocomplete'=>'off', 'files' => true])!!}
-    <input id="patient-detail" name="patient" type="hidden" value="{{$patient->id}}" />
+    {!! Form::open(['id'=>'payForm','route'=>['finance.account.deposit.save',$patient->id],'autocomplete'=>'off'])!!}
     <div class="box box-info">
         <div class="box-body">
             <div class="col-md-6">
@@ -23,48 +21,53 @@ extract($data);
                 <input type="hidden" name="deposit" value="1">
             </div>
             <div class="col-md-6">
-                <div class="accordion" id="someForm">
+                <div class="accordion form-horizontal" id="someForm">
                     <h4>Cash</h4>
                     <div>
                         <div class="form-group">
                             <label class="col-md-4 control-label">Cash Amount</label>
                             <div class="col-md-8">
-                                {!! Form::text('cash[amount]', null, ['class'=>'form-control']) !!}
+                                @if(isset($visit))
+                                    <input type="hidden" name="visit" value="{{$visit->id}}">
+                                @endif
+                                {!! Form::text('CashAmount',old('CashAmount'),['class'=>'form-control','placeholder'=>'Cash Amount']) !!}
                             </div>
                         </div>
                     </div>
-
                     <h4>Mpesa</h4>
                     <div>
                         <div class="form-group">
                             <label class="col-md-4 control-label">Mpesa Code</label>
                             <div class="col-md-8">
-                                {!! Form::text('mpesa[reference]', null, ['class'=>'form-control']) !!}
+                                {!! Form::text('MpesaCode',old('MpesaCode'),['class'=>'form-control','placeholder'=>'Transaction Number']) !!}
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-4 control-label">Amount</label>
                             <div class="col-md-8">
-                                {!! Form::text('mpesa[amount]', null, ['class'=>'form-control']) !!}
+                                {!! Form::text('MpesaAmount',old('MpesaAmount'),['class'=>'form-control','placeholder'=>'Mpesa Amount']) !!}
                             </div>
                         </div>
                     </div>
-
                     <h4>Cheque</h4>
                     <div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Name:</label>
                                 <div class="col-md-8">
-                                    {!! Form::text('cheque[name]', null, ['class'=>'form-control']) !!}
+                                    {!! Form::text('ChequeName',old('ChequeName'),['class'=>'form-control','placeholder'=>'Ac Holder Name']) !!}
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Date:</label>
+                                <div class="col-md-8">
+                                    {!! Form::text('ChequeDate',old('ChequeDate'),['class'=>'form-control datepicker','placeholder'=>'Date on Cheque']) !!}
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Amount:</label>
                                 <div class="col-md-8">
-                                    {!! Form::text('cheque[amount]', null, ['class'=>'form-control']) !!}
+                                    {!! Form::text('ChequeAmount',old('ChequeAmount'),['class'=>'form-control','placeholder'=>'Amount']) !!}
                                 </div>
                             </div>
                         </div>
@@ -72,20 +75,23 @@ extract($data);
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Bank:</label>
                                 <div class="col-md-8">
-                                    {!! Form::text('cheque[bank]', null,['class'=>'form-control']) !!}
+                                    {!! Form::text('ChequeBank',old('ChequeBank'),['class'=>'form-control','placeholder'=>'Bank']) !!}
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">    
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">Branch:</label>
+                                <div class="col-md-8">
+                                    {!! Form::text('ChequeBankBranch',old('ChequeBankBranch'),['class'=>'form-control','placeholder'=>'Branch']) !!}
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Cheque Number:</label>
                                 <div class="col-md-8">
-                                    {!! Form::text('cheque[number]', null, ['class'=>'form-control']) !!}
+                                    {!! Form::text('ChequeNumber',old('ChequeNumber'),['class'=>'form-control','placeholder'=>'Cheque Number']) !!}
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <h4>Credit Card</h4>
                     <div>
                         <div class="col-md-6">
@@ -98,13 +104,13 @@ extract($data);
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Name:</label>
                                 <div class="col-md-8">
-                                    {!! Form::text('card[name]', null, ['class'=>'form-control']) !!}
+                                    {!! Form::text('CardNames',old('CardNames'),['placeholder'=>'Name on Card','class'=>'form-control']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Card No:</label>
                                 <div class="col-md-8">
-                                    {!! Form::text('card[number]', null, ['class'=>'form-control']) !!}
+                                    {!! Form::text('CardNumber',old('CardNumber'),['class'=>'form-control','placeholder'=>'16 digit card number']) !!}
                                 </div>
                             </div>
                         </div>
@@ -112,13 +118,13 @@ extract($data);
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Expiry:</label>
                                 <div class="col-md-8">
-                                    {!! Form::text('card[expiry]', null, ['placeholder'=>'eg. 04/22','class'=>'form-control']) !!}
+                                    {!! Form::text('CardExpiry',old('expiry'),['placeholder'=>'eg. 04/22','class'=>'form-control']) !!}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Amount:</label>
                                 <div class="col-md-8">
-                                    {!! Form::text('card[amount]', null, ['class'=>'form-control']) !!}
+                                    {!! Form::text('CardAmount',old('CardAmount'),['placeholder'=>'Card Amount','class'=>'form-control']) !!}
                                 </div>
                             </div>
                         </div>
@@ -131,16 +137,16 @@ extract($data);
                             <span id="all"></span><br/>
                         </div>
                         <div class="pull-right">
-                            <button class="btn btn-success" type="submit"><i
+                            <button class="btn btn-success" type="submit" id="saver"><i
                                         class="fa fa-save"></i> Save
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div> 
-    </div>    
-{!! Form::close()!!}
+        </div>
+    </div>
+    {!! Form::close()!!}
 
     <script src="{{m_asset('finance:js/payments.js')}}"></script>
     <style type="text/css">
