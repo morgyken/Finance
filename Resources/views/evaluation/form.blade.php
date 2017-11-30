@@ -55,6 +55,21 @@
                 </div>
             </div>
         </div>
+        @if($patient->account)
+            <h4>Patient Account</h4>
+            <div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label">Amount</label>
+                    <div class="col-md-8">
+                        @if(isset($visit))
+                            <input type="hidden" name="visit" value="{{$visit->id}}">
+                        @endif
+                        {!! Form::text('account[amount]',old('account[amount]'), ['class'=>'form-control','placeholder'=>'Amount','id'=>'account_amount']) !!}
+                        <span class="help-block">Account balance Ksh {{number_format($patient->account->balance,2)}}</span>
+                    </div>
+                </div>
+            </div>
+        @endif
         <h4>Mpesa</h4>
         <div>
             <div class="form-group">
