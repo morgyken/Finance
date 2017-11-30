@@ -25,7 +25,7 @@ extract($data);
                             <td>{{$patient->full_name}}</td>
                             <td>{{$patient->id_no}}</td>
                             <td>{{$patient->mobile}}</td>
-                            <th>{{get_patient_balance_real($patient->id)}}</th>
+                            <th>{{$patient->account->balance??0}}</th>
                             <td>
                                 <a class="btn btn-primary btn-xs"
                                    href="{{route('finance.account.deposit',['patient'=>$patient->id])}}">
