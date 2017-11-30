@@ -9,7 +9,7 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <i class="fa fa-user"></i> {{ $patient->full_name }}
-            <span class="pull-right">Balance (Kshs): 
+            <span class="pull-right">Balance (Kshs):
                 <span id="all"><b>{{ $patient->account ?$patient->account->balance : 0}}</b></span>
             </span>
         </div>
