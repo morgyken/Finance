@@ -61,7 +61,7 @@ class PatientAccountController extends AdminBaseController
         }
         else
         {
-            return redirect()->back()->with('success', 'Patient account top up successful');
+            return redirect()->route('finance.account.deposit.done', $payment->id);
         }
     }
 }

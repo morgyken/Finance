@@ -41,7 +41,9 @@ $router->group(['prefix' => 'self-accounts', 'as' => 'account.'], function (Rout
     $router->get('patients', ['uses' => 'FinanceController@list', 'as' => 'list']);
     $router->get('deposit/{id}/request', ['uses' => 'FinanceController@deposit', 'as' => 'deposit']);
     $router->get('deposit/{id}/done', ['uses' => 'FinanceController@doneDeposit', 'as' => 'deposit.done']);
-    $router->post('deposit/{id}/do', ['uses' => 'FinanceController@saveDeposit', 'as' => 'deposit.save']);
+    // $router->post('deposit/{id}/do', ['uses' => 'FinanceController@saveDeposit', 'as' => 'deposit.save']);
+    $router->post('deposit/{id}/do', ['uses' => 'PatientAccountController@store', 'as' => 'deposit.save']);
+
 });
 //financials
 $router->group(['prefix' => 'evaluation', 'as' => 'evaluation.'], function (Router $router) {
