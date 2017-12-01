@@ -49,7 +49,7 @@ extract($data);
                         <td></td>
                         <td style="text-align: right">Total Account Balance</td>
                         <th>
-                            {{get_patient_balance($payment->patients->id)}}
+                            {{number_format($payment->patients->account->balance,2)}}
                         </th>
                     </tr>
                 </table>
@@ -77,7 +77,7 @@ extract($data);
                     Amount: Ksh {{$payment->card->amount}}
                     <hr/>
                 @endif
-                <strong>Total Amount Paid: Ksh {{$payment->total}}</strong>
+                <strong>Total Amount Paid: Ksh {{number_format($payment->total,2)}}</strong>
                 <hr/>
             </div>
         </div>

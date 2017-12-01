@@ -92,7 +92,7 @@ class FinanceController extends AdminBaseController
     {
         $this->data['payment'] = EvaluationPayments::find($id);
         $this->data['patient'] = Patients::find($this->data['payment']->patient);
-        return view('finance::deposit_details', ['data' => $this->data]);
+        return view('finance::accounts.deposit_details', ['data' => $this->data]);
     }
 
     public function changeMode(Request $request)
