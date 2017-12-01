@@ -22,6 +22,11 @@ function show_information() {
         // var card = parser($('input[name=CardAmount]').val());
         var cash = parser($('#cash_amount').val());
         var account = parser($('#account_amount').val());
+        if (account > __UXCT) {
+            account = __UXCT;
+            alertify.log("Patient account balance is " + account);
+            $('#account_amount').val(account);
+        }
         var mpesa = parser($('#mpesa_amount').val());
         var cheque = parser($('#cheque_amount').val());
         var card = parser($('#card_amount').val());
