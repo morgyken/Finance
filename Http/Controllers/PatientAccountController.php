@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Ignite\Reception\Entities\Patients;
+use Ignite\Finance\Repositories\PaymentsRepository;
 use Ignite\Finance\Repositories\PatientAccountRepository;
-use Ignite\Evaluation\Repositories\PaymentsRepository;
 
 class PatientAccountController extends AdminBaseController
 {
