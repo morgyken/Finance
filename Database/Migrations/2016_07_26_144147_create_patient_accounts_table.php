@@ -11,16 +11,13 @@ class CreatePatientAccountsTable extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('finance_patient_accounts', function(Blueprint $column) {
-            $column->increments('id');
-            $column->string('reference')->unique();
-            $column->longText('details');
-            $column->decimal('credit', 10, 2)->default(0);
-            $column->decimal('debit', 10, 2)->default(0);
-            $column->integer('patient')->unsigned();
+        Schema::create('finance_patient_accounts', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('patient')->unsigned();
+            $table->decimal('balance', 10, 2);
             //$column->
-            $column->timestamps();
-            $column->foreign('patient')
+            $table->timestamps();
+            $table->foreign('patient')
                     ->references('id')
                     ->on('reception_patients')
                     ->onUpdate('cascade')
