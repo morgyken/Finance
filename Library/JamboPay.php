@@ -387,15 +387,17 @@ class JamboPay implements Jambo
      */
     public function checkPayments()
     {
-        $pending = $this->pendingBills();
-        foreach ($pending as $bill) {
-            $patient = Patients::find($bill->patient_id);
-            $status = $this->getBillStatus($patient, $bill->BillNumber);
-            if (!empty($status->PaymentStatus)) {
-                $this->processPayment($bill, $status);
+        if (m_setting('finance.enable_jambo_pay')) {
+            $pending = $this->pendingBills();
+            foreach ($pending as $bill) {
+                $patient = Patients::find($bill->patient_id);
+                $status = $this->getBillStatus($patient, $bill->BillNumber);
+                if (!empty($status->PaymentStatus)) {
+                    $this->processPayment($bill, $status);
+                }
             }
+            reload_payments();
         }
-        reload_payments();
     }
 
     /**

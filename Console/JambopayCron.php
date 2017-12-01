@@ -45,8 +45,6 @@ class JambopayCron extends Command
      */
     public function fire()
     {
-        if (m_setting('finance.enable_jambo_pay')) {
-            $this->repository->checkPayments();
-        }
+        $this->repository->checkPayments();
     }
 }
