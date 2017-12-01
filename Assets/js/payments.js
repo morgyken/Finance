@@ -21,13 +21,14 @@ function show_information() {
         // var cheque = parser($('input[name=ChequeAmount]').val());
         // var card = parser($('input[name=CardAmount]').val());
         var cash = parser($('#cash_amount').val());
+        var account = parser($('#account_amount').val());
         var mpesa = parser($('#mpesa_mount').val());
         var cheque = parser($('#cheque_amount').val());
         var card = parser($('#card_amount').val());
         var jp = 0;
         if (JP_PAID)
             jp = parser($('input[name=JPAmount]').val());
-        return (cash + mpesa + cheque + card + jp);
+        return (cash + mpesa + cheque + card + jp + account);
     }
 
 

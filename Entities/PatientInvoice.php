@@ -6,31 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Ignite\Users\Entities\User;
 use Ignite\Reception\Entities\Patients;
 
-/**
- * Ignite\Finance\Entities\PatientInvoice
- *
- * @property int $id
- * @property int $patient_id
- * @property int|null $user_id
- * @property float|null $amount
- * @property string|null $description
- * @property string $status
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Ignite\Finance\Entities\PatientInvoiceDetails[] $details
- * @property-read mixed $total
- * @property-read \Ignite\Reception\Entities\Patients $patient
- * @property-read \Ignite\Users\Entities\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientInvoice whereAmount($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientInvoice whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientInvoice whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientInvoice whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientInvoice wherePatientId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientInvoice whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientInvoice whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\Ignite\Finance\Entities\PatientInvoice whereUserId($value)
- * @mixin \Eloquent
- */
+
 class PatientInvoice extends Model {
 
     protected $fillable = [];

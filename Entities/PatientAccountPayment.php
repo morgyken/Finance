@@ -4,9 +4,8 @@ namespace Ignite\Finance\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-
-class Transactions extends Model
+class PatientAccountPayment extends Model
 {
-    protected $table = 'finance_mpesa_transactions';
     protected $guarded = [];
+    protected $table = 'finance_patient_account_payments';
 }

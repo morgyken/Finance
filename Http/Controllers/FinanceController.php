@@ -79,7 +79,7 @@ class FinanceController extends AdminBaseController
     public function list()
     {
         $this->data['patients'] = Patients::all();
-        return view('finance::patient_accounts', ['data' => $this->data]);
+        return view('finance::accounts.patient_accounts', ['data' => $this->data]);
     }
 
     public function deposit($id)

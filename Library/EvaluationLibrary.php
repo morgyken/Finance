@@ -26,6 +26,7 @@ use Ignite\Finance\Entities\InsuranceInvoice;
 use Ignite\Finance\Entities\InsuranceInvoicePayment;
 use Ignite\Finance\Entities\JambopayPayment;
 use Ignite\Finance\Entities\PatientAccount;
+use Ignite\Finance\Entities\PatientAccountPayment;
 use Ignite\Finance\Entities\PatientInvoice;
 use Ignite\Finance\Entities\PatientInvoiceDetails;
 use Ignite\Finance\Entities\PatientTransaction;
@@ -388,6 +389,13 @@ class EvaluationLibrary implements EvaluationRepository
             ->sum('amount');
     }
 
+    private function debitAccount($user, $amount)
+    {
+        $acc = PatientAccount::wherePatientId($user)->first();
+        $acc->balance -= $amount;
+        return $acc->save();
+    }
+
     private function payment_methods(EvaluationPayments $payment)
     {
         $paid_amount = 0;
@@ -397,6 +405,14 @@ class EvaluationLibrary implements EvaluationRepository
                 'amount' => \request('cash.amount'),
                 'payment' => $payment->id
             ]);
+        }
+        if ($this->request->has('account.amount')) {
+            $paid_amount += request('account.amount');
+            PatientAccountPayment::create([
+                'amount' => \request('account.amount'),
+                'payment' => $payment->id
+            ]);
+            $this->debitAccount($payemtn, \request('account.amount'));
         }
         if ($this->request->has('JPAmount')) {
             $paid_amount += request('JPAmount');
