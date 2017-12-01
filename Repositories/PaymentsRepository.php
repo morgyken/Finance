@@ -1,4 +1,5 @@
 <?php
+
 namespace Ignite\Finance\Repositories;
 
 use Ignite\Finance\Entities\EvaluationPayments;
@@ -18,11 +19,12 @@ class PaymentsRepository
 
         $details['receipt'] = str_random(10);
 
-        $details['amount'] = $this->total();
 
         $details['deposit'] = true;
-
-        return EvaluationPayments::create($details);
+        $this->payment = EvaluationPayments::create($details);
+        $this->payment->amount = $this->total();
+        $this->payment->save();
+        return $this->payment;
     }
 
     /*
@@ -41,9 +43,9 @@ class PaymentsRepository
     public function getModes()
     {
         return collect([
-            'cash'  => $this->payment->cash, 
-            'card'  => $this->payment->card, 
-            'cheque'=> $this->payment->cheque, 
+            'cash' => $this->payment->cash,
+            'card' => $this->payment->card,
+            'cheque' => $this->payment->cheque,
             'mpesa' => $this->payment->mpesa
         ]);
     }
@@ -53,8 +55,8 @@ class PaymentsRepository
     */
     public function modes()
     {
-        return $this->getModes()->filter(function($mode){
-            
+        return $this->getModes()->filter(function ($mode) {
+
             return !is_null($mode);
 
         });
@@ -67,7 +69,7 @@ class PaymentsRepository
     {
         $total = 0;
 
-        $this->modes()->each(function($mode) use(&$total){
+        $this->modes()->each(function ($mode) use (&$total) {
 
             $total += $mode->amount;
 

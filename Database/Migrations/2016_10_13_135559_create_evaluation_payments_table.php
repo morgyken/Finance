@@ -3,47 +3,50 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEvaluationPaymentsTable extends Migration {
+class CreateEvaluationPaymentsTable extends Migration
+{
 
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
-        Schema::create('finance_evaluation_payments', function (Blueprint $column) {
-            $column->increments('id');
-            $column->string('receipt')->unique();
-            $column->integer('patient')->unsigned()->nullable();
-            $column->integer('user')->unsigned();
-            $column->integer('visit')->unsigned()->nullable();
-            $column->integer('sale')->unsigned()->nullable();
-            $column->string('dispensing')->nullable();
-            $column->timestamps();
+    public function up()
+    {
+        Schema::create('finance_evaluation_payments', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('receipt')->unique();
+            $table->integer('patient')->unsigned()->nullable();
+            $table->integer('user')->unsigned();
+            $table->integer('visit')->unsigned()->nullable();
+            $table->integer('sale')->unsigned()->nullable();
+            $table->boolean('deposit')->default(false);
+            $table->string('dispensing')->nullable();
+            $table->timestamps();
 
-            $column->foreign('patient')
-                    ->references('id')
-                    ->on('reception_patients')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
+            $table->foreign('patient')
+                ->references('id')
+                ->on('reception_patients')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
-            $column->foreign('user')
-                    ->references('id')
-                    ->on('users')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
+            $table->foreign('user')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
-            $column->foreign('visit')
-                    ->references('id')
-                    ->on('evaluation_visits')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
+            $table->foreign('visit')
+                ->references('id')
+                ->on('evaluation_visits')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
-            $column->foreign('sale')
-                    ->references('id')
-                    ->on('inventory_batch_sales')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
+            $table->foreign('sale')
+                ->references('id')
+                ->on('inventory_batch_sales')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
@@ -52,7 +55,8 @@ class CreateEvaluationPaymentsTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('finance_evaluation_payments');
     }
 

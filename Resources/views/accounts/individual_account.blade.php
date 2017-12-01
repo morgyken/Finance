@@ -41,7 +41,7 @@ $patient = $data['patient'];
                 <tfoot>
                 <tr>
                     <th colspan="3" style="text-align: right">Balance</th>
-                    <th>{{number_format(get_patient_balance($patient->id),2)}}</th>
+                    <th>{{number_format($patient->account->balance}}</th>
                 </tr>
                 </tfoot>
             </table>
