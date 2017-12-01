@@ -70,6 +70,19 @@ if (!function_exists('get_account_groups')) {
     }
 }
 
+
+if (!function_exists('generate_receipt_no')) {
+
+    /**
+     * Genearte a nice receipt number reference
+     * @return string
+     */
+    function generate_receipt_no()
+    {
+        return m_setting('finance.receipt_prefix') . date('dmyHis');
+    }
+
+}
 if (!function_exists('payment_modes')) {
 
     /**
