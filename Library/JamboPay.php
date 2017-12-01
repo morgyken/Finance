@@ -41,6 +41,9 @@ class JamboPay implements Jambo
      */
     private $token;
 
+    /**
+     * JamboPay constructor.
+     */
     public function __construct()
     {
         $this->client = new Client([
@@ -50,6 +53,13 @@ class JamboPay implements Jambo
             'expect' => false,
 //            'http_errors' => false,
         ]);
+    }
+
+    /**
+     * @throws ApiException
+     */
+    private function setToken()
+    {
         if (!$this->is_connected()) {
             throw new ApiException('No internet connection');
         }
@@ -91,6 +101,7 @@ class JamboPay implements Jambo
     /**
      * @param string $number
      * @return bool
+     * @throws ApiException
      */
     private function checkWalletExist($number)
     {
@@ -99,6 +110,7 @@ class JamboPay implements Jambo
             'PhoneNumber' => $this->formatPhoneNumber($number),
         ];
         $this->validatePayload($data);
+        $this->setToken();
         $p = \Curl::to($this->base_url . 'api/payments/GetWalletExists')
             ->withHeaders([
                 'app_key: ' . $this->app_key,
@@ -122,6 +134,7 @@ class JamboPay implements Jambo
     private function createWallet($data)
     {
         $curl = curl_init();
+        $this->setToken();
         curl_setopt_array($curl, [
             CURLOPT_URL => $this->base_url . 'api/payments/PostWalletRegister',
             CURLOPT_RETURNTRANSFER => true,
@@ -152,9 +165,11 @@ class JamboPay implements Jambo
      * @param array $data
      * @param callable $callback
      * @return mixed
+     * @throws ApiException
      */
     private function _curl($endpoint, $data, $callback)
     {
+        $this->setToken();
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $this->base_url . $endpoint,
@@ -301,6 +316,10 @@ class JamboPay implements Jambo
         });
     }
 
+    /**
+     * @return mixed
+     * @throws ApiException
+     */
     private function getMerchantStreams()
     {
         $data = [
@@ -308,6 +327,7 @@ class JamboPay implements Jambo
             'MerchantID' => m_setting('finance.merchant_id', 'Trans'),
         ];
         $this->validatePayload($data);
+        $this->setToken();
         $request = \Curl::to($this->base_url . 'api/payments/GetMerchantStreams')
             ->withHeaders([
                 'app_key: ' . $this->app_key,
@@ -341,6 +361,7 @@ class JamboPay implements Jambo
             'Month' => Carbon::now()->month,
         ];
         $this->validatePayload($data);
+        $this->setToken();
         $p = \Curl::to($this->base_url . 'api/payments/GetBill')
             ->withHeaders([
                 'app_key: ' . $this->app_key,

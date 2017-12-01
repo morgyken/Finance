@@ -20,6 +20,7 @@ use Ignite\Finance\Entities\SplitInsurance;
 use Ignite\Finance\Http\Requests\PaymentsRequest;
 use Ignite\Finance\Repositories\EvaluationRepository;
 use Ignite\Finance\Repositories\Jambo;
+use Ignite\Inpatient\Entities\ChargeSheet;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Ignite\Reception\Entities\Patients;
 use Ignite\Settings\Entities\Insurance;

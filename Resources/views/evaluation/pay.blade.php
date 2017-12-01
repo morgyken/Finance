@@ -47,6 +47,8 @@ $__visits = $patient->visits->filter(function ($value) {
     </div>
     {!! Form::close()!!}
     <script type="text/javascript">
+        var __UXCT = parseInt("<?=$patient->account->balance ?? 0?>");
+
         function remove_bill(type, id, visit) {
             $.ajax({
                 type: 'get',

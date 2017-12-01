@@ -13,9 +13,9 @@
                     @else
                         @include('finance::evaluation.payment.main')
                         @include('finance::evaluation.payment.pharmacy')
-                    @endif
-                    @if(is_module_enabled('Inpatient'))
-                        @include('finance::evaluation.payment.inpatient')
+                        @if(is_module_enabled('Inpatient'))
+                            @include('finance::evaluation.payment.inpatient-cash')
+                        @endif
                     @endif
                     </tbody>
                 </table>
