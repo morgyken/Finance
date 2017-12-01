@@ -65,7 +65,8 @@
                             <input type="hidden" name="visit" value="{{$visit->id}}">
                         @endif
                         {!! Form::text('account[amount]',old('account[amount]'), ['class'=>'form-control','placeholder'=>'Amount','id'=>'account_amount']) !!}
-                        <span class="help-block">Account balance Ksh {{number_format($patient->account->balance,2)}}</span>
+                        <span class="help-block">
+                            Account balance Ksh {{number_format($patient->account->balance,2)}}</span>
                     </div>
                 </div>
             </div>
