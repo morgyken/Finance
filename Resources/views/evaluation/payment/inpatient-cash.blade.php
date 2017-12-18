@@ -11,7 +11,7 @@
                     @elseif($item->invoiced)
                         <div class="label label-warning">Invoiced</div>
                     @endif
-                    {{$item->ward_id?$item->ward->name:$item->charge->name}}
+                    {{$item->ward_id?$item->ward->name:$item->charge->name}} {{$item->created_at->format('d/m/Y')}}
                     <i class="small">({{ $item->ward_id?'Ward':'Inpatient'}})</i> - Ksh
                     {{$item->price}}
                 </td>
@@ -30,6 +30,7 @@
                     <input type="hidden" value="chargesheet" name="type{{$item->id}}"/>
                 <td>
                     {{$item->ward_id?$item->ward->name:$item->charge->name}}
+                    {{$item->created_at->format('d/m/Y')}}
                     <i class="small">({{ $item->ward_id?'Ward':'Inpatient'}})</i> - Ksh
                     <span class="topay">{{$item->price}}</span>
                     @endif
