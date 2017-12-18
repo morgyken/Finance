@@ -909,7 +909,7 @@ class EvaluationLibrary implements EvaluationRepository
     {
         if (is_module_enabled('Inpatient')) {
             $cs = ChargeSheet::find($item);
-            $cs->paid = $payment->id;
+            $cs->paid = true;
             return $cs->save();
         }
         return true;
