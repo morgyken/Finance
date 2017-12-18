@@ -15,6 +15,7 @@ class CreateEvaluationPaymentDetailsTable extends Migration {
             $column->increments('id');
             $column->integer('payment')->unsigned();
             $column->integer('investigation')->unsigned();
+            $column->integer('cs_id')->unsigned();
             $column->integer('visit')->unsigned()->nullable();
             $column->double('cost', 10, 2)->nullable();
             $column->double('price', 10, 2);

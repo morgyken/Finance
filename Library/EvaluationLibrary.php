@@ -243,7 +243,7 @@ class EvaluationLibrary implements EvaluationRepository
                 } elseif ($this->isPaymentFor($item, 'copay')) {
                     $this->copayment($item, $payment);
                 } elseif ($this->isPaymentFor($item, 'chargesheet')) {
-                    $this->chargeSheetPayment($item, $payment);
+                    $this->chargeSheetPayment($request, $item, $payment);
                 } else {
                     $this->investigation_payment_details($request, $item, $payment);
                 }
@@ -901,14 +901,23 @@ class EvaluationLibrary implements EvaluationRepository
     }
 
     /**
+     * @param Request $request
      * @param $item
      * @param EvaluationPayments $payment
      * @return bool
      */
-    private function chargeSheetPayment($item, $payment)
+    private function chargeSheetPayment(Request $request, $item, EvaluationPayments $payment): bool
     {
         if (is_module_enabled('Inpatient')) {
             $cs = ChargeSheet::find($item);
+            $visit = 'visits' . $item;
+            $detail = new EvaluationPaymentsDetails;
+            $detail->price = $cs->price;
+            $detail->cs_id = $item;
+            $detail->visit = $request->$visit;
+            $detail->payment = $payment->id;
+            $detail->cost = $cs->price;
+            $detail->save();
             $cs->paid = true;
             return $cs->save();
         }
