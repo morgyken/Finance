@@ -6,7 +6,7 @@
                     <input type="checkbox" disabled/>
                 </td>
                 <td>
-                    @if($item->is_paid)
+                    @if($item->paid)
                         <div class="label label-success">Paid</div>
                     @elseif($item->invoiced)
                         <div class="label label-warning">Invoiced</div>
