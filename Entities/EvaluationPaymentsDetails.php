@@ -4,6 +4,7 @@ namespace Ignite\Finance\Entities;
 
 use Ignite\Evaluation\Entities\Investigations;
 use Ignite\Evaluation\Entities\Prescriptions;
+use Ignite\Inpatient\Entities\ChargeSheet;
 use Illuminate\Database\Eloquent\Model;
 
 
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $payment
  * @property int|null $investigation
  * @property int|null $prescription_id
- * @property int $cs_id
+ * @property int|null $cs_id
  * @property int|null $visit
  * @property int|null $patient_invoice
  * @property float|null $patient_invoice_amount
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property \Carbon\Carbon|null $created_at
  * @property \Carbon\Carbon|null $updated_at
  * @property-read \Ignite\Finance\Entities\EvaluationPayments $batch
+ * @property-read \Ignite\Inpatient\Entities\ChargeSheet|null $chargeSheet
  * @property-read mixed $item_desc
  * @property-read \Ignite\Evaluation\Entities\Investigations|null $investigations
  * @property-read \Ignite\Finance\Entities\PatientInvoice|null $patient_invoices
@@ -70,6 +72,11 @@ class EvaluationPaymentsDetails extends Model
         }
 
         return 'N/A';
+    }
+
+    public function chargeSheet()
+    {
+        return $this->belongsTo(ChargeSheet::class, 'cs_id');
     }
 
     public function patient_invoices()

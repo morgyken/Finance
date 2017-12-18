@@ -3,19 +3,21 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEvaluationPaymentDetailsTable extends Migration {
+class CreateEvaluationPaymentDetailsTable extends Migration
+{
 
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
         Schema::create('finance_evaluation_payment_details', function (Blueprint $column) {
             $column->increments('id');
             $column->integer('payment')->unsigned();
             $column->integer('investigation')->unsigned();
-            $column->integer('cs_id')->unsigned();
+            $column->integer('cs_id')->nullable()->unsigned();
             $column->integer('visit')->unsigned()->nullable();
             $column->double('cost', 10, 2)->nullable();
             $column->double('price', 10, 2);
@@ -23,12 +25,12 @@ class CreateEvaluationPaymentDetailsTable extends Migration {
             $column->timestamps();
 
             $column->foreign('payment')->references('id')->on('finance_evaluation_payments')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $column->foreign('investigation')->references('id')->on('evaluation_investigations')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
@@ -37,7 +39,8 @@ class CreateEvaluationPaymentDetailsTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::dropIfExists('finance_evaluation_payment_details');
     }
 
