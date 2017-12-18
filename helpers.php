@@ -11,6 +11,7 @@
  */
 
 use Ignite\Evaluation\Entities\Visit;
+use Ignite\Finance\Entities\ChangeInsurance;
 use Ignite\Finance\Entities\EvaluationPayments;
 use Ignite\Finance\Entities\FinanceAccountGroup;
 use Ignite\Finance\Entities\FinanceAccountType;
@@ -327,7 +328,7 @@ if (!function_exists('transferred2cash')) {
     function transferred2cash($item_id, $drug = false)
     {
         $finder = $drug ? 'prescription_id' : 'procedure_id';
-        $count = \Ignite\Finance\Entities\ChangeInsurance::where($finder, $item_id)->count();
+        $count = ChangeInsurance::where($finder, $item_id)->count();
         return (bool)$count;
     }
 }
@@ -439,7 +440,7 @@ function get_unpaid_amount_for(Visit $visit, $mode)
             }
         }
     }
-    $extra = \Ignite\Finance\Entities\ChangeInsurance::whereMode($mode)->whereVisitId($visit->id)->sum('amount');
+    $extra = ChangeInsurance::whereMode($mode)->whereVisitId($visit->id)->sum('amount');
     if ($visit->copay && $mode === 'cash')
         $extra += $visit->copay->amount;
     return $amount + $extra;
