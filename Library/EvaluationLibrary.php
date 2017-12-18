@@ -39,6 +39,7 @@ use Ignite\Finance\Entities\PaymentsMpesa;
 use Ignite\Finance\Entities\SplitInsurance;
 use Ignite\Finance\Entities\SplitInsuranceItems;
 use Ignite\Finance\Repositories\EvaluationRepository;
+use Ignite\Inpatient\Entities\ChargeSheet;
 use Ignite\Inventory\Entities\InventoryBatchProductSales;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -241,6 +242,8 @@ class EvaluationLibrary implements EvaluationRepository
                     $this->drug_payment_details($request, $item, $payment);
                 } elseif ($this->isPaymentFor($item, 'copay')) {
                     $this->copayment($item, $payment);
+                } elseif ($this->isPaymentFor($item, 'chargesheet')) {
+                    $this->chargeSheetPayment($item, $payment);
                 } else {
                     $this->investigation_payment_details($request, $item, $payment);
                 }
@@ -895,5 +898,20 @@ class EvaluationLibrary implements EvaluationRepository
             $pending = $pending->where('created_at', '<=', $date);
         }
         return $pending->paginate(100);
+    }
+
+    /**
+     * @param $item
+     * @param EvaluationPayments $payment
+     * @return bool
+     */
+    private function chargeSheetPayment($item, $payment)
+    {
+        if (is_module_enabled('Inpatient')) {
+            $cs = ChargeSheet::find($item);
+            $cs->paid = $payment->id;
+            return $cs->save();
+        }
+        return true;
     }
 }
