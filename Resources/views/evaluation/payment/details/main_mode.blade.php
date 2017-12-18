@@ -9,12 +9,12 @@
             </tr>
             </thead>
             <tbody>
-            <?php $n = $bill = 0; ?>
+            <?php $bill = 0; ?>
             @if(isset($payment->details))
                 @foreach($payment->details as $d)
                     @if(!empty($d->investigations))
                         <tr>
-                            <td>{{$n+=1}}</td>
+                            <td>{{$loop->iteration}}</td>
                             <td>{{$d->item_desc}}
                                 x {{$d->investigations->quantity>0?$d->investigations->quantity:1}}
                             </td>
@@ -24,10 +24,19 @@
                     @endif
                     @if(!empty($d->pharmacy))
                         <tr>
-                            <td>{{$n+=1}}</td>
+                            <td>{{$loop->iteration}}</td>
                             <td>{{$d->item_desc}}
                                 <i class="small">(Drugs)</i>
                                 x {{$d->pharmacy->payment->quantity}} units
+                            </td>
+                            <td>{{$d->price}}</td>
+                        </tr>
+                        <?php $bill += $d->price ?>
+                    @endif
+                    @if(!empty($d->chargeSheet))
+                        <tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$d->chargeSheet->desc}}
                             </td>
                             <td>{{$d->price}}</td>
                         </tr>

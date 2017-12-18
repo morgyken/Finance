@@ -6,13 +6,16 @@
                     <input type="checkbox" disabled/>
                 </td>
                 <td>
-                    @if($item->is_paid)
+                    @if($item->paid)
                         <div class="label label-success">Paid</div>
                     @elseif($item->invoiced)
                         <div class="label label-warning">Invoiced</div>
                     @endif
-                    {{$item->procedures->name}} <i class="small">({!! $item->nice_type!!})</i> -
-                    Ksh {{$item->price}}
+                    {{$item->desc}}
+                    <i class="small">({{ $item->ward_id?'Ward':'Inpatient'}}
+                        <strong>{{$item->created_at->format('d/m/Y')}}</strong>
+                        )</i> - Ksh
+                    {{$item->price}}
                 </td>
             @else
                 <td>
@@ -28,8 +31,10 @@
                     <input type="hidden" value="{{$visit->id}}" name="visits{{$item->id}}"/>
                     <input type="hidden" value="chargesheet" name="type{{$item->id}}"/>
                 <td>
-                    {{$item->ward_id?$item->ward->name:$item->charge->name}}
-                    <i class="small">({{ $item->ward_id?'Ward':'Inpatient'}})</i> - Ksh
+                    {{$item->desc}}
+                    <i class="small">({{ $item->ward_id?'Ward':'Inpatient'}}
+                        <strong>{{$item->created_at->format('d/m/Y')}}</strong>
+                        )</i> - Ksh
                     <span class="topay">{{$item->price}}</span>
                     @endif
                 </td>
