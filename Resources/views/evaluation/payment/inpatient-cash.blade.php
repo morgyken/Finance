@@ -11,8 +11,9 @@
                     @elseif($item->invoiced)
                         <div class="label label-warning">Invoiced</div>
                     @endif
-                    {{$item->procedures->name}} <i class="small">({!! $item->nice_type!!})</i> -
-                    Ksh {{$item->price}}
+                    {{$item->ward_id?$item->ward->name:$item->charge->name}}
+                    <i class="small">({{ $item->ward_id?'Ward':'Inpatient'}})</i> - Ksh
+                    {{$item->price}}
                 </td>
             @else
                 <td>
