@@ -431,6 +431,13 @@ function get_unpaid_amount_for(Visit $visit, $mode)
                     $amount += $item->priced_amount;
             }
         }
+        if (is_module_enabled('Inpatient')) {
+            foreach ($visit->chargeSheet as $cs) {
+                if (!$cs->paid && (!$cs->investigation_id || !$cs->dispensing_id)) {
+                    $amount += $cs->price;
+                }
+            }
+        }
     }
     $extra = \Ignite\Finance\Entities\ChangeInsurance::whereMode($mode)->whereVisitId($visit->id)->sum('amount');
     if ($visit->copay && $mode === 'cash')
