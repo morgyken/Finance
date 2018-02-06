@@ -51,7 +51,7 @@
                         ?>
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$item->drugs->name}}</td>
+                            <td>{{ !$item->drugs ?: $item->drugs->name}}</td>
                             <td>Drug</td>
                             <td>{!! $is_paid?'<span class="label label-success">Invoiced</span>':'<span class="label label-warning">Pending</span>'!!}</td>
                             <td style="text-align: right">{{number_format($item->payment->price,2)}}</td>
