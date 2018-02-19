@@ -160,6 +160,37 @@ class EvaluationController extends AdminBaseController
         return view('finance::evaluation.payment_list', ['data' => $this->data]);
     }
 
+    public function searchPay(Request $request)
+    {
+        $patient = $request->patient;
+        $invoice = $request->invoice;
+        if (!empty($patient)) {
+            $this->data['invoice_mode'] = $invoice;
+            $this->data['deposit'] = $request->deposit;
+            $this->data['patient'] = Patients::find($patient);
+            $this->data['patient_invoices'] = PatientInvoice::wherePatient_id($patient)->get();
+            return view('finance::evaluation.pay', ['data' => $this->data]);
+        }
+        if (m_setting('finance.background_manifest')) {
+            $this->data['manifests'] = PaymentManifest::whereType('cash')->orderBy('date', 'desc')->get()->filter(function ($query){
+                if(str_contains(strtolower(@$query->patient->full_name), strtolower(request('search_payment_list')))) {
+                    return $query;
+                }
+            });
+
+            $this->data['invoiced'] = Patients::whereHas('invoices', function ($query) {
+                $query->whereStatus('unpaid')
+                    ->orWhere('status', '=', 'part_paid');
+            })->get()->filter(function ($query){
+                str_contains(strtolower(@$query->patient->full_name), strtolower(request('search_payment_list')));
+                return $query;
+            });;
+            return view('finance::search_payment_list', ['data' => $this->data]);
+        }
+        $this->billable_patients();
+        return view('finance::evaluation.payment_list', ['data' => $this->data]);
+    }
+
     public function pharmacy_dispense(Request $request)
     {
         $stack = $this->_get_selected_stack();
@@ -381,6 +412,27 @@ class EvaluationController extends AdminBaseController
             ->get();
 
         return view('finance::evaluation.partials.pending', ['data' => $this->data]);
+    }
+
+    //search pending bills
+    public function searchPendingBills(Request $request)
+    {
+        $this->data['pending_mode'] = 1;
+
+        if (m_setting('finance.background_manifest')) {
+            $this->data['pending'] = $this->evaluationRepository->searchPending();
+            return view('finance::search-pending-insurance', ['data' => $this->data]);
+        }
+
+        $this->data['pending'] = Visit::wherePaymentMode('insurance')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        $this->data['split'] = Visit::wherePaymentMode('insurance')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        return view('finance::evaluation.partials.pendng', ['data' => $this->data]);
     }
 
     public function billedBills()

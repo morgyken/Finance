@@ -123,3 +123,7 @@ $router->get('patient/{patient}/account', ['as' => 'patient.account', 'uses' => 
 $router->get('payment/{payment}', ['uses' => 'PaymentController@show']);
 
 $router->post('patient/{patient}/account/deposit', ['uses' => 'PatientAccountController@store']);
+
+// search for pending patients
+$router->post('pending/bills/search', ['as' => 'search_pending', 'uses' => 'EvaluationController@searchPendingBills']);
+$router->post('pay/{patient?}/{invoice?}/{deposit?}', ['as' => 'search_payment_list', 'uses' => 'EvaluationController@searchPay']);

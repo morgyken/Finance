@@ -69,8 +69,7 @@
         <script>
             $(function () {
                 $('.records').dataTable({
-                    pageLength: 50,
-                    dom: 'Bfrtip',
+                    pageLength: 25,
                     buttons: [
                         {
                             extend: 'excel',
@@ -95,6 +94,6 @@
             });
         </script>
     @else
-        <p>No pending insurance bill</p>
+        <p>No results found</p>
     @endif
 @endsection
