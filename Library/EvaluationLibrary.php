@@ -784,6 +784,32 @@ class EvaluationLibrary implements EvaluationRepository
         return $pending->paginate(100);
     }
 
+    /*search for pending bills*/
+    public function searchPending()
+    {
+        $request = \request();
+        $pending = PaymentManifest::whereType('insurance')->orderBy('date', 'DESC')->get()->filter(function ($query){
+            if(str_contains(strtolower(@$query->visit->patients->full_name), strtolower(request('search_pending')))){
+                return $query;
+            }
+        });
+
+        if ($request->has('company')) {
+            $pending = $pending->where('company_id', $request->company);
+        }
+        if ($request->has('scheme')) {
+            $pending = $pending->where('scheme_id', $request->scheme);
+        }
+        if ($request->has('date1')) {
+            $pending = $pending->where('date', '>=', $request->date1);
+        }
+        if ($request->has('date2')) {
+            $date = Carbon::parse($request->date2)->endOfDay()->toDateTimeString();
+            $pending = $pending->where('date', '<=', $date);
+        }
+        return $pending;
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */

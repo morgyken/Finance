@@ -37,9 +37,7 @@ extract($data);
                 <div class="tab-content">
                     <!--Patient List Tab -->
                     <div class="tab-pane active" id="patients">
-
                         @include('finance::partials.queues.search_payment_list')
-
                         <table class="table table-striped table-condensed table-responsive" id="patients">
                             <tbody>
                             @foreach($manifests as $visit)
