@@ -17,9 +17,9 @@ class CreateInventoryAccountGroupsTable extends Migration {
             $table->string('name');
             $table->longText('description');
             $table->timestamps();
-            $table->foreign('type')->references('id')->on('finance_gl_account_types')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('type')->references('id')->on('finance_gl_account_types')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

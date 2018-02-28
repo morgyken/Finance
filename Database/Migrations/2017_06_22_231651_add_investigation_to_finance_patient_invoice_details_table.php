@@ -22,17 +22,17 @@ class AddInvestigationToFinancePatientInvoiceDetailsTable extends Migration {
                     ->unsigned()
                     ->nullable();
 
-            $table->foreign('investigation_id')
-                    ->references('id')
-                    ->on('evaluation_investigations')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-
-            $table->foreign('dispensing_id')
-                    ->references('id')
-                    ->on('inventory_evaluation_dispensing')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('investigation_id')
+//                    ->references('id')
+//                    ->on('evaluation_investigations')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//
+//            $table->foreign('dispensing_id')
+//                    ->references('id')
+//                    ->on('inventory_evaluation_dispensing')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

@@ -21,17 +21,17 @@ class CreateFinancePatientInvoicesTable extends Migration {
             $table->enum('status', ['unpaid', 'part_paid', 'paid'])->default('unpaid');
             $table->timestamps();
 
-            $table->foreign('patient_id')
-                    ->references('id')
-                    ->on('reception_patients')
-                    ->onDelete('restrict')
-                    ->onUpdate('cascade');
-
-            $table->foreign('user_id')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('restrict')
-                    ->onUpdate('cascade');
+//            $table->foreign('patient_id')
+//                    ->references('id')
+//                    ->on('reception_patients')
+//                    ->onDelete('restrict')
+//                    ->onUpdate('cascade');
+//
+//            $table->foreign('user_id')
+//                    ->references('id')
+//                    ->on('users')
+//                    ->onDelete('restrict')
+//                    ->onUpdate('cascade');
         });
     }
 

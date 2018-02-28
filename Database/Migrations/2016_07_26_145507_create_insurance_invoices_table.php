@@ -22,9 +22,9 @@ class CreateInsuranceInvoicesTable extends Migration {
             $table->integer('status')->default(0);
             $table->timestamps();
 
-            $table->foreign('visit')->references('id')->on('evaluation_visits')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
+//            $table->foreign('visit')->references('id')->on('evaluation_visits')
+//                    ->onUpdate('cascade')
+//                    ->onDelete('cascade');
         });
     }
 

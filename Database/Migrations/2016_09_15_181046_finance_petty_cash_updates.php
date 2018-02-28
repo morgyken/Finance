@@ -18,9 +18,9 @@ class FinancePettyCashUpdates extends Migration {
             $table->string('type'); //widthrawal or deposit
             $table->string('reason')->nullable();
             $table->timestamps();
-            $table->foreign('user')->references('id')->on('users')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('user')->references('id')->on('users')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

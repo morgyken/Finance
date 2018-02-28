@@ -24,29 +24,29 @@ class CreateFinanceSplitInsuranceItemsTable extends Migration
             $table->boolean('status')->default(false);
             $table->timestamps();
 
-            $table->foreign('visit_id')
-                ->references('id')
-                ->on('evaluation_visits')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->foreign('parent_id')
-                ->references('id')
-                ->on('finance_split_insurances')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->foreign('prescription_id')
-                ->references('id')
-                ->on('evaluation_prescriptions')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->foreign('investigation_id')
-                ->references('id')
-                ->on('evaluation_investigations')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+//            $table->foreign('visit_id')
+//                ->references('id')
+//                ->on('evaluation_visits')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
+//
+//            $table->foreign('parent_id')
+//                ->references('id')
+//                ->on('finance_split_insurances')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
+//
+//            $table->foreign('prescription_id')
+//                ->references('id')
+//                ->on('evaluation_prescriptions')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
+//
+//            $table->foreign('investigation_id')
+//                ->references('id')
+//                ->on('evaluation_investigations')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
         });
     }
 

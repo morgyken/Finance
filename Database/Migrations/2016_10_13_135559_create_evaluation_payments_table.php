@@ -24,23 +24,23 @@ class CreateEvaluationPaymentsTable extends Migration
             $table->string('dispensing')->nullable();
             $table->timestamps();
 
-            $table->foreign('patient')
-                ->references('id')
-                ->on('reception_patients')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->foreign('user')
-                ->references('id')
-                ->on('users')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->foreign('visit')
-                ->references('id')
-                ->on('evaluation_visits')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+//            $table->foreign('patient')
+//                ->references('id')
+//                ->on('reception_patients')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
+//
+//            $table->foreign('user')
+//                ->references('id')
+//                ->on('users')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
+//
+//            $table->foreign('visit')
+//                ->references('id')
+//                ->on('evaluation_visits')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
 
 //            $table->foreign('sale')
 //                ->references('id')

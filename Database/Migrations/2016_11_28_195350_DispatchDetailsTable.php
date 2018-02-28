@@ -18,12 +18,12 @@ class DispatchDetailsTable extends Migration {
             $table->integer('dispatch')->unsigned();
             $table->decimal('amount', 10, 2);
             $table->timestamps();
-            $table->foreign('insurance_invoice')->references('id')->on('finance_insurance_invoices')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-            $table->foreign('dispatch')->references('id')->on('finance_bill_dispatches')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('insurance_invoice')->references('id')->on('finance_insurance_invoices')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//            $table->foreign('dispatch')->references('id')->on('finance_bill_dispatches')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

@@ -20,10 +20,10 @@ class AddPatientInvoiceToFinanceEvaluationPaymentDetailsTable extends Migration 
             $table->integer('investigation')->unsigned()->nullable()->change();
             $table->decimal('price', 10, 2)->nullable()->change();
 
-            $table->foreign('patient_invoice')
-                    ->references('id')->on('finance_patient_invoices')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('patient_invoice')
+//                    ->references('id')->on('finance_patient_invoices')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

@@ -21,11 +21,11 @@ class CreatePatientTransactionsTable extends Migration
             $table->longText('details')->nullable();
             $table->timestamps();
 
-            $table->foreign('patient_id')
-                ->references('id')
-                ->on('reception_patients')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+//            $table->foreign('patient_id')
+//                ->references('id')
+//                ->on('reception_patients')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
         });
     }
 

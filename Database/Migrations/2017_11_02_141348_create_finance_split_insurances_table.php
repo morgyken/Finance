@@ -21,17 +21,17 @@ class CreateFinanceSplitInsurancesTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->timestamps();
 
-            $table->foreign('visit_id')
-                ->references('id')
-                ->on('evaluation_visits')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->foreign('scheme')
-                ->references('id')
-                ->on('reception_patient_schemes')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+//            $table->foreign('visit_id')
+//                ->references('id')
+//                ->on('evaluation_visits')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
+//
+//            $table->foreign('scheme')
+//                ->references('id')
+//                ->on('reception_patient_schemes')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
         });
     }
 

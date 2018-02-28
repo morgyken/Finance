@@ -18,9 +18,9 @@ class FinanceBankAccounts extends Migration {
             $table->string('number');
             $table->decimal('balance', 10, 2);
             $table->timestamps();
-            $table->foreign('bank')->references('id')->on('finance_banks')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('bank')->references('id')->on('finance_banks')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

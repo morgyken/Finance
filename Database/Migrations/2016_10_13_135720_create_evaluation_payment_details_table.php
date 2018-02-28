@@ -23,14 +23,14 @@ class CreateEvaluationPaymentDetailsTable extends Migration
             $column->double('price', 10, 2);
             $column->text('description')->nullable();
             $column->timestamps();
-
-            $column->foreign('payment')->references('id')->on('finance_evaluation_payments')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-
-            $column->foreign('investigation')->references('id')->on('evaluation_investigations')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+//
+//            $column->foreign('payment')->references('id')->on('finance_evaluation_payments')
+//                ->onDelete('cascade')
+//                ->onUpdate('cascade');
+//
+//            $column->foreign('investigation')->references('id')->on('evaluation_investigations')
+//                ->onDelete('cascade')
+//                ->onUpdate('cascade');
         });
     }
 
