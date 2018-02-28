@@ -42,11 +42,11 @@ class CreateEvaluationPaymentsTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->foreign('sale')
-                ->references('id')
-                ->on('inventory_batch_sales')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+//            $table->foreign('sale')
+//                ->references('id')
+//                ->on('inventory_batch_sales')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
         });
     }
 
