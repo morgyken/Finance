@@ -19,11 +19,11 @@ class AddPaymentIdToPatientTransactionsTable extends Migration
                 ->after('amount')
                 ->nullable();
 
-            $table->foreign('payment_id')
-                ->references('id')
-                ->on('finance_evaluation_payments')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+//            $table->foreign('payment_id')
+//                ->references('id')
+//                ->on('finance_evaluation_payments')
+//                ->onDelete('cascade')
+//                ->onUpdate('cascade');
         });
     }
 

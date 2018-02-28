@@ -20,9 +20,9 @@ class FinanceBankingCheques extends Migration {
             $table->string('bank');
             $table->string('branch');
             $table->timestamps();
-            $table->foreign('banking')->references('id')->on('finance_banking')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('banking')->references('id')->on('finance_banking')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

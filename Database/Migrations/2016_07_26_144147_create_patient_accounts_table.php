@@ -17,11 +17,11 @@ class CreatePatientAccountsTable extends Migration {
             $table->decimal('balance', 10, 2);
             //$column->
             $table->timestamps();
-            $table->foreign('patient')
-                    ->references('id')
-                    ->on('reception_patients')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');
+//            $table->foreign('patient')
+//                    ->references('id')
+//                    ->on('reception_patients')
+//                    ->onUpdate('cascade')
+//                    ->onDelete('cascade');
         });
     }
 

@@ -17,9 +17,9 @@ class CreateEvaluationInsurancePaymentsTable extends Migration {
             $table->double('amount', 10, 2);
             $table->integer('user')->unsigned();
             $table->timestamps();
-            $table->foreign('user')->references('id')->on('users')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('user')->references('id')->on('users')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

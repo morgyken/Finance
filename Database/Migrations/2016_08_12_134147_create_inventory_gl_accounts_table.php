@@ -16,9 +16,9 @@ class CreateInventoryGlAccountsTable extends Migration {
             $table->integer('group')->unsigned();
             $table->string('name');
             $table->timestamps();
-            $table->foreign('group')->references('id')->on('finance_gl_account_groups')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('group')->references('id')->on('finance_gl_account_groups')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

@@ -17,9 +17,9 @@ class CreateInventoryGlTransactionsTable extends Migration {
             $table->string('type');
             $table->decimal('amount', 10, 2);
             $table->timestamps();
-            $table->foreign('account')->references('id')->on('finance_gl_accounts')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('account')->references('id')->on('finance_gl_accounts')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

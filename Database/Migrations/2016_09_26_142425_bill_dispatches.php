@@ -17,13 +17,13 @@ class BillDispatches extends Migration {
             $table->integer('firm')->unsigned()->nullable();
             $table->timestamps();
 
-            $table->foreign('user')->references('id')->on('users')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-
-            $table->foreign('firm')->references('id')->on('settings_insurance')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('user')->references('id')->on('users')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//
+//            $table->foreign('firm')->references('id')->on('settings_insurance')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

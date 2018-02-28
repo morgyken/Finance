@@ -15,11 +15,11 @@ class AddSplitToFinanceInsuranceInvoicesTable extends Migration
     {
         Schema::table('finance_insurance_invoices', function (Blueprint $table) {
             $table->unsignedInteger('split_id')->before('created_at')->nullable();
-            $table->foreign('split_id')
-                ->references('id')
-                ->on('finance_split_insurances')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+//            $table->foreign('split_id');
+//                ->references('id')
+//                ->on('finance_split_insurances')
+//                ->onUpdate('cascade')
+//                ->onDelete('cascade');
         });
     }
 

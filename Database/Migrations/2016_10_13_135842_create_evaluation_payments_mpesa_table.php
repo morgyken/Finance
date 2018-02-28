@@ -21,9 +21,9 @@ class CreateEvaluationPaymentsMpesaTable extends Migration {
             $column->double('amount', 10, 2);
             $column->timestamps();
 
-            $column->foreign('payment')->references('id')->on('finance_evaluation_payments')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $column->foreign('payment')->references('id')->on('finance_evaluation_payments')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

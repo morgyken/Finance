@@ -22,11 +22,11 @@ class CreateFinancePatientInvoiceDetailsTable extends Migration {
             $table->date('service_date')->nullable();
             $table->timestamps();
 
-            $table->foreign('invoice_id')
-                    ->references('id')
-                    ->on('finance_patient_invoices')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('invoice_id')
+//                    ->references('id')
+//                    ->on('finance_patient_invoices')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

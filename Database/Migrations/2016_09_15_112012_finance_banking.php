@@ -20,15 +20,15 @@ class FinanceBanking extends Migration {
             $table->string('type');
             $table->string('mode');
             $table->timestamps();
-            $table->foreign('user')->references('id')->on('users')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-            $table->foreign('bank')->references('id')->on('finance_banks')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-            $table->foreign('account')->references('id')->on('finance_bank_accounts')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('user')->references('id')->on('users')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//            $table->foreign('bank')->references('id')->on('finance_banks')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//            $table->foreign('account')->references('id')->on('finance_bank_accounts')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

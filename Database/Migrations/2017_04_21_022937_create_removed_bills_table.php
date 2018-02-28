@@ -23,35 +23,35 @@ class CreateRemovedBillsTable extends Migration {
             $table->integer('amount')->unsigned()->nullable();
             $table->timestamps();
 
-            $table->foreign('visit')
-                    ->references('id')
-                    ->on('evaluation_visits')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-
-            $table->foreign('investigation')
-                    ->references('id')
-                    ->on('evaluation_investigations')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-
-            $table->foreign('dispensing')
-                    ->references('id')
-                    ->on('inventory_evaluation_dispensing')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-
-            $table->foreign('sale')
-                    ->references('id')
-                    ->on('inventory_batch_sales')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-
-            $table->foreign('user')
-                    ->references('id')
-                    ->on('users')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('visit')
+//                    ->references('id')
+//                    ->on('evaluation_visits')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//
+//            $table->foreign('investigation')
+//                    ->references('id')
+//                    ->on('evaluation_investigations')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//
+//            $table->foreign('dispensing')
+//                    ->references('id')
+//                    ->on('inventory_evaluation_dispensing')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//
+//            $table->foreign('sale')
+//                    ->references('id')
+//                    ->on('inventory_batch_sales')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//
+//            $table->foreign('user')
+//                    ->references('id')
+//                    ->on('users')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 

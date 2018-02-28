@@ -19,15 +19,15 @@ class InsuranceInvoicePayments extends Migration {
             $table->integer('batch')->unsigned()->nullable();
             $table->string('mode')->nullable();
             $table->timestamps();
-            $table->foreign('user')->references('id')->on('users')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-            $table->foreign('insurance_invoice')->references('id')->on('finance_insurance_invoices')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
-            $table->foreign('batch')->references('id')->on('finance_evaluation_insurance_payments')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
+//            $table->foreign('user')->references('id')->on('users')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//            $table->foreign('insurance_invoice')->references('id')->on('finance_insurance_invoices')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
+//            $table->foreign('batch')->references('id')->on('finance_evaluation_insurance_payments')
+//                    ->onDelete('cascade')
+//                    ->onUpdate('cascade');
         });
     }
 
